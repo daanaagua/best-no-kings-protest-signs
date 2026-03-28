@@ -13,23 +13,23 @@ export const siteConfig = {
   domainLabel: 'BESTNOKINGSPROTESTSIGNS.ORG',
   url: 'https://bestnokingsprotestsigns.org',
   description:
-    'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and community-submitted designs. Vote on favorites or submit your own sign.',
-  headerNote: 'Poster-ready civic signs for marches, rallies, and printable share-outs.',
+    'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs. Static launch keeps public voting and new submissions in beta.',
+  headerNote: 'Poster-ready civic signs for marches, rallies, printable share-outs, and a preview-only submit beta.',
   footerNote:
-    'A poster-bright civic archive for sharp slogans, printable ideas, and community submissions that stay readable on sidewalks, in nav bars, and across social shares.',
+    'A poster-bright civic archive for sharp slogans, printable ideas, and approved community additions while public write features stay in beta for launch.',
   primaryAction: {
-    label: 'Submit a Sign',
+    label: 'Preview your sign',
     href: '/submit',
   },
   footerGroups: [
     {
-      heading: 'Trust',
-      links: [
-        { label: 'About', href: '/about' },
-        { label: 'Content Policy', href: '/content-policy' },
-        { label: 'Submit a Sign', href: '/submit' },
-      ],
-    },
+        heading: 'Trust',
+        links: [
+          { label: 'About', href: '/about' },
+          { label: 'Content Policy', href: '/content-policy' },
+          { label: 'Preview your sign', href: '/submit' },
+        ],
+      },
     {
       heading: 'Policies',
       links: [

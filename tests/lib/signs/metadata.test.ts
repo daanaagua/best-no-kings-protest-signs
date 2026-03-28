@@ -12,7 +12,7 @@ describe('metadata helpers', () => {
     expect(buildHomeMetadata()).toEqual({
       title: 'Best No Kings Protest Signs, Funny Ideas & Community Uploads',
       description:
-        'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and community-submitted designs. Vote on favorites or submit your own sign.',
+        'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs. Static launch keeps public voting and new submissions in beta.',
     })
   })
 
@@ -20,7 +20,7 @@ describe('metadata helpers', () => {
     expect(buildCategoryMetadata('funny')).toEqual({
       title: 'Funny No Kings Protest Sign Ideas',
       description:
-        'Browse funny No Kings protest sign ideas, vote on favorites, and discover related printable and community-created signs.',
+        'Browse funny No Kings protest sign ideas, explore related printable picks, and preview where approved community signs fit into the static launch archive.',
     })
   })
 
@@ -28,7 +28,7 @@ describe('metadata helpers', () => {
     expect(buildTopMetadata('funny')).toEqual({
       title: 'Top Funny No Kings Protest Signs',
       description:
-        'See the most popular funny No Kings protest signs ranked by votes and editorial picks.',
+        'See the strongest funny No Kings protest signs ranked from launch scoring and editorial picks.',
     })
     expect(buildCategoryMetadata('funny').title).not.toBe(buildTopMetadata('funny').title)
   })
@@ -37,7 +37,7 @@ describe('metadata helpers', () => {
     expect(buildSignMetadata({ title: 'No Crown for a Clown' })).toEqual({
       title: 'No Crown for a Clown | No Kings Protest Sign',
       description:
-        'View this No Kings protest sign, vote on it, and explore related funny, printable, or community-submitted signs.',
+        'View this No Kings protest sign, share it, and explore related funny, printable, or approved community signs.',
     })
   })
 
@@ -45,7 +45,7 @@ describe('metadata helpers', () => {
     expect(buildSignMetadata({ title: '  No Crown for a Clown  ' })).toEqual({
       title: 'No Crown for a Clown | No Kings Protest Sign',
       description:
-        'View this No Kings protest sign, vote on it, and explore related funny, printable, or community-submitted signs.',
+        'View this No Kings protest sign, share it, and explore related funny, printable, or approved community signs.',
     })
   })
 })

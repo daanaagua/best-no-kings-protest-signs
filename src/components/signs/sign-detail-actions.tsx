@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { PUBLIC_VOTING_BETA_MESSAGE } from '@/src/lib/launch-mode'
 
 type SignDetailActionsProps = {
   voteCount: number
@@ -27,33 +27,19 @@ export function SignDetailActions({
   signSlogan,
   shareUrl,
 }: SignDetailActionsProps) {
-  const [visibleVoteCount, setVisibleVoteCount] = useState(voteCount)
-  const [hasVoted, setHasVoted] = useState(false)
-
-  function handleVote() {
-    if (hasVoted) {
-      return
-    }
-
-    setVisibleVoteCount((currentCount) => currentCount + 1)
-    setHasVoted(true)
-  }
-
   return (
     <div className="sign-detail__actions-wrap">
       <span className="sign-card__badge sign-card__badge--pick">
-        {formatVoteCount(visibleVoteCount)}
+        {formatVoteCount(voteCount)}
       </span>
 
       <div className="sign-detail__actions">
         <button
-          aria-pressed={hasVoted}
           className="site-cta sign-detail__vote"
-          disabled={hasVoted}
-          onClick={handleVote}
+          disabled
           type="button"
         >
-          {hasVoted ? 'Vote recorded' : 'Vote for this sign'}
+          Public voting opens after launch
         </button>
 
         <a
@@ -65,6 +51,10 @@ export function SignDetailActions({
           Share this sign
         </a>
       </div>
+
+      <p className="sign-detail__vote-status" role="status">
+        {PUBLIC_VOTING_BETA_MESSAGE}
+      </p>
     </div>
   )
 }

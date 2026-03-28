@@ -5,8 +5,6 @@ import { getAllSigns, getApprovedHomepageCommunitySigns } from '@/src/lib/signs/
 import { getEditorsPicks, getTopAllTimeSigns, getTrendingSigns } from '@/src/lib/signs/ranking'
 import { SIGN_CATEGORIES } from '@/src/lib/signs/types'
 
-export const dynamic = 'force-dynamic'
-
 export default function Home() {
   const allSigns = getAllSigns()
   const editorsPicks = getEditorsPicks(8)

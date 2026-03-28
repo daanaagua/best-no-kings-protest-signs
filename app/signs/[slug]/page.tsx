@@ -9,8 +9,6 @@ import { siteConfig } from '@/src/data/site'
 import { buildSignMetadata } from '@/src/lib/signs/metadata'
 import { getAllSigns, getRelatedSigns, getSignBySlug } from '@/src/lib/signs/queries'
 
-export const dynamic = 'force-dynamic'
-
 function getMetadataImages(sign: { image: string; title: string }) {
   if (sign.image.startsWith('data:')) {
     return undefined
@@ -118,9 +116,9 @@ export default async function SignPage({ params }: SignPageProps) {
           <div role="listitem">
             <Link className="topic-links__item" href="/submit">
               <p className="topic-links__eyebrow">Community route</p>
-              <p className="topic-links__title">Prepare your own sign idea</p>
+              <p className="topic-links__title">Preview your own sign idea</p>
               <p className="topic-links__description">
-                Submission flow lands next, but approved community signs already render on detail pages like this one.
+                Static launch keeps the submit route in preview-only beta mode, while approved community signs already render on detail pages like this one.
               </p>
             </Link>
           </div>

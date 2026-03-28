@@ -11,7 +11,7 @@ vi.mock('next/image', () => ({
 }))
 
 describe('SignDetail', () => {
-  it('renders the static sign detail content around the client-side actions', () => {
+  it('renders the static sign detail content around the launch-gated actions', () => {
     render(
       <SignDetail
         shareUrl="https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown"
@@ -26,7 +26,7 @@ describe('SignDetail', () => {
       'href',
       '/topics/no-kings/funny',
     )
-    expect(screen.getByRole('button', { name: /Vote for this sign/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Public voting opens after launch/i })).toBeDisabled()
   })
 
   it('renders approved community signs with the community source label', () => {

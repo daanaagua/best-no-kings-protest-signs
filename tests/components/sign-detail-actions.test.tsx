@@ -1,10 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { SignDetailActions } from '@/src/components/signs/sign-detail-actions'
 
 describe('SignDetailActions', () => {
-  it('keeps vote and share behavior inside the client island', () => {
+  it('beta-gates public voting during the static launch', () => {
     render(
       <SignDetailActions
         shareUrl="https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown"
@@ -14,10 +14,9 @@ describe('SignDetailActions', () => {
       />,
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /Vote for this sign/i }))
-
-    expect(screen.getByText('943 votes')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Vote recorded/i })).toBeDisabled()
+    expect(screen.getByText('942 votes')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Public voting opens after launch/i })).toBeDisabled()
+    expect(screen.getByRole('status')).toHaveTextContent(/public voting is disabled/i)
     expect(screen.getByRole('link', { name: /Share this sign/i })).toHaveAttribute(
       'href',
       expect.stringContaining('https://twitter.com/intent/tweet'),

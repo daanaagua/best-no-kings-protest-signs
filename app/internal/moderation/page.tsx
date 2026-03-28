@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 
+import { INTERNAL_MODERATION_BETA_MESSAGE } from '@/src/lib/launch-mode'
 import {
   approveSubmission,
   listApprovedSubmissions,
@@ -60,10 +61,10 @@ export default async function ModerationPage({ searchParams }: ModerationPagePro
       <div className="moderation-page">
         <section className="moderation-page__panel">
           <div className="section-heading">
-            <p className="section-heading__eyebrow">Protected moderation</p>
+            <p className="section-heading__eyebrow">Internal moderation beta</p>
             <h1 className="section-heading__title">Moderation token required</h1>
             <p className="section-heading__description">
-              Add `?token=YOUR_MODERATION_TOKEN` to this URL to review pending community submissions.
+              {INTERNAL_MODERATION_BETA_MESSAGE} Add `?token=YOUR_MODERATION_TOKEN` to this URL to review launch-hold submissions.
             </p>
           </div>
         </section>
@@ -82,10 +83,10 @@ export default async function ModerationPage({ searchParams }: ModerationPagePro
     <div className="moderation-page">
       <section className="moderation-page__panel">
         <div className="section-heading">
-          <p className="section-heading__eyebrow">Internal moderation</p>
-          <h1 className="section-heading__title">Review the live submission queue</h1>
+          <p className="section-heading__eyebrow">Internal moderation beta</p>
+          <h1 className="section-heading__title">Review the internal launch-hold queue</h1>
           <p className="section-heading__description">
-            This route intentionally uses one lightweight token gate and file-backed records. Approvals move directly into the public community wall.
+            {INTERNAL_MODERATION_BETA_MESSAGE} This token-gated page remains available only for manual internal review of file-backed records.
           </p>
         </div>
 
@@ -108,7 +109,7 @@ export default async function ModerationPage({ searchParams }: ModerationPagePro
       <section className="moderation-page__panel">
         <div className="section-heading section-heading--compact">
           <p className="section-heading__eyebrow">Pending queue</p>
-          <h2 className="section-heading__title">Approve or reject community slogans</h2>
+          <h2 className="section-heading__title">Approve or reject launch-hold community slogans</h2>
         </div>
 
         <div className="moderation-list">

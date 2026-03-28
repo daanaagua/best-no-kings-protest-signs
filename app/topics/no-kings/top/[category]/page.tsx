@@ -130,7 +130,7 @@ export default async function TopCategoryPage({ params }: TopCategoryPageProps) 
               Browse the full {category} idea wall
             </Link>
             <Link className="home-hero__secondary" href="/submit">
-              Save a new sign for review
+              Preview a new sign idea
             </Link>
           </div>
         </div>

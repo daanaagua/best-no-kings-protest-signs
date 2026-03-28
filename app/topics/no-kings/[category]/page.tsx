@@ -180,7 +180,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               See the ranked list
             </Link>
             <Link className="home-hero__secondary" href="/submit">
-              Save your own idea for review
+              Preview your own idea
             </Link>
           </div>
         </div>

@@ -11,8 +11,8 @@ export default function NotFound() {
             The page you requested is not part of the current Best No Kings Protest Signs archive.
           </p>
           <p className="topic-page__supporting">
-            Try the homepage, browse one of the live topic routes, or head to the submission flow to add a new idea
-            for moderation review.
+            Try the homepage, browse one of the live topic routes, or head to the preview-only submit beta to sketch a
+            new idea before public submissions reopen.
           </p>
 
           <div className="topic-page__actions">
@@ -20,7 +20,7 @@ export default function NotFound() {
               Return home
             </Link>
             <Link className="home-hero__secondary" href="/submit">
-              Submit a sign
+              Preview your sign
             </Link>
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function NotFound() {
           <div className="topic-page__stat">
             <dt>Next step</dt>
             <dd>Browse</dd>
-            <p className="topic-page__stat-note">Return to the archive or submit a new slogan</p>
+            <p className="topic-page__stat-note">Return to the archive or open the preview-only submit beta</p>
           </div>
         </dl>
       </section>
