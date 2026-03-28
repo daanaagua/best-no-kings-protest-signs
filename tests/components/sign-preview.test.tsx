@@ -27,4 +27,14 @@ describe('SignPreview', () => {
     expect(poster).not.toBeNull()
     expect(within(poster as HTMLElement).getByText(/all/i)).toBeInTheDocument()
   })
+
+  it('breaks long unbroken words into multiple poster lines', () => {
+    const { container } = render(
+      <SignPreview slogan="Pneumonoultramicroscopicsilicovolcanoconiosis" template="bold-marker" />,
+    )
+    const poster = container.querySelector('.sign-preview__poster')
+
+    expect(poster).not.toBeNull()
+    expect((poster as HTMLElement).querySelectorAll('.sign-preview__line')).toHaveLength(4)
+  })
 })

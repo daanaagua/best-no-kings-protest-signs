@@ -1,9 +1,10 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import { buildTemplatePreviewDataUrl, getSignTemplateDefinition, type SignTemplateId } from '@/src/lib/signs/templates'
+import { officialLaunchSigns } from '@/src/data/signs'
 import type { SignRecord } from '@/src/lib/signs/types'
 
 export const SUBMISSION_STATUSES = ['pending', 'approved', 'rejected'] as const
@@ -69,6 +70,46 @@ function parseJsonFile<T>(content: string, fallback: T): T {
   }
 }
 
+async function writeJsonAtomic(filePath: string, payload: unknown) {
+  const directory = path.dirname(filePath)
+  const tempPath = path.join(
+    directory,
+    `${path.basename(filePath)}.${process.pid}.${Date.now()}.${randomUUID()}.tmp`,
+  )
+
+  await mkdir(directory, { recursive: true })
+  await writeFile(tempPath, JSON.stringify(payload, null, 2))
+  await rename(tempPath, filePath)
+}
+
+function createSerializedRunner() {
+  let queue = Promise.resolve()
+
+  return async function runSerialized<T>(operation: () => Promise<T>) {
+    const result = queue.then(operation, operation)
+    queue = result.then(
+      () => undefined,
+      () => undefined,
+    )
+
+    return result
+  }
+}
+
+function buildUniqueSlugCandidate(baseSlug: string, usedSlugs: Set<string>) {
+  if (!usedSlugs.has(baseSlug)) {
+    return baseSlug
+  }
+
+  let suffix = 2
+
+  while (usedSlugs.has(`${baseSlug}-${suffix}`)) {
+    suffix += 1
+  }
+
+  return `${baseSlug}-${suffix}`
+}
+
 export function buildApprovedSubmissionSign(
   submission: SubmissionRecord,
   storedVoteCount = 0,
@@ -97,6 +138,7 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
   const votesPath = path.join(dataDir, 'votes.json')
   const now = options.now ?? (() => new Date().toISOString())
   const generateId = options.generateId ?? (() => `submission-${randomUUID()}`)
+  const runSerialized = createSerializedRunner()
 
   function ensureSyncFiles() {
     mkdirSync(dataDir, { recursive: true })
@@ -156,12 +198,12 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
 
   async function writeSubmissionsFile(file: SubmissionFile) {
     await ensureFiles()
-    await writeFile(submissionsPath, JSON.stringify(file, null, 2))
+    await writeJsonAtomic(submissionsPath, file)
   }
 
   async function writeVotesFile(file: VotesFile) {
     await ensureFiles()
-    await writeFile(votesPath, JSON.stringify(file, null, 2))
+    await writeJsonAtomic(votesPath, file)
   }
 
   async function listSubmissions() {
@@ -191,22 +233,24 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
   }
 
   async function createPendingSubmission(draft: SubmissionDraft) {
-    const file = await readSubmissionsFile()
-    const record: SubmissionRecord = {
-      id: generateId(),
-      slogan: draft.slogan,
-      slugCandidate: draft.slugCandidate,
-      selectedTemplate: draft.selectedTemplate,
-      submitterName: draft.submitterName,
-      submitterEmail: draft.submitterEmail,
-      status: 'pending',
-      createdAt: now(),
-    }
+    return runSerialized(async () => {
+      const file = await readSubmissionsFile()
+      const record: SubmissionRecord = {
+        id: generateId(),
+        slogan: draft.slogan,
+        slugCandidate: draft.slugCandidate,
+        selectedTemplate: draft.selectedTemplate,
+        submitterName: draft.submitterName,
+        submitterEmail: draft.submitterEmail,
+        status: 'pending',
+        createdAt: now(),
+      }
 
-    file.submissions.unshift(record)
-    await writeSubmissionsFile(file)
+      file.submissions.unshift(record)
+      await writeSubmissionsFile(file)
 
-    return cloneSubmission(record)
+      return cloneSubmission(record)
+    })
   }
 
   async function updateSubmissionStatus(
@@ -214,27 +258,42 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
     status: SubmissionStatus,
     moderatorNote?: string,
   ) {
-    const file = await readSubmissionsFile()
-    const index = file.submissions.findIndex((submission) => submission.id === id)
+    return runSerialized(async () => {
+      const file = await readSubmissionsFile()
+      const index = file.submissions.findIndex((submission) => submission.id === id)
 
-    if (index === -1) {
-      throw new Error(`Submission not found: ${id}`)
-    }
+      if (index === -1) {
+        throw new Error(`Submission not found: ${id}`)
+      }
 
-    if (file.submissions[index]?.status !== 'pending') {
-      throw new Error('Only pending submissions can move through moderation.')
-    }
+      if (file.submissions[index]?.status !== 'pending') {
+        throw new Error('Only pending submissions can move through moderation.')
+      }
 
-    const updated: SubmissionRecord = {
-      ...file.submissions[index],
-      status,
-      moderatorNote: normalizeModeratorNote(moderatorNote),
-    }
+      const currentSubmission = file.submissions[index]
+      const publicSlugs = new Set(officialLaunchSigns.map((sign) => sign.slug))
 
-    file.submissions[index] = updated
-    await writeSubmissionsFile(file)
+      for (const submission of file.submissions) {
+        if (submission.id !== id && submission.status === 'approved') {
+          publicSlugs.add(submission.slugCandidate)
+        }
+      }
 
-    return cloneSubmission(updated)
+      const updated: SubmissionRecord = {
+        ...currentSubmission,
+        slugCandidate:
+          status === 'approved'
+            ? buildUniqueSlugCandidate(currentSubmission.slugCandidate, publicSlugs)
+            : currentSubmission.slugCandidate,
+        status,
+        moderatorNote: normalizeModeratorNote(moderatorNote),
+      }
+
+      file.submissions[index] = updated
+      await writeSubmissionsFile(file)
+
+      return cloneSubmission(updated)
+    })
   }
 
   async function approveSubmission(id: string, moderatorNote?: string) {
@@ -252,14 +311,16 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
   }
 
   async function incrementVoteCount(slug: string, baseCount = 0) {
-    const file = await readVotesFile()
-    const currentCount = file.votes[slug] ?? baseCount
-    const nextCount = currentCount + 1
+    return runSerialized(async () => {
+      const file = await readVotesFile()
+      const currentCount = file.votes[slug] ?? baseCount
+      const nextCount = currentCount + 1
 
-    file.votes[slug] = nextCount
-    await writeVotesFile(file)
+      file.votes[slug] = nextCount
+      await writeVotesFile(file)
 
-    return nextCount
+      return nextCount
+    })
   }
 
   return {

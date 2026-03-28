@@ -1132,6 +1132,7 @@ a {
   text-align: center;
   font-size: 0.95rem;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
 
 .sign-preview__poster {
@@ -1156,6 +1157,8 @@ a {
   line-height: 0.94;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .sign-preview__stick {

@@ -8,6 +8,22 @@ import { createSubmissionStore } from '@/src/lib/submissions/store'
 
 const temporaryDirectories: string[] = []
 
+async function removeDirectoryWithRetry(directory: string) {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      await rm(directory, { force: true, recursive: true })
+      return
+    } catch (error) {
+      lastError = error
+      await new Promise((resolve) => setTimeout(resolve, 25))
+    }
+  }
+
+  throw lastError
+}
+
 async function createTestStore() {
   const dataDir = await mkdtemp(path.join(os.tmpdir(), 'site-mvp-store-'))
   temporaryDirectories.push(dataDir)
@@ -24,7 +40,7 @@ async function createTestStore() {
 
 afterEach(async () => {
   await Promise.all(
-    temporaryDirectories.splice(0).map((directory) => rm(directory, { force: true, recursive: true })),
+    temporaryDirectories.splice(0).map((directory) => removeDirectoryWithRetry(directory)),
   )
 })
 
@@ -109,5 +125,31 @@ describe('submission store', () => {
     }
 
     expect(persisted.votes['no-crown-for-a-clown']).toBe(943)
+  })
+
+  it('serializes concurrent vote increments so updates are not lost', async () => {
+    const store = await createTestStore()
+
+    await Promise.all([
+      store.incrementVoteCount('hot-sign', 0),
+      store.incrementVoteCount('hot-sign', 0),
+      store.incrementVoteCount('hot-sign', 0),
+    ])
+
+    expect(await store.getVoteCount('hot-sign')).toBe(3)
+  })
+
+  it('assigns a deterministic unique slug when approval collides with a public slug', async () => {
+    const store = await createTestStore()
+
+    const pending = await store.createPendingSubmission({
+      slogan: 'No Crown for a Clown',
+      slugCandidate: 'no-crown-for-a-clown',
+      selectedTemplate: 'classic',
+    })
+
+    const approved = await store.approveSubmission(pending.id)
+
+    expect(approved.slugCandidate).toBe('no-crown-for-a-clown-2')
   })
 })

@@ -86,19 +86,46 @@ export function normalizePreviewSlogan(slogan: string) {
   return normalized || 'Your slogan preview'
 }
 
+function splitLongWord(word: string, chunkLength = 12) {
+  if (word.length <= chunkLength) {
+    return [word]
+  }
+
+  const chunks: string[] = []
+
+  for (let index = 0; index < word.length; index += chunkLength) {
+    chunks.push(word.slice(index, index + chunkLength))
+  }
+
+  return chunks
+}
+
 export function getPreviewLines(slogan: string) {
   const normalized = normalizePreviewSlogan(slogan)
-  const words = normalized.split(' ')
+  const words = normalized.split(' ').flatMap((word) => splitLongWord(word))
   const lines: string[] = []
+  const maxLineLength = words.length <= 3 ? 14 : words.length <= 6 ? 16 : 18
 
-  if (words.length <= 3) {
+  let currentLine = ''
+
+  if (words.length === 1) {
     return [normalized]
   }
 
-  const wordsPerLine = words.length <= 6 ? 2 : 3
+  for (const word of words) {
+    const nextLine = currentLine ? `${currentLine} ${word}` : word
 
-  for (let index = 0; index < words.length; index += wordsPerLine) {
-    lines.push(words.slice(index, index + wordsPerLine).join(' '))
+    if (nextLine.length <= maxLineLength || !currentLine) {
+      currentLine = nextLine
+      continue
+    }
+
+    lines.push(currentLine)
+    currentLine = word
+  }
+
+  if (currentLine) {
+    lines.push(currentLine)
   }
 
   return lines
@@ -107,11 +134,14 @@ export function getPreviewLines(slogan: string) {
 export function buildTemplatePreviewDataUrl(slogan: string, template: SignTemplateId) {
   const definition = getSignTemplateDefinition(template)
   const lines = getPreviewLines(slogan)
+  const fontSize = lines.length >= 6 ? 38 : lines.length === 5 ? 44 : 54
+  const lineHeight = fontSize + 24
+  const startY = 500 - ((lines.length - 1) * lineHeight) / 2
   const lineMarkup = lines
     .map((line, index) => {
-      const y = 118 + index * 92
+      const y = startY + index * lineHeight
 
-      return `<text x="400" y="${y}" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="54" letter-spacing="2" fill="${definition.textColor}">${escapeSvgText(line.toUpperCase())}</text>`
+      return `<text x="400" y="${y}" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="${fontSize}" letter-spacing="2" fill="${definition.textColor}">${escapeSvgText(line.toUpperCase())}</text>`
     })
     .join('')
 
