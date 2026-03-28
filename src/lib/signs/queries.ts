@@ -1,5 +1,9 @@
 import { launchSigns } from '@/src/data/signs'
 import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
+import {
+  getStoredVotesSnapshotSync,
+  listApprovedSubmissionSignsSync,
+} from '@/src/lib/submissions/store'
 
 function cloneSign(sign: SignRecord): SignRecord {
   return {
@@ -33,16 +37,39 @@ function sortSigns(signs: SignRecord[]) {
   return [...signs].sort(compareSignsByRecency).map(cloneSign)
 }
 
+function applyStoredVoteCount(sign: SignRecord, votes: Record<string, number>): SignRecord {
+  return {
+    ...sign,
+    categories: [...sign.categories],
+    voteCount: votes[sign.slug] ?? sign.voteCount,
+  }
+}
+
+function getMergedPublicSigns() {
+  const votes = getStoredVotesSnapshotSync()
+  const signMap = new Map<string, SignRecord>()
+
+  for (const sign of launchSigns) {
+    signMap.set(sign.slug, applyStoredVoteCount(sign, votes))
+  }
+
+  for (const sign of listApprovedSubmissionSignsSync()) {
+    signMap.set(sign.slug, applyStoredVoteCount(sign, votes))
+  }
+
+  return [...signMap.values()]
+}
+
 function countSharedCategories(a: SignRecord, b: SignRecord) {
   return a.categories.filter((category) => b.categories.includes(category)).length
 }
 
 export function getAllSigns() {
-  return sortSigns(launchSigns)
+  return sortSigns(getMergedPublicSigns())
 }
 
 export function getSignBySlug(slug: string) {
-  const sign = launchSigns.find((result) => result.slug === slug)
+  const sign = getMergedPublicSigns().find((result) => result.slug === slug)
 
   return sign ? cloneSign(sign) : undefined
 }

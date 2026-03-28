@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { buildCategoryHref } from '@/src/components/home/category-rail'
-import { SignDetailActions } from '@/src/components/signs/sign-detail-actions'
+import { VoteButton } from '@/src/components/signs/vote-button'
 import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
 
 type SignDetailProps = {
@@ -16,6 +16,12 @@ function formatCategoryLabel(category: SignCategory) {
 
 function formatSourceLabel(sourceType: SignRecord['sourceType']) {
   return sourceType === 'community' ? 'Community' : 'Official release'
+}
+
+function buildShareHref(signTitle: string, signSlogan: string, shareUrl: string) {
+  const text = `${signTitle} — ${signSlogan}`
+
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`
 }
 
 export function SignDetail({ sign, shareUrl }: SignDetailProps) {
@@ -60,12 +66,20 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
           ))}
         </div>
 
-        <SignDetailActions
-          shareUrl={shareUrl}
-          signSlogan={sign.slogan}
-          signTitle={sign.title}
-          voteCount={sign.voteCount}
-        />
+        <div className="sign-detail__actions-wrap">
+          <VoteButton initialVoteCount={sign.voteCount} slug={sign.slug} />
+
+          <div className="sign-detail__actions">
+            <a
+              className="home-hero__secondary sign-detail__share"
+              href={buildShareHref(sign.title, sign.slogan, shareUrl)}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Share this sign
+            </a>
+          </div>
+        </div>
 
         <p className="sign-detail__note">
           {sign.sourceType === 'community'

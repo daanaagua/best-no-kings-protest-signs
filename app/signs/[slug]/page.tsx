@@ -9,6 +9,21 @@ import { siteConfig } from '@/src/data/site'
 import { buildSignMetadata } from '@/src/lib/signs/metadata'
 import { getAllSigns, getRelatedSigns, getSignBySlug } from '@/src/lib/signs/queries'
 
+export const dynamic = 'force-dynamic'
+
+function getMetadataImages(sign: { image: string; title: string }) {
+  if (sign.image.startsWith('data:')) {
+    return undefined
+  }
+
+  return [
+    {
+      url: sign.image,
+      alt: sign.title,
+    },
+  ]
+}
+
 type SignPageProps = {
   params: Promise<{ slug: string }>
 }
@@ -30,6 +45,7 @@ export async function generateMetadata({ params }: SignPageProps): Promise<Metad
 
   const metadata = buildSignMetadata(sign)
   const canonicalPath = `/signs/${sign.slug}`
+  const images = getMetadataImages(sign)
 
   return {
     title: metadata.title,
@@ -42,18 +58,13 @@ export async function generateMetadata({ params }: SignPageProps): Promise<Metad
       description: metadata.description,
       type: 'article',
       url: `${siteConfig.url}${canonicalPath}`,
-      images: [
-        {
-          url: sign.image,
-          alt: sign.title,
-        },
-      ],
+      images,
     },
     twitter: {
       card: 'summary_large_image',
       title: metadata.title,
       description: metadata.description,
-      images: [sign.image],
+      images: images?.map((image) => image.url),
     },
   }
 }
