@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+  <title id="title">My Allowance Isn&#x27;t Funding a Throne</title>
+  <desc id="desc">Piggy banks prefer public libraries</desc>
+  <rect width="1080" height="1350" fill="#FFD8E6" />
+  <circle cx="160" cy="160" r="88" fill="#FFF1F6" opacity="0.9" />
+  <circle cx="930" cy="1100" r="120" fill="#FFF1F6" opacity="0.75" />
+  <rect x="515" y="930" width="48" height="330" rx="24" fill="#4F2B38" opacity="0.82" />
+  <g transform="translate(540 530) rotate(-4)">
+    <rect x="-330" y="-350" width="660" height="760" rx="28" fill="#FFF1F6" stroke="#4F2B38" stroke-width="12" />
+    <rect x="-250" y="-330" width="220" height="58" rx="29" fill="#E0316B" />
+    <text x="-140" y="-292" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF" letter-spacing="2">OFFICIAL LAUNCH</text>
+    <text x="0" y="-220" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="800" fill="#4F2B38" letter-spacing="1"><tspan x="0" dy="0">MY ALLOWANCE ISN&#x27;T</tspan><tspan x="0" dy="96">FUNDING A THRONE</tspan></text>
+    <text x="0" y="96" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="600" fill="#7A4A5B"><tspan x="0" dy="0">Piggy banks prefer public</tspan><tspan x="0" dy="52">libraries</tspan></text>
+    <rect x="-250" y="205" width="500" height="86" rx="18" fill="#FFD8E6" stroke="#4F2B38" stroke-width="4" />
+    <text x="0" y="258" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#4F2B38" letter-spacing="2">KIDS / FUNNY</text>
+    <line x1="-250" y1="325" x2="250" y2="325" stroke="#E0316B" stroke-width="10" stroke-linecap="round" />
+    <text x="0" y="390" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#E0316B" letter-spacing="3">MARCH READY</text>
+  </g>
+  <rect x="206" y="182" width="118" height="28" rx="6" fill="#FFF6BF" opacity="0.95" transform="rotate(-14 206 182)" />
+  <rect x="754" y="202" width="118" height="28" rx="6" fill="#FFF6BF" opacity="0.95" transform="rotate(16 754 202)" />
+  <text x="540" y="1280" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#4F2B38" letter-spacing="3">BESTNOKINGSPROTESTSIGNS.ORG</text>
+</svg>
