@@ -127,7 +127,7 @@ function formatCategoryLabel(category: SignCategory) {
 }
 
 function buildTopCategoryHref(category: SignCategory) {
-  return `/topics/no-kings/top/${category}/`
+  return `/topics/no-kings/top/${category}`
 }
 
 export function generateStaticParams() {

@@ -15,19 +15,19 @@ describe('Home page', () => {
 
     expect(screen.getByRole('link', { name: /Funny\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/funny/',
+      '/topics/no-kings/funny',
     )
     expect(screen.getByRole('link', { name: /Best\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/best/',
+      '/topics/no-kings/best',
     )
     expect(screen.getByRole('link', { name: /Kids\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/kids/',
+      '/topics/no-kings/kids',
     )
     expect(screen.getByRole('link', { name: /Printable\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/printable/',
+      '/topics/no-kings/printable',
     )
   })
 
@@ -45,19 +45,19 @@ describe('Home page', () => {
 
     expect(scoped.getByRole('link', { name: /Funny No Kings signs/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/funny/',
+      '/topics/no-kings/funny',
     )
     expect(scoped.getByRole('link', { name: /Best No Kings protest signs/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/best/',
+      '/topics/no-kings/best',
     )
     expect(scoped.getByRole('link', { name: /family-friendly sign ideas/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/kids/',
+      '/topics/no-kings/kids',
     )
     expect(scoped.getByRole('link', { name: /printable No Kings protest posters/i })).toHaveAttribute(
       'href',
-      '/topics/no-kings/printable/',
+      '/topics/no-kings/printable',
     )
   })
 

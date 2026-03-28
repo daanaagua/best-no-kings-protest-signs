@@ -15,7 +15,7 @@ function formatCategoryLabel(category: SignCategory) {
 }
 
 export function buildCategoryHref(category: SignCategory) {
-  return `/topics/no-kings/${category}/`
+  return `/topics/no-kings/${category}`
 }
 
 export function CategoryRail({ items }: CategoryRailProps) {

@@ -14,7 +14,7 @@ type SignPageProps = {
 }
 
 function buildTopCategoryHref(category: string) {
-  return `/topics/no-kings/top/${category}/`
+  return `/topics/no-kings/top/${category}`
 }
 
 export function generateStaticParams() {
