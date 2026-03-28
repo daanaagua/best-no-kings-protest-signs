@@ -34,6 +34,7 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
           priority
           sizes="(min-width: 1100px) 42rem, 100vw"
           src={sign.image}
+          style={{ objectFit: 'contain', objectPosition: 'center' }}
         />
       </div>
 

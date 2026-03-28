@@ -25,7 +25,13 @@ export function SignCard({ sign }: SignCardProps) {
   return (
     <article className="sign-card">
       <div className="sign-card__media">
-        <Image alt={sign.title} fill sizes="(min-width: 1200px) 24rem, (min-width: 768px) 33vw, 100vw" src={sign.image} />
+        <Image
+          alt={sign.title}
+          fill
+          sizes="(min-width: 1200px) 24rem, (min-width: 768px) 33vw, 100vw"
+          src={sign.image}
+          style={{ objectFit: 'contain', objectPosition: 'center' }}
+        />
       </div>
 
       <div className="sign-card__body">

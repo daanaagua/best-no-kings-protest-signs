@@ -19,7 +19,10 @@ describe('SignDetail', () => {
       />,
     )
 
-    expect(screen.getByRole('img', { name: officialLaunchSigns[0].title })).toBeInTheDocument()
+    const image = screen.getByRole('img', { name: officialLaunchSigns[0].title })
+
+    expect(image).toBeInTheDocument()
+    expect(image).toHaveStyle({ objectFit: 'contain' })
     expect(screen.getByRole('heading', { name: officialLaunchSigns[0].title })).toBeInTheDocument()
     expect(screen.getByText(officialLaunchSigns[0].description)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Funny' })).toHaveAttribute(

@@ -16,12 +16,15 @@ describe('SignCard', () => {
 
     render(<SignCard sign={sign} />)
 
+    const image = screen.getByRole('img', { name: sign.title })
+
     expect(screen.getByRole('heading', { name: sign.title })).toBeInTheDocument()
     expect(screen.getByText(sign.slogan)).toBeInTheDocument()
     expect(screen.getByText('Funny')).toBeInTheDocument()
     expect(screen.getByText('Editors pick')).toBeInTheDocument()
     expect(screen.getByText('942 votes')).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: sign.title })).toHaveAttribute('src', sign.image)
+    expect(image).toHaveAttribute('src', sign.image)
+    expect(image).toHaveStyle({ objectFit: 'contain' })
     expect(screen.getByRole('link', { name: /View sign/i })).toHaveAttribute(
       'href',
       `/signs/${sign.slug}`,

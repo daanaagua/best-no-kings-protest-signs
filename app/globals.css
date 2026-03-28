@@ -529,13 +529,15 @@ a {
 
 .sign-card__media {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
   border-bottom: 2px solid rgba(22, 38, 53, 0.1);
   background: linear-gradient(180deg, rgba(199, 221, 234, 0.65), rgba(255, 248, 238, 0.88));
 }
 
 .sign-card__media img {
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 1rem;
 }
 
 .sign-card__body {
@@ -869,7 +871,8 @@ a {
 
 .sign-detail__media {
   position: relative;
-  min-height: 22rem;
+  min-height: 28rem;
+  aspect-ratio: 4 / 5;
   border: 2px solid rgba(22, 38, 53, 0.14);
   border-radius: 1rem;
   overflow: hidden;
@@ -877,7 +880,9 @@ a {
 }
 
 .sign-detail__media img {
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 1.5rem;
 }
 
 .sign-detail__badges {
