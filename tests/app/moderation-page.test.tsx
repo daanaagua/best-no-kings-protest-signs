@@ -5,10 +5,10 @@ import ModerationPage from '@/app/internal/moderation/page'
 
 describe('ModerationPage', () => {
   it('does not frame the route as a public launch feature', async () => {
-    render(await ModerationPage({ searchParams: Promise.resolve({}) }))
+    render(<ModerationPage />)
 
-    expect(screen.getByRole('heading', { name: /Moderation token required/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Internal workflow placeholder/i })).toBeInTheDocument()
     expect(screen.getByText(/internal-only beta route/i)).toBeInTheDocument()
-    expect(screen.getByText(/not part of the public static launch/i)).toBeInTheDocument()
+    expect(screen.getByText(/not a live moderation dashboard/i)).toBeInTheDocument()
   })
 })
