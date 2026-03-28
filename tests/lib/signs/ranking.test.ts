@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
+  getCategoryEditorsPicks,
   getEditorsPicks,
   getTopAllTimeSigns,
   getTrendingSigns,
@@ -16,6 +17,14 @@ describe('ranking helpers', () => {
 
     expect(picks).toHaveLength(4)
     expect(picks.every((sign) => sign.editorsPick === true)).toBe(true)
+  })
+
+  it('returns editors picks scoped to a category', () => {
+    const picks = getCategoryEditorsPicks('best', 3)
+
+    expect(picks).toHaveLength(3)
+    expect(picks.every((sign) => sign.editorsPick === true)).toBe(true)
+    expect(picks.every((sign) => sign.categories.includes('best'))).toBe(true)
   })
 
   it('returns top all-time signs sorted by voteCount', () => {

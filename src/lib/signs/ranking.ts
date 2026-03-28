@@ -37,6 +37,15 @@ export function getEditorsPicks(limit: number) {
     .slice(0, normalizedLimit)
 }
 
+export function getCategoryEditorsPicks(category: SignCategory, limit: number) {
+  const normalizedLimit = normalizeLimit(limit)
+
+  return getSignsByCategory(category)
+    .filter((sign) => sign.editorsPick === true)
+    .sort(compareByVoteCount)
+    .slice(0, normalizedLimit)
+}
+
 export function getTopAllTimeSigns(category: SignCategory, limit: number) {
   const normalizedLimit = normalizeLimit(limit)
 

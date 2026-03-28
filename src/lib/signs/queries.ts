@@ -33,6 +33,10 @@ function sortSigns(signs: SignRecord[]) {
   return [...signs].sort(compareSignsByRecency).map(cloneSign)
 }
 
+function countSharedCategories(a: SignRecord, b: SignRecord) {
+  return a.categories.filter((category) => b.categories.includes(category)).length
+}
+
 export function getAllSigns() {
   return sortSigns(launchSigns)
 }
@@ -52,5 +56,35 @@ export function getApprovedHomepageCommunitySigns(limit: number) {
 
   return getAllSigns()
     .filter((sign) => sign.sourceType === 'community')
+    .slice(0, normalizedLimit)
+}
+
+export function getRelatedSigns(
+  currentSlug: string,
+  category: SignCategory,
+  limit: number,
+) {
+  const normalizedLimit = normalizeLimit(limit)
+
+  if (normalizedLimit === 0) {
+    return []
+  }
+
+  const currentSign = getSignBySlug(currentSlug)
+
+  return getSignsByCategory(category)
+    .filter((sign) => sign.slug !== currentSlug)
+    .sort((a, b) => {
+      if (currentSign) {
+        const sharedCategoryDiff =
+          countSharedCategories(b, currentSign) - countSharedCategories(a, currentSign)
+
+        if (sharedCategoryDiff !== 0) {
+          return sharedCategoryDiff
+        }
+      }
+
+      return compareSignsByRecency(a, b)
+    })
     .slice(0, normalizedLimit)
 }
