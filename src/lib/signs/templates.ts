@@ -101,7 +101,7 @@ export function getPreviewLines(slogan: string) {
     lines.push(words.slice(index, index + wordsPerLine).join(' '))
   }
 
-  return lines.slice(0, 4)
+  return lines
 }
 
 export function buildTemplatePreviewDataUrl(slogan: string, template: SignTemplateId) {
