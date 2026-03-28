@@ -1,10 +1,8 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
 
 import { buildCategoryHref } from '@/src/components/home/category-rail'
+import { SignDetailActions } from '@/src/components/signs/sign-detail-actions'
 import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
 
 type SignDetailProps = {
@@ -16,35 +14,11 @@ function formatCategoryLabel(category: SignCategory) {
   return category.charAt(0).toUpperCase() + category.slice(1)
 }
 
-function formatVoteCount(voteCount: number) {
-  const label = voteCount === 1 ? 'vote' : 'votes'
-
-  return `${voteCount.toLocaleString('en-US')} ${label}`
-}
-
 function formatSourceLabel(sourceType: SignRecord['sourceType']) {
   return sourceType === 'community' ? 'Community' : 'Official release'
 }
 
-function buildShareHref(sign: SignRecord, shareUrl: string) {
-  const text = `${sign.title} — ${sign.slogan}`
-
-  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`
-}
-
 export function SignDetail({ sign, shareUrl }: SignDetailProps) {
-  const [voteCount, setVoteCount] = useState(sign.voteCount)
-  const [hasVoted, setHasVoted] = useState(false)
-
-  function handleVote() {
-    if (hasVoted) {
-      return
-    }
-
-    setVoteCount((currentCount) => currentCount + 1)
-    setHasVoted(true)
-  }
-
   return (
     <article className="sign-detail">
       <div className="sign-detail__media">
@@ -61,9 +35,6 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
         <div className="sign-detail__badges">
           <span className="sign-card__badge sign-card__badge--source">
             {formatSourceLabel(sign.sourceType)}
-          </span>
-          <span className="sign-card__badge sign-card__badge--pick">
-            {formatVoteCount(voteCount)}
           </span>
           {sign.editorsPick ? (
             <span className="sign-card__badge sign-card__badge--category">Editors pick</span>
@@ -89,26 +60,12 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
           ))}
         </div>
 
-        <div className="sign-detail__actions">
-          <button
-            aria-pressed={hasVoted}
-            className="site-cta sign-detail__vote"
-            disabled={hasVoted}
-            onClick={handleVote}
-            type="button"
-          >
-            {hasVoted ? 'Vote recorded' : 'Vote for this sign'}
-          </button>
-
-          <a
-            className="home-hero__secondary sign-detail__share"
-            href={buildShareHref(sign, shareUrl)}
-            rel="noreferrer"
-            target="_blank"
-          >
-            Share this sign
-          </a>
-        </div>
+        <SignDetailActions
+          shareUrl={shareUrl}
+          signSlogan={sign.slogan}
+          signTitle={sign.title}
+          voteCount={sign.voteCount}
+        />
 
         <p className="sign-detail__note">
           {sign.sourceType === 'community'

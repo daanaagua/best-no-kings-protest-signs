@@ -137,7 +137,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const category = getCategoryOrThrow((await params).category)
   const metadata = buildCategoryMetadata(category)
-  const canonicalPath = `/topics/no-kings/${category}/`
+  const canonicalPath = `/topics/no-kings/${category}`
 
   return {
     title: metadata.title,
@@ -196,8 +196,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
           <div className="topic-page__stat">
             <dt>Current leader</dt>
-            <dd>{topSign ? formatCategoryLabel(topSign.primaryCategory) : 'Live'}</dd>
-            <p className="topic-page__stat-note">{topSign?.title ?? 'Fresh signs are landing now'}</p>
+            <dd>{topSign?.title ?? 'Fresh signs are landing now'}</dd>
+            <p className="topic-page__stat-note">
+              {topSign ? `${topSign.voteCount.toLocaleString('en-US')} votes` : 'New votes are still reshuffling the board'}
+            </p>
           </div>
         </dl>
       </header>

@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: SignPageProps): Promise<Metad
   }
 
   const metadata = buildSignMetadata(sign)
-  const canonicalPath = `/signs/${sign.slug}/`
+  const canonicalPath = `/signs/${sign.slug}`
 
   return {
     title: metadata.title,
@@ -66,7 +66,7 @@ export default async function SignPage({ params }: SignPageProps) {
   }
 
   const relatedSigns = getRelatedSigns(sign.slug, sign.primaryCategory, 4)
-  const shareUrl = `${siteConfig.url}/signs/${sign.slug}/`
+  const shareUrl = `${siteConfig.url}/signs/${sign.slug}`
 
   return (
     <div className="sign-detail-page">

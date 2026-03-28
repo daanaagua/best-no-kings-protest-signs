@@ -86,7 +86,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: TopCategoryPageProps): Promise<Metadata> {
   const category = getCategoryOrThrow((await params).category)
   const metadata = buildTopMetadata(category)
-  const canonicalPath = `/topics/no-kings/top/${category}/`
+  const canonicalPath = `/topics/no-kings/top/${category}`
 
   return {
     title: metadata.title,

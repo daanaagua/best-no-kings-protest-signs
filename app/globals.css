@@ -776,6 +776,11 @@ a {
   gap: 0.8rem;
 }
 
+.sign-detail__actions-wrap {
+  display: grid;
+  gap: 0.8rem;
+}
+
 .topic-page__stats {
   display: grid;
   gap: 0.8rem;
