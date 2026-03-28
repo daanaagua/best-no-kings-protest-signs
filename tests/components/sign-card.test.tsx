@@ -27,4 +27,18 @@ describe('SignCard', () => {
       `/signs/${sign.slug}`,
     )
   })
+
+  it('formats a singular vote count label', () => {
+    const sign = {
+      ...officialLaunchSigns[0],
+      slug: 'single-vote-sign',
+      title: 'Single Vote Sign',
+      voteCount: 1,
+    }
+
+    render(<SignCard sign={sign} />)
+
+    expect(screen.getByText('1 vote')).toBeInTheDocument()
+    expect(screen.queryByText('1 votes')).not.toBeInTheDocument()
+  })
 })
