@@ -12,7 +12,9 @@ function formatCategoryLabel(category: SignRecord['primaryCategory']) {
 }
 
 function formatVoteCount(voteCount: number) {
-  return `${voteCount.toLocaleString('en-US')} votes`
+  const label = voteCount === 1 ? 'vote' : 'votes'
+
+  return `${voteCount.toLocaleString('en-US')} ${label}`
 }
 
 function formatSourceLabel(sourceType: SignRecord['sourceType']) {
