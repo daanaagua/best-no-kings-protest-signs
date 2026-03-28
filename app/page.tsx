@@ -1,65 +1,100 @@
-import Image from "next/image";
+import { CategoryRail } from '@/src/components/home/category-rail'
+import { Hero } from '@/src/components/home/hero'
+import { SignGrid } from '@/src/components/signs/sign-grid'
+import { getAllSigns, getApprovedHomepageCommunitySigns } from '@/src/lib/signs/queries'
+import { getEditorsPicks, getTopAllTimeSigns, getTrendingSigns } from '@/src/lib/signs/ranking'
+import { SIGN_CATEGORIES } from '@/src/lib/signs/types'
 
 export default function Home() {
+  const allSigns = getAllSigns()
+  const editorsPicks = getEditorsPicks(4)
+  const communitySigns = getApprovedHomepageCommunitySigns(4)
+  const printableCount = allSigns.filter((sign) => sign.categories.includes('printable')).length
+  const communityCount = allSigns.filter((sign) => sign.sourceType === 'community').length
+
+  const trendingSigns = []
+  const seenTrendingSlugs = new Set<string>()
+
+  for (const category of SIGN_CATEGORIES) {
+    for (const sign of getTrendingSigns(category, 2)) {
+      if (seenTrendingSlugs.has(sign.slug)) {
+        continue
+      }
+
+      seenTrendingSlugs.add(sign.slug)
+      trendingSigns.push(sign)
+
+      if (trendingSigns.length === 4) {
+        break
+      }
+    }
+
+    if (trendingSigns.length === 4) {
+      break
+    }
+  }
+
+  const categoryItems = SIGN_CATEGORIES.map((category) => ({
+    category,
+    count: allSigns.filter((sign) => sign.categories.includes(category)).length,
+    highlight: getTopAllTimeSigns(category, 1)[0]?.title ?? 'Fresh picks landing now',
+  }))
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="home-page">
+      <Hero
+        communityCount={communityCount}
+        featuredSign={editorsPicks[0] ?? allSigns[0]}
+        printableCount={printableCount}
+        totalSigns={allSigns.length}
+      />
+
+      <SignGrid
+        description="The launch desk pulled the sharpest reads, strongest poster silhouettes, and most reusable chants from the initial collection."
+        eyebrow="Curated by the launch desk"
+        id="editorial-picks"
+        signs={editorsPicks}
+        title="Editorial picks for marches, megaphones, and fast print runs"
+      />
+
+      <CategoryRail items={categoryItems} />
+
+      <SignGrid
+        description="These signs are climbing on freshness, votes, and cross-category momentum from funny, best, kids, and printable lanes."
+        eyebrow="Moving fast this week"
+        id="trending-signs"
+        signs={trendingSigns}
+        title="Trending now across the homepage wall"
+      />
+
+      <SignGrid
+        description="Approved uploads keep the collection grounded in neighborhood marches, school pickup lines, library-card wit, and local rally phrasing."
+        eyebrow="Approved community uploads"
+        id="community-signs"
+        signs={communitySigns}
+        title="Community ideas that earned a homepage slot"
+      />
+
+      <section aria-labelledby="seo-copy-title" className="home-section seo-copy">
+        <div className="section-heading">
+          <p className="section-heading__eyebrow">Search-friendly rally copy</p>
+          <h2 className="section-heading__title" id="seo-copy-title">
+            Why people search for No Kings protest signs here
+          </h2>
+        </div>
+
+        <div className="seo-copy__body">
+          <p>
+            This homepage is built for people looking for the best No Kings protest signs, funny sign ideas, printable slogans, and crowd-tested phrases that stay readable on poster board, phone screens, and social shares.
+          </p>
+          <p>
+            Editorial picks surface the strongest all-around slogans, trending cards highlight what is climbing right now, and approved community uploads add local voice without losing the clear, poster-ready aesthetic established across the site shell.
+          </p>
+          <p>
+            If you are comparing funny No Kings signs, printable No Kings protest posters, or family-friendly sign ideas for marches and rallies, the sections above give you a quick path into each lane without duplicating one-off homepage markup.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
-  );
+  )
 }
