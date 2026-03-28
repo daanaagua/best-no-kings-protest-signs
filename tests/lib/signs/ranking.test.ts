@@ -35,4 +35,10 @@ describe('ranking helpers', () => {
     expect(trendingFunnySigns).toHaveLength(3)
     expect(trendingFunnySigns[0].slug).toBe('cardboard-not-crowns')
   })
+
+  it('returns no ranked signs when the requested limit is non-positive', () => {
+    expect(getEditorsPicks(0)).toEqual([])
+    expect(getTopAllTimeSigns('funny', -1)).toEqual([])
+    expect(getTrendingSigns('funny', -1)).toEqual([])
+  })
 })
