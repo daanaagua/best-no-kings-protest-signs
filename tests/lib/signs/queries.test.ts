@@ -57,4 +57,9 @@ describe('public sign queries', () => {
       true,
     )
   })
+
+  it('returns no homepage community signs when the requested limit is non-positive', () => {
+    expect(getApprovedHomepageCommunitySigns(0)).toEqual([])
+    expect(getApprovedHomepageCommunitySigns(-1)).toEqual([])
+  })
 })

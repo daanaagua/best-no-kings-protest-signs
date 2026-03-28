@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
   getEditorsPicks,
@@ -7,6 +7,10 @@ import {
 } from '@/src/lib/signs/ranking'
 
 describe('ranking helpers', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it('returns editors picks', () => {
     const picks = getEditorsPicks(4)
 
@@ -34,6 +38,15 @@ describe('ranking helpers', () => {
 
     expect(trendingFunnySigns).toHaveLength(3)
     expect(trendingFunnySigns[0].slug).toBe('cardboard-not-crowns')
+  })
+
+  it('recomputes trending recency from the current time instead of a fixed launch date', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2030-03-28T00:00:00.000Z'))
+
+    const trendingFunnySigns = getTrendingSigns('funny', 3)
+
+    expect(trendingFunnySigns[0].slug).toBe('no-crown-for-a-clown')
   })
 
   it('returns no ranked signs when the requested limit is non-positive', () => {

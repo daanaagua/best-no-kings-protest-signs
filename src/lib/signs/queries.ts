@@ -8,6 +8,10 @@ function cloneSign(sign: SignRecord): SignRecord {
   }
 }
 
+function normalizeLimit(limit: number) {
+  return limit > 0 ? Math.floor(limit) : 0
+}
+
 function compareSignsByRecency(a: SignRecord, b: SignRecord) {
   const createdAtDiff =
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -44,7 +48,9 @@ export function getSignsByCategory(category: SignCategory) {
 }
 
 export function getApprovedHomepageCommunitySigns(limit: number) {
+  const normalizedLimit = normalizeLimit(limit)
+
   return getAllSigns()
     .filter((sign) => sign.sourceType === 'community')
-    .slice(0, limit)
+    .slice(0, normalizedLimit)
 }

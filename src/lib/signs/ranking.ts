@@ -1,8 +1,6 @@
 import { getAllSigns, getSignsByCategory } from '@/src/lib/signs/queries'
 import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
 
-const TRENDING_REFERENCE_DATE = new Date('2026-03-28T00:00:00.000Z')
-
 function normalizeLimit(limit: number) {
   return limit > 0 ? Math.floor(limit) : 0
 }
@@ -17,12 +15,11 @@ function compareByVoteCount(a: SignRecord, b: SignRecord) {
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 }
 
-function calculateTrendingScore(sign: SignRecord) {
+function calculateTrendingScore(sign: SignRecord, now: Date) {
   const ageInDays = Math.max(
     0,
     Math.floor(
-      (TRENDING_REFERENCE_DATE.getTime() - new Date(sign.createdAt).getTime()) /
-        (1000 * 60 * 60 * 24),
+      (now.getTime() - new Date(sign.createdAt).getTime()) / (1000 * 60 * 60 * 24),
     ),
   )
   const freshnessScore = Math.max(0, 30 - ageInDays)
@@ -50,11 +47,12 @@ export function getTopAllTimeSigns(category: SignCategory, limit: number) {
 
 export function getTrendingSigns(category: SignCategory, limit: number) {
   const normalizedLimit = normalizeLimit(limit)
+  const now = new Date()
 
   return getSignsByCategory(category)
     .sort(
       (a, b) =>
-        calculateTrendingScore(b) - calculateTrendingScore(a) ||
+        calculateTrendingScore(b, now) - calculateTrendingScore(a, now) ||
         compareByVoteCount(a, b),
     )
     .slice(0, normalizedLimit)
