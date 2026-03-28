@@ -22,6 +22,24 @@ describe('public sign queries', () => {
     )
   })
 
+  it('returns defensive copies so one lookup cannot mutate later query results', () => {
+    const sign = getSignBySlug('no-crown-for-a-clown')
+
+    expect(sign).toBeDefined()
+
+    sign!.title = 'Tampered title'
+    sign!.categories.push('kids')
+
+    expect(getSignBySlug('no-crown-for-a-clown')?.title).toBe(
+      'No Crown for a Clown',
+    )
+    expect(
+      getSignsByCategory('kids').some(
+        (result) => result.slug === 'no-crown-for-a-clown',
+      ),
+    ).toBe(false)
+  })
+
   it('returns category matches using category tags', () => {
     const funnySigns = getSignsByCategory('funny')
 
