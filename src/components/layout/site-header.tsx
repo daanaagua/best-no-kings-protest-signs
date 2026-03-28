@@ -6,6 +6,9 @@ import { siteConfig } from '@/src/data/site'
 export function SiteHeader() {
   return (
     <header className="site-header">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <div className="site-header__inner">
         <Logo className="site-header__brand" />
         <nav aria-label="Primary" className="site-header__nav">

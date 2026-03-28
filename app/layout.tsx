@@ -56,7 +56,9 @@ export default function RootLayout({
       <body className="site-body">
         <div className="site-shell">
           <SiteHeader />
-          <main className="site-main">{children}</main>
+          <main className="site-main" id="main-content">
+            {children}
+          </main>
           <SiteFooter />
         </div>
       </body>

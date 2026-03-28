@@ -98,6 +98,27 @@ a {
   padding: clamp(1rem, 2vw, 1.4rem) clamp(1rem, 3vw, 2rem) 1rem;
 }
 
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 20;
+  padding: 0.65rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper-bright);
+  box-shadow: var(--shadow-strong);
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.skip-link:focus-visible {
+  top: 1rem;
+}
+
 .site-header__inner,
 .site-footer__inner {
   width: min(100%, 74rem);
