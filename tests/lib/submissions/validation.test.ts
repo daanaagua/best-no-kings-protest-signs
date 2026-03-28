@@ -28,6 +28,18 @@ describe('validateSubmission', () => {
     expect(result.errors.confirmedOwnership).toMatch(/ownership/i)
   })
 
+  it('rejects slogans that cannot produce a usable slug candidate', () => {
+    const result = validateSubmission({
+      slogan: '!!!!',
+      selectedTemplate: 'classic',
+      acceptedPolicy: true,
+      confirmedOwnership: true,
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.errors.slogan).toMatch(/usable slug/i)
+  })
+
   it('returns normalized data for a valid submission', () => {
     const result = validateSubmission({
       slogan: '  Let voters steer  ',
