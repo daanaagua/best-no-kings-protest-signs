@@ -633,6 +633,14 @@ a {
   border: 2px solid rgba(22, 38, 53, 0.14);
   border-radius: 1rem;
   background: linear-gradient(180deg, rgba(199, 221, 234, 0.28), rgba(255, 248, 238, 0.92));
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.category-rail__item:hover,
+.category-rail__item:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(22, 38, 53, 0.28);
+  background: linear-gradient(180deg, rgba(199, 221, 234, 0.42), rgba(255, 248, 238, 0.98));
 }
 
 .category-rail__count {
@@ -657,6 +665,19 @@ a {
 .seo-copy__body p {
   font-size: 1rem;
   line-height: 1.7;
+}
+
+.seo-copy__body a {
+  font-family: var(--font-label);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.18em;
+}
+
+.seo-copy__body a:hover,
+.seo-copy__body a:focus-visible {
+  color: var(--signal);
 }
 
 @media (max-width: 860px) {

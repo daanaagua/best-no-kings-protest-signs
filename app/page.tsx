@@ -1,4 +1,4 @@
-import { CategoryRail } from '@/src/components/home/category-rail'
+import { buildCategoryHref, CategoryRail } from '@/src/components/home/category-rail'
 import { Hero } from '@/src/components/home/hero'
 import { SignGrid } from '@/src/components/signs/sign-grid'
 import { getAllSigns, getApprovedHomepageCommunitySigns } from '@/src/lib/signs/queries'
@@ -7,7 +7,7 @@ import { SIGN_CATEGORIES } from '@/src/lib/signs/types'
 
 export default function Home() {
   const allSigns = getAllSigns()
-  const editorsPicks = getEditorsPicks(4)
+  const editorsPicks = getEditorsPicks(8)
   const communitySigns = getApprovedHomepageCommunitySigns(4)
   const printableCount = allSigns.filter((sign) => sign.categories.includes('printable')).length
   const communityCount = allSigns.filter((sign) => sign.sourceType === 'community').length
@@ -85,13 +85,13 @@ export default function Home() {
 
         <div className="seo-copy__body">
           <p>
-            This homepage is built for people looking for the best No Kings protest signs, funny sign ideas, printable slogans, and crowd-tested phrases that stay readable on poster board, phone screens, and social shares.
+            This homepage is built for people looking for the <a href={buildCategoryHref('best')}>best No Kings protest signs</a>, <a href={buildCategoryHref('funny')}>Funny No Kings signs</a>, printable slogans, and crowd-tested phrases that stay readable on poster board, phone screens, and social shares.
           </p>
           <p>
             Editorial picks surface the strongest all-around slogans, trending cards highlight what is climbing right now, and approved community uploads add local voice without losing the clear, poster-ready aesthetic established across the site shell.
           </p>
           <p>
-            If you are comparing funny No Kings signs, printable No Kings protest posters, or family-friendly sign ideas for marches and rallies, the sections above give you a quick path into each lane without duplicating one-off homepage markup.
+            If you are comparing <a href={buildCategoryHref('printable')}>printable No Kings protest posters</a> or <a href={buildCategoryHref('kids')}>family-friendly sign ideas</a> for marches and rallies, the sections above give you a quick path into each lane without duplicating one-off homepage markup.
           </p>
         </div>
       </section>

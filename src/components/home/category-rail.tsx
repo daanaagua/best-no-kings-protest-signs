@@ -14,6 +14,10 @@ function formatCategoryLabel(category: SignCategory) {
   return category.charAt(0).toUpperCase() + category.slice(1)
 }
 
+export function buildCategoryHref(category: SignCategory) {
+  return `/topics/no-kings/${category}/`
+}
+
 export function CategoryRail({ items }: CategoryRailProps) {
   return (
     <section aria-labelledby="category-rail-title" className="home-section category-rail-section">
@@ -26,11 +30,13 @@ export function CategoryRail({ items }: CategoryRailProps) {
 
       <div className="category-rail" role="list">
         {items.map((item) => (
-          <article className="category-rail__item" key={item.category} role="listitem">
-            <p className="category-rail__label">{formatCategoryLabel(item.category)}</p>
-            <p className="category-rail__count">{item.count} signs</p>
-            <p className="category-rail__highlight">Now leading: {item.highlight}</p>
-          </article>
+          <div key={item.category} role="listitem">
+            <a className="category-rail__item" href={buildCategoryHref(item.category)}>
+              <p className="category-rail__label">{formatCategoryLabel(item.category)}</p>
+              <p className="category-rail__count">{item.count} signs</p>
+              <p className="category-rail__highlight">Now leading: {item.highlight}</p>
+            </a>
+          </div>
         ))}
       </div>
     </section>
