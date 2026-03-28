@@ -4,7 +4,7 @@ import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import { buildTemplatePreviewDataUrl, getSignTemplateDefinition, type SignTemplateId } from '@/src/lib/signs/templates'
-import { officialLaunchSigns } from '@/src/data/signs'
+import { launchSigns } from '@/src/data/signs'
 import type { SignRecord } from '@/src/lib/signs/types'
 
 export const SUBMISSION_STATUSES = ['pending', 'approved', 'rejected'] as const
@@ -271,7 +271,7 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
       }
 
       const currentSubmission = file.submissions[index]
-      const publicSlugs = new Set(officialLaunchSigns.map((sign) => sign.slug))
+      const publicSlugs = new Set(launchSigns.map((sign) => sign.slug))
 
       for (const submission of file.submissions) {
         if (submission.id !== id && submission.status === 'approved') {

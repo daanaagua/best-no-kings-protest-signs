@@ -152,4 +152,18 @@ describe('submission store', () => {
 
     expect(approved.slugCandidate).toBe('no-crown-for-a-clown-2')
   })
+
+  it('avoids collisions with already-public seed community slugs during approval', async () => {
+    const store = await createTestStore()
+
+    const pending = await store.createPendingSubmission({
+      slogan: 'Library Cards Over Crowns',
+      slugCandidate: 'community-library-cards-over-crowns',
+      selectedTemplate: 'classic',
+    })
+
+    const approved = await store.approveSubmission(pending.id)
+
+    expect(approved.slugCandidate).toBe('community-library-cards-over-crowns-2')
+  })
 })
