@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { SignPreview } from '@/src/components/submit/sign-preview'
@@ -17,5 +17,14 @@ describe('SignPreview', () => {
 
       unmount()
     }
+  })
+
+  it('keeps the final word visible inside the poster for longer slogans', () => {
+    const slogan = 'We choose neighbors over crowns because every block deserves a vote from all'
+    const { container } = render(<SignPreview slogan={slogan} template="printable" />)
+    const poster = container.querySelector('.sign-preview__poster')
+
+    expect(poster).not.toBeNull()
+    expect(within(poster as HTMLElement).getByText(/all/i)).toBeInTheDocument()
   })
 })
