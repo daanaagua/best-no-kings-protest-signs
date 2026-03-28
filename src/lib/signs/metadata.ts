@@ -34,8 +34,10 @@ export function buildTopMetadata(category: SignCategory): SignPageMetadata {
 export function buildSignMetadata(
   sign: Pick<SignRecord, 'title'>,
 ): SignPageMetadata {
+  const normalizedTitle = sign.title.trim()
+
   return {
-    title: `${sign.title} | No Kings Protest Sign`,
+    title: `${normalizedTitle} | No Kings Protest Sign`,
     description:
       'View this No Kings protest sign, vote on it, and explore related funny, printable, or community-submitted signs.',
   }
