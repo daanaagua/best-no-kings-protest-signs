@@ -1,6 +1,13 @@
 import { launchSigns } from '@/src/data/signs'
 import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
 
+function cloneSign(sign: SignRecord): SignRecord {
+  return {
+    ...sign,
+    categories: [...sign.categories],
+  }
+}
+
 function compareSignsByRecency(a: SignRecord, b: SignRecord) {
   const createdAtDiff =
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -19,7 +26,7 @@ function compareSignsByRecency(a: SignRecord, b: SignRecord) {
 }
 
 function sortSigns(signs: SignRecord[]) {
-  return [...signs].sort(compareSignsByRecency)
+  return [...signs].sort(compareSignsByRecency).map(cloneSign)
 }
 
 export function getAllSigns() {
@@ -27,7 +34,9 @@ export function getAllSigns() {
 }
 
 export function getSignBySlug(slug: string) {
-  return launchSigns.find((sign) => sign.slug === slug)
+  const sign = launchSigns.find((result) => result.slug === slug)
+
+  return sign ? cloneSign(sign) : undefined
 }
 
 export function getSignsByCategory(category: SignCategory) {
