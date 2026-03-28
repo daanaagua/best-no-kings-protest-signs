@@ -15,15 +15,15 @@ export function Hero({ featuredSign, totalSigns, communityCount, printableCount 
   return (
     <section className="home-hero">
       <div className="home-hero__copy">
-        <p className="home-hero__eyebrow">Poster-bright protest ideas for the no-kings crowd</p>
-        <h1 className="home-hero__title">Find the sharpest No Kings protest signs for march day, print day, and share day.</h1>
+        <p className="home-hero__eyebrow">Serious protest signs for a no-kings crowd</p>
+        <h1 className="home-hero__title">No Kings protest signs built to read clearly at rallies, on sidewalks, and in the street.</h1>
         <p className="home-hero__description">
-          Browse a launch-ready wall of funny slogans, printable lines, kids-safe chants, and approved community uploads built to read clearly from sidewalks to social crops.
+          Browse a clean wall of No Kings protest signs with stronger lettering, tighter line breaks, and a more serious protest look. Every sign is designed to stay legible without extra clutter inside the board.
         </p>
 
         <div className="home-hero__actions">
           <Link className="site-cta" href="#editorial-picks">
-            Browse editorial picks
+            Browse the sign wall
           </Link>
           <Link className="home-hero__secondary" href={siteConfig.primaryAction.href}>
             {siteConfig.primaryAction.label}
@@ -46,13 +46,13 @@ export function Hero({ featuredSign, totalSigns, communityCount, printableCount 
         </dl>
       </div>
 
-      <div className="home-hero__feature">
-        <div className="home-hero__feature-header">
-          <p className="home-hero__feature-kicker">Featured pick</p>
-          <p className="home-hero__feature-note">A crowd-tested sign from the homepage launch stack.</p>
+        <div className="home-hero__feature">
+          <div className="home-hero__feature-header">
+          <p className="home-hero__feature-kicker">Featured sign</p>
+          <p className="home-hero__feature-note">A launch-ready sign from the current No Kings wall.</p>
+          </div>
+          <SignCard sign={featuredSign} />
         </div>
-        <SignCard sign={featuredSign} />
-      </div>
     </section>
   )
 }

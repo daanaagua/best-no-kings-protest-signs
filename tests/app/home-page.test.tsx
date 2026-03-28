@@ -10,32 +10,18 @@ vi.mock('next/image', () => ({
 }))
 
 describe('Home page', () => {
-  it('links every category rail card to its category page', () => {
+  it('keeps the homepage free of category-rail labels', () => {
     render(<Home />)
 
-    expect(screen.getByRole('link', { name: /Funny\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/funny',
-    )
-    expect(screen.getByRole('link', { name: /Best\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/best',
-    )
-    expect(screen.getByRole('link', { name: /Kids\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/kids',
-    )
-    expect(screen.getByRole('link', { name: /Printable\s+\d+ signs\s+Now leading:/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/printable',
-    )
+    expect(screen.queryByText(/Four fast ways into the sign wall/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Browse by lane/i)).not.toBeInTheDocument()
   })
 
-  it('includes internal SEO links to core category pages', () => {
+  it('keeps the homepage SEO copy focused on the core no-kings sign intent', () => {
     render(<Home />)
 
     const seoHeading = screen.getByRole('heading', {
-      name: /Why people search for No Kings protest signs here/i,
+      name: /What this no kings sign wall is built for/i,
     })
     const seoSection = seoHeading.closest('section')
 
@@ -43,29 +29,15 @@ describe('Home page', () => {
 
     const scoped = within(seoSection as HTMLElement)
 
-    expect(scoped.getByRole('link', { name: /Funny No Kings signs/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/funny',
-    )
-    expect(scoped.getByRole('link', { name: /Best No Kings protest signs/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/best',
-    )
-    expect(scoped.getByRole('link', { name: /family-friendly sign ideas/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/kids',
-    )
-    expect(scoped.getByRole('link', { name: /printable No Kings protest posters/i })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/printable',
-    )
+    expect(scoped.getByText(/No Kings protest signs/i)).toBeInTheDocument()
+    expect(scoped.queryByRole('link', { name: /Funny No Kings signs/i })).not.toBeInTheDocument()
   })
 
   it('shows eight editorial pick cards when enough picks exist', () => {
     render(<Home />)
 
     const editorialHeading = screen.getByRole('heading', {
-      name: /Editorial picks for marches, megaphones, and fast print runs/i,
+      name: /Featured no kings protest signs/i,
     })
     const editorialSection = editorialHeading.closest('section')
 

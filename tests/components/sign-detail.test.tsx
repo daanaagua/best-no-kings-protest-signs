@@ -25,14 +25,12 @@ describe('SignDetail', () => {
     expect(image).toHaveStyle({ objectFit: 'contain' })
     expect(screen.getByRole('heading', { name: officialLaunchSigns[0].title })).toBeInTheDocument()
     expect(screen.getByText(officialLaunchSigns[0].description)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Funny' })).toHaveAttribute(
-      'href',
-      '/topics/no-kings/funny',
-    )
     expect(screen.getByRole('button', { name: /Public voting opens after launch/i })).toBeDisabled()
+    expect(screen.queryByText('Editors pick')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Funny' })).not.toBeInTheDocument()
   })
 
-  it('renders approved community signs with the community source label', () => {
+  it('renders approved community signs without reintroducing noisy category badges', () => {
     render(
       <SignDetail
         shareUrl="https://bestnokingsprotestsigns.org/signs/community-library-cards-over-crowns"
@@ -40,7 +38,7 @@ describe('SignDetail', () => {
       />,
     )
 
-    expect(screen.getByText('Community')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: approvedCommunitySigns[0].title })).toBeInTheDocument()
+    expect(screen.queryByText('Community')).not.toBeInTheDocument()
   })
 })

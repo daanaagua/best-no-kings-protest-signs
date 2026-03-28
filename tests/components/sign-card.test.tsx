@@ -20,8 +20,6 @@ describe('SignCard', () => {
 
     expect(screen.getByRole('heading', { name: sign.title })).toBeInTheDocument()
     expect(screen.getByText(sign.slogan)).toBeInTheDocument()
-    expect(screen.getByText('Funny')).toBeInTheDocument()
-    expect(screen.getByText('Editors pick')).toBeInTheDocument()
     expect(screen.getByText('942 votes')).toBeInTheDocument()
     expect(image).toHaveAttribute('src', sign.image)
     expect(image).toHaveStyle({ objectFit: 'contain' })
@@ -29,6 +27,8 @@ describe('SignCard', () => {
       'href',
       `/signs/${sign.slug}`,
     )
+    expect(screen.queryByText('Editors pick')).not.toBeInTheDocument()
+    expect(screen.queryByText('Funny')).not.toBeInTheDocument()
   })
 
   it('formats a singular vote count label', () => {

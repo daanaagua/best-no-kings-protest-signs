@@ -9,14 +9,14 @@ export type SiteLinkGroup = {
 }
 
 export const siteConfig = {
-  name: 'Best No Kings Protest Signs',
+  name: 'No Kings Protest Signs',
   domainLabel: 'BESTNOKINGSPROTESTSIGNS.ORG',
   url: 'https://bestnokingsprotestsigns.org',
   description:
-    'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs. Static launch keeps public voting and new submissions in beta.',
-  headerNote: 'Poster-ready civic signs for marches, rallies, printable share-outs, and a preview-only submit beta.',
+    'Browse No Kings protest signs built for marches, rallies, and printable use. Static launch keeps public voting and new submissions in beta.',
+  headerNote: 'A clean wall of No Kings protest signs for marches, rallies, and print-at-home poster making.',
   footerNote:
-    'A poster-bright civic archive for sharp slogans, printable ideas, and approved community additions while public write features stay in beta for launch.',
+    'A focused archive of No Kings protest signs with clean layouts, stronger readability, and public write features still in beta for launch.',
   primaryAction: {
     label: 'Preview your sign',
     href: '/submit',
