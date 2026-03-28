@@ -3,6 +3,10 @@ import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
 
 const TRENDING_REFERENCE_DATE = new Date('2026-03-28T00:00:00.000Z')
 
+function normalizeLimit(limit: number) {
+  return limit > 0 ? Math.floor(limit) : 0
+}
+
 function compareByVoteCount(a: SignRecord, b: SignRecord) {
   const voteCountDiff = b.voteCount - a.voteCount
 
@@ -28,22 +32,30 @@ function calculateTrendingScore(sign: SignRecord) {
 }
 
 export function getEditorsPicks(limit: number) {
+  const normalizedLimit = normalizeLimit(limit)
+
   return getAllSigns()
     .filter((sign) => sign.editorsPick === true)
     .sort(compareByVoteCount)
-    .slice(0, limit)
+    .slice(0, normalizedLimit)
 }
 
 export function getTopAllTimeSigns(category: SignCategory, limit: number) {
-  return getSignsByCategory(category).sort(compareByVoteCount).slice(0, limit)
+  const normalizedLimit = normalizeLimit(limit)
+
+  return getSignsByCategory(category)
+    .sort(compareByVoteCount)
+    .slice(0, normalizedLimit)
 }
 
 export function getTrendingSigns(category: SignCategory, limit: number) {
+  const normalizedLimit = normalizeLimit(limit)
+
   return getSignsByCategory(category)
     .sort(
       (a, b) =>
         calculateTrendingScore(b) - calculateTrendingScore(a) ||
         compareByVoteCount(a, b),
     )
-    .slice(0, limit)
+    .slice(0, normalizedLimit)
 }
