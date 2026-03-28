@@ -40,4 +40,12 @@ describe('metadata helpers', () => {
         'View this No Kings protest sign, vote on it, and explore related funny, printable, or community-submitted signs.',
     })
   })
+
+  it('trims surrounding whitespace from sign titles before building detail metadata', () => {
+    expect(buildSignMetadata({ title: '  No Crown for a Clown  ' })).toEqual({
+      title: 'No Crown for a Clown | No Kings Protest Sign',
+      description:
+        'View this No Kings protest sign, vote on it, and explore related funny, printable, or community-submitted signs.',
+    })
+  })
 })
