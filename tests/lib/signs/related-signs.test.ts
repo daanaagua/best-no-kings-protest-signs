@@ -10,4 +10,8 @@ describe('related sign queries', () => {
     expect(related.some((sign) => sign.slug === 'no-crown-for-a-clown')).toBe(false)
     expect(related.every((sign) => sign.categories.includes('funny'))).toBe(true)
   })
+
+  it('returns no related signs when the current slug does not exist', () => {
+    expect(getRelatedSigns('missing-sign-slug', 'funny', 3)).toEqual([])
+  })
 })
