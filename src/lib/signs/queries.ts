@@ -72,16 +72,18 @@ export function getRelatedSigns(
 
   const currentSign = getSignBySlug(currentSlug)
 
+  if (!currentSign) {
+    return []
+  }
+
   return getSignsByCategory(category)
     .filter((sign) => sign.slug !== currentSlug)
     .sort((a, b) => {
-      if (currentSign) {
-        const sharedCategoryDiff =
-          countSharedCategories(b, currentSign) - countSharedCategories(a, currentSign)
+      const sharedCategoryDiff =
+        countSharedCategories(b, currentSign) - countSharedCategories(a, currentSign)
 
-        if (sharedCategoryDiff !== 0) {
-          return sharedCategoryDiff
-        }
+      if (sharedCategoryDiff !== 0) {
+        return sharedCategoryDiff
       }
 
       return compareSignsByRecency(a, b)
