@@ -51,6 +51,7 @@ export function createSlugCandidate(slogan: string) {
 
 export function validateSubmission(input: SubmissionValidationInput): SubmissionValidationResult {
   const slogan = normalizeText(input.slogan)
+  const slugCandidate = createSlugCandidate(slogan)
   const submitterName = normalizeText(input.submitterName)
   const submitterEmail = normalizeText(input.submitterEmail).toLowerCase()
   const selectedTemplate = input.selectedTemplate
@@ -62,6 +63,8 @@ export function validateSubmission(input: SubmissionValidationInput): Submission
     errors.slogan = 'Use at least 4 characters so moderators can review it.'
   } else if (slogan.length > 120) {
     errors.slogan = 'Keep slogans under 120 characters for the MVP sign layouts.'
+  } else if (!/[a-z0-9]/i.test(slogan) || slugCandidate === 'community-sign') {
+    errors.slogan = 'Use at least one letter or number so we can create a usable slug candidate.'
   }
 
   if (!selectedTemplate || !isSignTemplateId(selectedTemplate)) {
@@ -94,7 +97,7 @@ export function validateSubmission(input: SubmissionValidationInput): Submission
     errors,
     value: {
       slogan,
-      slugCandidate: createSlugCandidate(slogan),
+      slugCandidate,
       selectedTemplate: validatedTemplate,
       submitterName: submitterName || undefined,
       submitterEmail: submitterEmail || undefined,
