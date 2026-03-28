@@ -221,6 +221,10 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
       throw new Error(`Submission not found: ${id}`)
     }
 
+    if (file.submissions[index]?.status !== 'pending') {
+      throw new Error('Only pending submissions can move through moderation.')
+    }
+
     const updated: SubmissionRecord = {
       ...file.submissions[index],
       status,
