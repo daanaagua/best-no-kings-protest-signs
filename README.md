@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Best No Kings Protest Signs
 
-## Getting Started
+Next.js App Router MVP for `BESTNOKINGSPROTESTSIGNS.ORG`.
 
-First, run the development server:
+## Local install and run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` after the dev server starts.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Test suite: `npx vitest run`
+- Interactive tests: `npm test`
+- Lint: `npm run lint`
+- Production build: `npm run build`
 
-## Learn More
+## Content and data locations
 
-To learn more about Next.js, take a look at the following resources:
+- Seed sign data for the launch collection: `src/data/signs.ts`
+- Official sign asset path map: `src/data/sign-assets.ts`
+- Official SVG sign assets: `public/signs/`
+- Approved and pending submissions in the MVP: `data/submissions.json`
+- Stored vote totals in the MVP: `data/votes.json`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+When you add a new official sign, place the asset in `public/signs/`, add its public path in
+`src/data/sign-assets.ts`, and reference it from `src/data/signs.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Moderation token
 
-## Deploy on Vercel
+Create `.env.local` in the project root with a token for the protected moderation screen:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+MODERATION_TOKEN=replace-with-a-long-random-secret
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Then open `/internal/moderation?token=YOUR_TOKEN` locally.
+
+## Domain
+
+The registered domain for this project is `BESTNOKINGSPROTESTSIGNS.ORG`.
+
+## Cloudflare deployment path
+
+Simple MVP path:
+
+1. Push this repository to GitHub.
+2. Create a Cloudflare Pages project connected to the repo.
+3. Set the production environment variable `MODERATION_TOKEN` in Cloudflare.
+4. Use `npm run build` as the build command.
+5. Deploy the public site, then replace the file-backed `data/submissions.json` and `data/votes.json`
+   storage with durable cloud storage before relying on live moderation or vote writes in production.
+
+The public pages can be previewed this way, but the current MVP persistence model is local-file based and is
+best suited to local development until durable storage is wired in.
