@@ -82,6 +82,20 @@ describe('submission store', () => {
     expect(rejected.moderatorNote).toBe('duplicate')
   })
 
+  it('does not allow a rejected submission to move back to approved', async () => {
+    const store = await createTestStore()
+
+    const pending = await store.createPendingSubmission({
+      slogan: 'Already reviewed',
+      slugCandidate: 'already-reviewed',
+      selectedTemplate: 'classic',
+    })
+
+    await store.rejectSubmission(pending.id, 'duplicate')
+
+    await expect(store.approveSubmission(pending.id)).rejects.toThrow(/pending/i)
+  })
+
   it('stores vote counts in votes.json', async () => {
     const store = await createTestStore()
 
