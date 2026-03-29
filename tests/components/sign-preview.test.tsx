@@ -9,7 +9,7 @@ describe('SignPreview', () => {
 
     for (const template of templates) {
       const { unmount } = render(
-        <SignPreview slogan="No Crown for a Clown" template={template} />,
+        <SignPreview slogan="No Crown for a Clown" template={template} textRotation={0} />,
       )
 
       expect(screen.getByText('No Crown for a Clown')).toBeInTheDocument()
@@ -23,7 +23,7 @@ describe('SignPreview', () => {
 
   it('keeps the final word visible inside the poster for longer slogans', () => {
     const slogan = 'We choose neighbors over crowns because every block deserves a vote from all'
-    const { container } = render(<SignPreview slogan={slogan} template="printable" />)
+    const { container } = render(<SignPreview slogan={slogan} template="printable" textRotation={0} />)
     const poster = container.querySelector('.sign-preview__poster')
 
     expect(poster).not.toBeNull()
@@ -32,7 +32,7 @@ describe('SignPreview', () => {
 
   it('breaks long unbroken words into multiple poster lines', () => {
     const { container } = render(
-      <SignPreview slogan="Pneumonoultramicroscopicsilicovolcanoconiosis" template="bold-marker" />,
+      <SignPreview slogan="Pneumonoultramicroscopicsilicovolcanoconiosis" template="bold-marker" textRotation={0} />,
     )
     const poster = container.querySelector('.sign-preview__poster')
 
@@ -41,9 +41,22 @@ describe('SignPreview', () => {
   })
 
   it('keeps the preview shell free of decorative sticks and chrome', () => {
-    const { container } = render(<SignPreview slogan="No Kings" template="classic" />)
+    const { container } = render(<SignPreview slogan="No Kings" template="classic" textRotation={0} />)
 
     expect(container.querySelector('.sign-preview__stick')).toBeNull()
     expect(container.querySelector('.sign-preview__template-label')).toBeNull()
+  })
+
+  it('renders the text layer with arbitrary rotation over the board template', () => {
+    const { container } = render(
+      <SignPreview slogan="Power to the Public" template="classic" textRotation={-14} />,
+    )
+
+    const textLayer = container.querySelector('.sign-preview__text-layer') as HTMLElement | null
+    const poster = container.querySelector('.sign-preview__poster') as HTMLElement | null
+
+    expect(textLayer).not.toBeNull()
+    expect(textLayer?.style.getPropertyValue('--text-rotation')).toBe('-14deg')
+    expect(poster?.style.backgroundImage).toContain('/submit-templates/')
   })
 })

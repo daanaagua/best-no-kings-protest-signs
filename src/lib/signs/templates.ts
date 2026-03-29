@@ -10,56 +10,71 @@ export type SignTemplateDefinition = {
   description: string
   primaryCategory: SignCategory
   categories: SignCategory[]
+  previewBackground: string
   accentColor: string
   boardColor: string
   textColor: string
   rotation: number
+  textFrameTop: string
+  textFrameWidth: string
 }
 
 export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefinition> = {
   classic: {
     id: 'classic',
-    label: 'Classic chant board',
-    description: 'Centered rally copy with a steady, all-purpose poster layout.',
+    label: 'Centered crowd board',
+    description: 'A straight-on rally board with balanced margins and room for long lines.',
     primaryCategory: 'best',
     categories: ['best', 'printable'],
+    previewBackground: '/submit-templates/classic-board.png',
     accentColor: '#d45736',
     boardColor: '#fff9ef',
     textColor: '#162635',
     rotation: 0,
+    textFrameTop: '49%',
+    textFrameWidth: '78%',
   },
   tilted: {
     id: 'tilted',
-    label: 'Tilted curbside sign',
-    description: 'A slightly skewed board with playful, punchy march energy.',
+    label: 'Street rally board',
+    description: 'A slightly weathered white board with a tighter text box for shorter chants.',
     primaryCategory: 'funny',
     categories: ['funny', 'best'],
+    previewBackground: '/submit-templates/street-board.png',
     accentColor: '#31516b',
     boardColor: '#fff4df',
     textColor: '#162635',
     rotation: 0,
+    textFrameTop: '50%',
+    textFrameWidth: '74%',
   },
   'bold-marker': {
     id: 'bold-marker',
-    label: 'Bold marker block',
-    description: 'Heavy marker lettering for short slogans and fast reads.',
+    label: 'Bold march board',
+    description: 'A closer white board layout meant for punchier marker-heavy slogans.',
     primaryCategory: 'funny',
     categories: ['funny', 'printable'],
+    previewBackground: '/submit-templates/bold-board.png',
     accentColor: '#162635',
     boardColor: '#f4e6ca',
     textColor: '#0d2235',
     rotation: 0,
+    textFrameTop: '50%',
+    textFrameWidth: '72%',
   },
   printable: {
     id: 'printable',
-    label: 'Printable flyer layout',
-    description: 'High-contrast stacked lines designed for quick home printing.',
+    label: 'Poster wall board',
+    description: 'A cleaner board with more vertical room for longer protest copy.',
     primaryCategory: 'printable',
     categories: ['printable', 'best'],
+    previewBackground: '/submit-templates/poster-board.png',
     accentColor: '#0d2235',
     boardColor: '#ffffff',
     textColor: '#111111',
     rotation: 0,
+    textFrameTop: '50%',
+    textFrameWidth: '80%',
   },
 }
 

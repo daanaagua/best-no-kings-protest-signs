@@ -10,7 +10,7 @@ export default function SubmitPage() {
             Preview your No Kings sign now, then come back when public submissions reopen
           </h1>
           <p className="section-heading__description">
-            This launch is intentionally static-content-first. The submit route still helps with slogan drafting and template preview, but it does not send live public writes to the server yet.
+            This launch is intentionally static-content-first. The submit route now lets you choose blank rally-board backgrounds and rotate the text layer before public submissions reopen, but it still does not send live public writes to the server yet.
           </p>
         </div>
       </section>

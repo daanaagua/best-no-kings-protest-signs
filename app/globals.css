@@ -1047,6 +1047,13 @@ a {
   color: var(--ink-soft);
 }
 
+.submit-field__label--row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
 .submit-field__input {
   width: 100%;
   min-height: 3rem;
@@ -1061,6 +1068,11 @@ a {
 .submit-field__input--textarea {
   min-height: 7.5rem;
   resize: vertical;
+}
+
+.submit-field__range {
+  width: 100%;
+  accent-color: var(--signal);
 }
 
 .submit-field__error {
@@ -1081,6 +1093,18 @@ a {
   border: 2px solid rgba(22, 38, 53, 0.14);
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.68);
+}
+
+.template-switcher__art {
+  display: block;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 2px solid rgba(22, 38, 53, 0.08);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 0 10px 18px rgba(22, 38, 53, 0.08);
 }
 
 .template-switcher__option--selected {
@@ -1158,18 +1182,29 @@ a {
 }
 
 .sign-preview__poster {
-  display: grid;
-  gap: 0.65rem;
+  display: block;
   width: 100%;
-  min-height: 20rem;
+  aspect-ratio: 4 / 5;
   margin-top: 0.5rem;
-  padding: 1.4rem 1.25rem;
   position: relative;
-  border: 3px solid var(--ink);
   border-radius: 1rem;
   box-shadow: 0 12px 28px rgba(22, 38, 53, 0.14);
-  align-content: center;
+  overflow: hidden;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.sign-preview__text-layer {
+  position: absolute;
+  top: var(--text-frame-top);
+  left: 50%;
+  width: var(--text-frame-width);
+  display: grid;
+  gap: 0.5rem;
   justify-items: center;
+  transform: translate(-50%, -50%) rotate(var(--text-rotation));
+  transform-origin: center center;
 }
 
 .sign-preview__line {
@@ -1188,41 +1223,24 @@ a {
   right: 0.85rem;
   bottom: 0.75rem;
   font-size: 0.56rem;
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.68);
 }
 
 .sign-preview__board--classic {
   transform: none;
 }
 
-.sign-preview__board--classic .sign-preview__poster {
-  background: linear-gradient(180deg, #fff9ef, #f4e9d5);
-}
-
 .sign-preview__board--tilted {
   transform: none;
-}
-
-.sign-preview__board--tilted .sign-preview__poster {
-  background: linear-gradient(180deg, #fff3db, #f0dfbf);
 }
 
 .sign-preview__board--bold-marker {
   transform: none;
 }
 
-.sign-preview__board--bold-marker .sign-preview__poster {
-  background: linear-gradient(180deg, #f4e5c7, #ebd8b4);
-}
-
 .sign-preview__board--bold-marker .sign-preview__line {
   font-family: 'Courier New', Courier, monospace;
   font-weight: 700;
-}
-
-.sign-preview__board--printable .sign-preview__poster {
-  background: linear-gradient(180deg, #ffffff, #f1f1f1);
-  border-style: dashed;
 }
 
 .moderation-list,
