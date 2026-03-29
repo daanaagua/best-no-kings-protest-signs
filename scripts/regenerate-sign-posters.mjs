@@ -68,7 +68,7 @@ function escapeSvg(value) {
     .replace(/'/g, '&#39;')
 }
 
-function splitLongWord(word, maxChunk = 14) {
+function splitLongWord(word, maxChunk = 12) {
   if (word.length <= maxChunk) {
     return [word]
   }
@@ -90,7 +90,7 @@ function buildLines(title) {
     .filter(Boolean)
     .flatMap((word) => splitLongWord(word))
 
-  const maxLineLength = words.length <= 3 ? 14 : words.length <= 6 ? 16 : 18
+  const maxLineLength = words.length <= 3 ? 12 : words.length <= 6 ? 14 : 16
   const lines = []
   let current = ''
 
@@ -151,10 +151,10 @@ while ((match = itemRegex.exec(source))) {
   const palette = palettes[hash(slug) % palettes.length]
   const lines = buildLines(title)
   const longest = Math.max(...lines.map((line) => line.length))
-  const baseFontSize = lines.length >= 4 ? 68 : lines.length === 3 ? 80 : 94
-  const fontSize = Math.max(54, baseFontSize - Math.max(0, longest - 14) * 2)
-  const lineHeight = Math.round(fontSize * 1.08)
-  const startY = 525 - ((lines.length - 1) * lineHeight) / 2
+  const baseFontSize = lines.length >= 4 ? 58 : lines.length === 3 ? 70 : 82
+  const fontSize = Math.max(46, baseFontSize - Math.max(0, longest - 12) * 2)
+  const lineHeight = Math.round(fontSize * 1.02)
+  const startY = 520 - ((lines.length - 1) * lineHeight) / 2
   const rotation = [-3.5, -2.25, 1.8, 3.1][hash(slug) % 4]
 
   const lineMarkup = lines
@@ -185,8 +185,6 @@ while ((match = itemRegex.exec(source))) {
   <g transform="translate(540 540) rotate(${rotation})" filter="url(#shadow)">
     <rect x="-332" y="-382" width="664" height="790" rx="18" fill="${palette.board}" stroke="#181818" stroke-width="10"/>
     <rect x="-316" y="-366" width="632" height="758" rx="14" fill="none" stroke="rgba(24,24,24,0.12)" stroke-width="3"/>
-    <rect x="-255" y="-360" width="150" height="22" rx="4" fill="${palette.tape}" opacity="0.98" transform="rotate(-8 -255 -360)"/>
-    <rect x="105" y="-360" width="150" height="22" rx="4" fill="${palette.tape}" opacity="0.98" transform="rotate(9 105 -360)"/>
     ${lineMarkup}
   </g>
   <text x="1030" y="1298" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#262626" opacity="0.55" letter-spacing="2">NO KINGS PROTEST SIGNS</text>

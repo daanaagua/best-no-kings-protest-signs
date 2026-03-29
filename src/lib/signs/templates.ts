@@ -26,7 +26,7 @@ export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefin
     accentColor: '#d45736',
     boardColor: '#fff9ef',
     textColor: '#162635',
-    rotation: -1.5,
+    rotation: 0,
   },
   tilted: {
     id: 'tilted',
@@ -37,7 +37,7 @@ export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefin
     accentColor: '#31516b',
     boardColor: '#fff4df',
     textColor: '#162635',
-    rotation: -4,
+    rotation: 0,
   },
   'bold-marker': {
     id: 'bold-marker',
@@ -48,7 +48,7 @@ export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefin
     accentColor: '#162635',
     boardColor: '#f4e6ca',
     textColor: '#0d2235',
-    rotation: 1.25,
+    rotation: 0,
   },
   printable: {
     id: 'printable',
@@ -147,12 +147,11 @@ export function buildTemplatePreviewDataUrl(slogan: string, template: SignTempla
 
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="${escapeSvgText(normalizePreviewSlogan(slogan))}">
-      <rect width="800" height="1000" fill="#ead8b8" />
+      <rect width="800" height="1000" fill="#d7d3cd" />
       <rect x="112" y="48" width="576" height="904" rx="30" fill="${definition.boardColor}" stroke="#162635" stroke-width="16" transform="rotate(${definition.rotation} 400 500)" />
-      <rect x="162" y="106" width="476" height="72" rx="18" fill="${definition.accentColor}" transform="rotate(${definition.rotation} 400 500)" />
-      <text x="400" y="154" text-anchor="middle" font-family="Arial Narrow, Arial, sans-serif" font-size="28" letter-spacing="5" fill="#fffaf0">${escapeSvgText(definition.label.toUpperCase())}</text>
+      <rect x="128" y="64" width="544" height="872" rx="22" fill="none" stroke="rgba(22, 38, 53, 0.08)" stroke-width="4" transform="rotate(${definition.rotation} 400 500)" />
       <g transform="rotate(${definition.rotation} 400 500)">${lineMarkup}</g>
-      <rect x="372" y="930" width="56" height="180" rx="16" fill="#bd7a31" />
+      <text x="744" y="956" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="2" fill="#3f3f3f" opacity="0.55">NO KINGS PROTEST SIGNS</text>
     </svg>
   `
 

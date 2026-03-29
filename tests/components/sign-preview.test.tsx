@@ -14,6 +14,7 @@ describe('SignPreview', () => {
 
       expect(screen.getByText('No Crown for a Clown')).toBeInTheDocument()
       expect(screen.getByTestId('sign-preview-root')).toHaveAttribute('data-template', template)
+      expect(screen.queryByText(/Classic chant board|Tilted curbside sign|Bold marker block|Printable flyer layout/i)).not.toBeInTheDocument()
 
       unmount()
     }
@@ -36,5 +37,12 @@ describe('SignPreview', () => {
 
     expect(poster).not.toBeNull()
     expect((poster as HTMLElement).querySelectorAll('.sign-preview__line')).toHaveLength(4)
+  })
+
+  it('keeps the preview shell free of decorative sticks and chrome', () => {
+    const { container } = render(<SignPreview slogan="No Kings" template="classic" />)
+
+    expect(container.querySelector('.sign-preview__stick')).toBeNull()
+    expect(container.querySelector('.sign-preview__template-label')).toBeNull()
   })
 })
