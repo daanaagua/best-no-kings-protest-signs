@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import llms from '@/app/llms.txt/route'
 import robots from '@/app/robots'
 import sitemap from '@/app/sitemap'
 
@@ -26,5 +27,15 @@ describe('SEO metadata files', () => {
     expect(urls).toContain('https://bestnokingsprotestsigns.org/topics/no-kings/top/funny')
     expect(urls).toContain('https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown')
     expect(urls.some((url) => url.includes('/internal/moderation'))).toBe(false)
+  })
+
+  it('serves an llms.txt file with key site guidance', async () => {
+    const response = await llms()
+    const body = await response.text()
+
+    expect(response.headers.get('content-type')).toContain('text/plain')
+    expect(body).toContain('# No Kings Protest Signs')
+    expect(body).toContain('https://bestnokingsprotestsigns.org/submit')
+    expect(body).toContain('https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown')
   })
 })

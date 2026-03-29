@@ -91,6 +91,7 @@ export async function generateMetadata({ params }: TopCategoryPageProps): Promis
   return {
     title: metadata.title,
     description: metadata.description,
+    keywords: metadata.keywords,
     alternates: {
       canonical: canonicalPath,
     },

@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: homeMetadata.title,
   description: homeMetadata.description,
+  keywords: homeMetadata.keywords,
   applicationName: siteConfig.name,
   alternates: {
     canonical: '/',

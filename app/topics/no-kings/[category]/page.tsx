@@ -142,6 +142,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   return {
     title: metadata.title,
     description: metadata.description,
+    keywords: metadata.keywords,
     alternates: {
       canonical: canonicalPath,
     },
