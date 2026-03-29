@@ -1,41 +1,6 @@
 {
   "submissions": [
     {
-      "id": "submission-neighborhoods-elect",
-      "slogan": "Neighborhoods Elect, Kingdoms Collect",
-      "slugCandidate": "neighborhoods-elect-kingdoms-collect",
-      "selectedTemplate": "classic",
-      "submitterName": "Rosa",
-      "status": "approved",
-      "createdAt": "2026-03-29T09:00:00.000Z"
-    },
-    {
-      "id": "submission-cardboard-beats",
-      "slogan": "Cardboard Beats Coronation",
-      "slugCandidate": "cardboard-beats-coronation",
-      "selectedTemplate": "tilted",
-      "submitterName": "Milo",
-      "status": "approved",
-      "createdAt": "2026-03-29T08:00:00.000Z"
-    },
-    {
-      "id": "submission-school-buses",
-      "slogan": "School Buses, Not Royal Coaches",
-      "slugCandidate": "school-buses-not-royal-coaches",
-      "selectedTemplate": "bold-marker",
-      "status": "approved",
-      "createdAt": "2026-03-28T18:30:00.000Z"
-    },
-    {
-      "id": "submission-print-the-people",
-      "slogan": "Print the People, Not the Palace",
-      "slugCandidate": "print-the-people-not-the-palace",
-      "selectedTemplate": "printable",
-      "submitterEmail": "press@example.com",
-      "status": "approved",
-      "createdAt": "2026-03-28T16:00:00.000Z"
-    },
-    {
       "id": "submission-town-hall",
       "slogan": "Town Hall Over Throne Room",
       "slugCandidate": "town-hall-over-throne-room",

@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import CategoryPage, {
   generateMetadata as generateCategoryMetadata,
@@ -19,7 +19,28 @@ import {
 } from '@/app/topics/no-kings/top/[category]/page'
 import { buildCategoryHref } from '@/src/components/home/category-rail'
 
+afterEach(() => {
+  vi.resetModules()
+  vi.doUnmock('@/src/lib/submissions/store')
+  vi.unstubAllEnvs()
+})
+
 describe('topic routes', () => {
+  it('forces runtime rendering for community-aware routes', async () => {
+    const [homePageModule, categoryPageModule, signPageModule, moderationPageModule] =
+      await Promise.all([
+        import('@/app/page'),
+        import('@/app/topics/no-kings/[category]/page'),
+        import('@/app/signs/[slug]/page'),
+        import('@/app/internal/moderation/page'),
+      ])
+
+    expect(homePageModule.dynamic).toBe('force-dynamic')
+    expect(categoryPageModule.dynamic).toBe('force-dynamic')
+    expect(signPageModule.dynamic).toBe('force-dynamic')
+    expect(moderationPageModule.dynamic).toBe('force-dynamic')
+  })
+
   it('builds canonical metadata without trailing slashes for category, top, and sign routes', async () => {
     expect(buildCategoryHref('best')).toBe('/topics/no-kings/best')
 
@@ -148,6 +169,69 @@ describe('topic routes', () => {
     expect(screen.getByRole('link', { name: /Top list/i })).toHaveAttribute(
       'href',
       '/topics/no-kings/top/best',
+    )
+  })
+
+  it('resolves metadata and routes for runtime-approved community slugs', async () => {
+    vi.resetModules()
+    vi.stubEnv('ENABLE_COMMUNITY_MVP', 'true')
+    vi.doMock('@/src/lib/submissions/store', async () => {
+      const actual = await vi.importActual<typeof import('@/src/lib/submissions/store')>(
+        '@/src/lib/submissions/store',
+      )
+
+      return {
+        ...actual,
+        listApprovedSubmissions: async () => [
+          {
+            id: 'submission-runtime-approved',
+            slogan: 'Town Hall Over Throne Room',
+            slugCandidate: 'town-hall-over-throne-room',
+            selectedTemplate: 'classic',
+            primaryCategory: 'best',
+            categories: ['best', 'printable'],
+            submitterName: 'Dana Rivers',
+            submitterEmail: 'dana@example.com',
+            status: 'approved',
+            createdAt: '2026-03-29T10:30:00.000Z',
+            approvedAt: '2026-03-29T12:00:00.000Z',
+            textRotation: 0,
+            textOffsetY: 0,
+            textScale: 1,
+          },
+        ],
+        getStoredVotesSnapshot: async () => ({
+          'town-hall-over-throne-room': 12,
+        }),
+      }
+    })
+
+    const { default: RuntimeSignPage, generateMetadata: generateRuntimeSignMetadata } = await import(
+      '@/app/signs/[slug]/page'
+    )
+
+    await expect(
+      generateRuntimeSignMetadata({
+        params: Promise.resolve({ slug: 'town-hall-over-throne-room' }),
+      }),
+    ).resolves.toMatchObject({
+      title: 'Town Hall Over Throne Room | No Kings Protest Sign',
+      alternates: { canonical: '/signs/town-hall-over-throne-room' },
+      openGraph: { url: 'https://bestnokingsprotestsigns.org/signs/town-hall-over-throne-room' },
+    })
+
+    render(
+      await RuntimeSignPage({
+        params: Promise.resolve({ slug: 'town-hall-over-throne-room' }),
+      }),
+    )
+
+    expect(
+      screen.getByRole('heading', { name: /Town Hall Over Throne Room/i }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Category wall/i })).toHaveAttribute(
+      'href',
+      '/topics/no-kings/best',
     )
   })
 })

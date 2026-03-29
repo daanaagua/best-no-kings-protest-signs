@@ -4,7 +4,10 @@ import path from 'node:path'
 
 import { afterEach, describe, expect, it } from 'vitest'
 
-import { createSubmissionStore } from '@/src/lib/submissions/store'
+import {
+  buildApprovedSubmissionSign,
+  createSubmissionStore,
+} from '@/src/lib/submissions/store'
 
 const temporaryDirectories: string[] = []
 
@@ -38,6 +41,10 @@ async function createTestStore() {
   })
 }
 
+function decodeSvgAsset(dataUrl: string) {
+  return decodeURIComponent(dataUrl.replace('data:image/svg+xml;charset=UTF-8,', ''))
+}
+
 afterEach(async () => {
   await Promise.all(
     temporaryDirectories.splice(0).map((directory) => removeDirectoryWithRetry(directory)),
@@ -48,25 +55,39 @@ describe('submission store', () => {
   it('creates pending submissions and can approve them', async () => {
     const store = await createTestStore()
 
-    const pending = await store.createPendingSubmission({
+    const draft = {
       slogan: 'No Crown for a Clown',
       slugCandidate: 'no-crown-for-a-clown',
       selectedTemplate: 'classic',
+      primaryCategory: 'best',
+      categories: ['best', 'printable'],
       submitterName: 'Dana',
       submitterEmail: 'dana@example.com',
-    })
+      selectedTextColor: 'signal-red',
+      textRotation: 8,
+      textOffsetY: 12,
+      textScale: 1.14,
+    }
+    const pending = await store.createPendingSubmission(draft)
 
     expect(pending).toMatchObject({
       id: 'submission-fixed-id',
       status: 'pending',
       slugCandidate: 'no-crown-for-a-clown',
       selectedTemplate: 'classic',
+      primaryCategory: 'best',
+      categories: ['best', 'printable'],
+      selectedTextColor: 'signal-red',
+      textRotation: 8,
+      textOffsetY: 12,
+      textScale: 1.14,
       createdAt: '2026-03-28T12:00:00.000Z',
     })
 
     const approved = await store.approveSubmission(pending.id)
 
     expect(approved.status).toBe('approved')
+    expect(approved.approvedAt).toBe('2026-03-28T12:00:00.000Z')
 
     const approvedItems = await store.listApprovedSubmissions()
 
@@ -74,38 +95,54 @@ describe('submission store', () => {
     expect(approvedItems[0]?.id).toBe(pending.id)
 
     const persisted = JSON.parse(await readFile(path.join(store.dataDir, 'submissions.json'), 'utf8')) as {
-      submissions: Array<{ id: string; status: string }>
+      submissions: Array<{ id: string; status: string; approvedAt?: string }>
     }
 
     expect(persisted.submissions[0]).toMatchObject({
       id: pending.id,
       status: 'approved',
+      approvedAt: '2026-03-28T12:00:00.000Z',
     })
   })
 
   it('can reject pending submissions with a moderator note', async () => {
     const store = await createTestStore()
 
-    const pending = await store.createPendingSubmission({
+    const pendingDraft = {
       slogan: 'Reject me',
       slugCandidate: 'reject-me',
       selectedTemplate: 'tilted',
-    })
+      primaryCategory: 'best',
+      categories: ['best'],
+      selectedTextColor: 'charcoal',
+      textRotation: 0,
+      textOffsetY: 0,
+      textScale: 1,
+    }
+    const pending = await store.createPendingSubmission(pendingDraft)
 
     const rejected = await store.rejectSubmission(pending.id, 'duplicate')
 
     expect(rejected.status).toBe('rejected')
     expect(rejected.moderatorNote).toBe('duplicate')
+    expect(rejected.approvedAt).toBeUndefined()
   })
 
   it('does not allow a rejected submission to move back to approved', async () => {
     const store = await createTestStore()
 
-    const pending = await store.createPendingSubmission({
+    const pendingDraft = {
       slogan: 'Already reviewed',
       slugCandidate: 'already-reviewed',
       selectedTemplate: 'classic',
-    })
+      primaryCategory: 'best',
+      categories: ['best', 'printable'],
+      selectedTextColor: 'charcoal',
+      textRotation: 0,
+      textOffsetY: 0,
+      textScale: 1,
+    }
+    const pending = await store.createPendingSubmission(pendingDraft)
 
     await store.rejectSubmission(pending.id, 'duplicate')
 
@@ -142,28 +179,299 @@ describe('submission store', () => {
   it('assigns a deterministic unique slug when approval collides with a public slug', async () => {
     const store = await createTestStore()
 
-    const pending = await store.createPendingSubmission({
+    const pendingDraft = {
       slogan: 'No Crown for a Clown',
       slugCandidate: 'no-crown-for-a-clown',
       selectedTemplate: 'classic',
-    })
+      primaryCategory: 'best',
+      categories: ['best', 'printable'],
+      selectedTextColor: 'charcoal',
+      textRotation: 0,
+      textOffsetY: 0,
+      textScale: 1,
+    }
+    const pending = await store.createPendingSubmission(pendingDraft)
 
     const approved = await store.approveSubmission(pending.id)
 
     expect(approved.slugCandidate).toBe('no-crown-for-a-clown-2')
   })
 
-  it('avoids collisions with already-public seed community slugs during approval', async () => {
+  it('does not treat legacy seeded community slugs as public collisions during approval', async () => {
     const store = await createTestStore()
 
-    const pending = await store.createPendingSubmission({
+    const pendingDraft = {
       slogan: 'Library Cards Over Crowns',
       slugCandidate: 'community-library-cards-over-crowns',
       selectedTemplate: 'classic',
-    })
+      primaryCategory: 'best',
+      categories: ['best', 'printable'],
+      selectedTextColor: 'charcoal',
+      textRotation: 0,
+      textOffsetY: 0,
+      textScale: 1,
+    }
+    const pending = await store.createPendingSubmission(pendingDraft)
 
     const approved = await store.approveSubmission(pending.id)
 
-    expect(approved.slugCandidate).toBe('community-library-cards-over-crowns-2')
+    expect(approved.slugCandidate).toBe('community-library-cards-over-crowns')
+  })
+
+  it('builds a public community sign without leaking private submission fields', async () => {
+    const store = await createTestStore()
+
+    const draft = {
+      slogan: 'Power to the Public',
+      slugCandidate: 'power-to-the-public',
+      selectedTemplate: 'tilted',
+      primaryCategory: 'best',
+      categories: ['best'],
+      submitterEmail: 'dana@example.com',
+      selectedTextColor: 'signal-red',
+      textRotation: 8,
+      textOffsetY: 12,
+      textScale: 1.14,
+    }
+
+    const pending = await store.createPendingSubmission(draft)
+    const approved = await store.approveSubmission(pending.id, 'ready for gallery')
+    const sign = buildApprovedSubmissionSign(approved, 7)
+    const svg = decodeSvgAsset(sign.image)
+
+    expect(sign).not.toHaveProperty('submitterEmail')
+    expect(sign).not.toHaveProperty('moderatorNote')
+    expect(svg).toContain('fill="#b42318"')
+    expect(svg).toContain('rotate(8 400 500)')
+  })
+
+  it('keeps the template default text color for legacy records without a stored color id', async () => {
+    const dataDir = await mkdtemp(path.join(os.tmpdir(), 'site-mvp-store-'))
+    temporaryDirectories.push(dataDir)
+
+    await writeFile(
+      path.join(dataDir, 'submissions.json'),
+      JSON.stringify(
+        {
+          submissions: [
+            {
+              id: 'submission-legacy-printable',
+              slogan: 'Poster power',
+              slugCandidate: 'poster-power',
+              selectedTemplate: 'printable',
+              status: 'approved',
+              createdAt: '2026-03-28T12:00:00.000Z',
+            },
+          ],
+        },
+        null,
+        2,
+      ),
+    )
+    await writeFile(path.join(dataDir, 'votes.json'), JSON.stringify({ votes: {} }, null, 2))
+
+    const store = createSubmissionStore({
+      dataDir,
+      now: () => '2026-03-28T12:00:00.000Z',
+      generateId: () => 'submission-fixed-id',
+    })
+
+    const approved = (await store.listApprovedSubmissions())[0]
+
+    expect(approved).toBeDefined()
+
+    const sign = buildApprovedSubmissionSign(approved!, 0)
+    const svg = decodeSvgAsset(sign.image)
+
+    expect(svg).toContain('fill="#111111"')
+    expect(svg).not.toContain('fill="#171717"')
+  })
+
+  it('prefers D1-backed async reads when a binding is available', async () => {
+    const store = await createTestStore()
+
+    const d1Statements = new Map<string, { results?: unknown[]; first?: unknown }>([
+      [
+        'SELECT id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, status, created_at, approved_at, moderator_note FROM submissions WHERE status = ? ORDER BY datetime(created_at) DESC, id DESC',
+        {
+          results: [
+            {
+              id: 'submission-from-d1',
+              slogan: 'From D1 only',
+              slug_candidate: 'from-d1-only',
+              selected_template: 'classic',
+              primary_category: 'best',
+              categories_json: JSON.stringify(['best', 'printable']),
+              submitter_name: 'Dana',
+              submitter_email: 'dana@example.com',
+              selected_text_color: 'signal-red',
+              text_rotation: 4,
+              text_offset_y: 6,
+              text_scale: 1.1,
+              status: 'approved',
+              created_at: '2026-03-29T09:00:00.000Z',
+              approved_at: '2026-03-29T10:00:00.000Z',
+              moderator_note: 'ready',
+            },
+          ],
+        },
+      ],
+    ])
+
+    const storeWithD1 = createSubmissionStore({
+      dataDir: store.dataDir,
+      now: () => '2026-03-28T12:00:00.000Z',
+      generateId: () => 'submission-fixed-id',
+      getD1Database: async () => ({
+        prepare(sql: string) {
+          const statement = d1Statements.get(sql)
+
+          if (!statement) {
+            throw new Error(`Unexpected SQL in test: ${sql}`)
+          }
+
+          return {
+            bind() {
+              return this
+            },
+            async all() {
+              return {
+                results: statement.results ?? [],
+              }
+            },
+            async first() {
+              return (statement.first ?? null) as never
+            },
+            async run() {
+              return {}
+            },
+          }
+        },
+      }),
+    })
+
+    const approvedItems = await storeWithD1.listApprovedSubmissions()
+
+    expect(approvedItems).toHaveLength(1)
+    expect(approvedItems[0]?.id).toBe('submission-from-d1')
+    expect(approvedItems[0]?.slugCandidate).toBe('from-d1-only')
+  })
+
+  it('retries D1 approval with a new slug when the approved slug hits a unique constraint', async () => {
+    const store = await createTestStore()
+    const attemptedSlugs: string[] = []
+    let approvedSlugReads = 0
+    let lastBoundValues: unknown[] = []
+
+    const storeWithD1 = createSubmissionStore({
+      dataDir: store.dataDir,
+      now: () => '2026-03-28T12:00:00.000Z',
+      generateId: () => 'submission-fixed-id',
+      getD1Database: async () => ({
+        prepare(sql: string) {
+          return {
+            bind(...values: unknown[]) {
+              lastBoundValues = values
+              return this
+            },
+            async all() {
+              if (
+                sql ===
+                'SELECT slug_candidate FROM submissions WHERE status = ? AND id != ?'
+              ) {
+                approvedSlugReads += 1
+
+                return {
+                  results:
+                    approvedSlugReads === 1
+                      ? []
+                      : [{ slug_candidate: 'same-slug' }],
+                }
+              }
+
+              throw new Error(`Unexpected SQL all() in test: ${sql}`)
+            },
+            async first() {
+              if (
+                sql ===
+                'SELECT id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, status, created_at, approved_at, moderator_note FROM submissions WHERE id = ?'
+              ) {
+                return {
+                  id: 'submission-from-d1',
+                  slogan: 'Same slug please',
+                  slug_candidate: 'same-slug',
+                  selected_template: 'classic',
+                  primary_category: 'best',
+                  categories_json: JSON.stringify(['best']),
+                  submitter_name: 'Dana',
+                  submitter_email: 'dana@example.com',
+                  selected_text_color: 'charcoal',
+                  text_rotation: 0,
+                  text_offset_y: 0,
+                  text_scale: 1,
+                  status: 'pending',
+                  created_at: '2026-03-28T11:00:00.000Z',
+                  approved_at: null,
+                  moderator_note: null,
+                }
+              }
+
+              throw new Error(`Unexpected SQL first() in test: ${sql}`)
+            },
+            async run() {
+              if (
+                sql ===
+                'UPDATE submissions SET slug_candidate = ?, status = ?, approved_at = ?, moderator_note = ? WHERE id = ?'
+              ) {
+                attemptedSlugs.push(String(lastBoundValues[0]))
+
+                if (attemptedSlugs.length === 1) {
+                  throw new Error('D1_ERROR: UNIQUE constraint failed: submissions.slug_candidate')
+                }
+
+                return {}
+              }
+
+              throw new Error(`Unexpected SQL run() in test: ${sql}`)
+            },
+          }
+        },
+      }),
+    })
+
+    const approved = await storeWithD1.approveSubmission('submission-from-d1')
+
+    expect(approved.slugCandidate).toBe('same-slug-2')
+    expect(attemptedSlugs).toEqual(['same-slug', 'same-slug-2'])
+  })
+
+  it('falls back to file storage when no D1 binding is available', async () => {
+    const store = await createTestStore()
+
+    const pending = await store.createPendingSubmission({
+      slogan: 'Fallback path',
+      slugCandidate: 'fallback-path',
+      selectedTemplate: 'classic',
+      primaryCategory: 'best',
+      categories: ['best'],
+      selectedTextColor: 'charcoal',
+      textRotation: 0,
+      textOffsetY: 0,
+      textScale: 1,
+    })
+
+    await store.approveSubmission(pending.id)
+
+    const storeWithoutD1 = createSubmissionStore({
+      dataDir: store.dataDir,
+      now: () => '2026-03-28T12:00:00.000Z',
+      generateId: () => 'submission-fixed-id',
+      getD1Database: async () => null,
+    })
+
+    const approvedItems = await storeWithoutD1.listApprovedSubmissions()
+
+    expect(approvedItems).toHaveLength(1)
+    expect(approvedItems[0]?.slugCandidate).toBe('fallback-path')
   })
 })

@@ -61,4 +61,20 @@ describe('metadata helpers', () => {
       keywords: expect.arrayContaining(['No Crown for a Clown', 'no kings protest sign']),
     })
   })
+
+  it('keeps community attribution and private submission fields out of detail metadata', () => {
+    const metadata = buildSignMetadata({
+      title: 'Town Hall Over Throne Room',
+      submitterName: 'Dana Rivers',
+      submitterEmail: 'dana@example.com',
+      moderatorNote: 'Ready for the gallery',
+    })
+
+    expect(metadata).toMatchObject({
+      title: 'Town Hall Over Throne Room | No Kings Protest Sign',
+      description:
+        'View this No Kings protest sign, download it as a PNG, share it, and explore related readable, printable, or approved community signs.',
+    })
+    expect(JSON.stringify(metadata)).not.toMatch(/Dana Rivers|dana@example.com|Ready for the gallery/i)
+  })
 })

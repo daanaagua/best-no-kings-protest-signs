@@ -19,4 +19,10 @@ export type SignRecord = {
   voteCount: number
   editorsPick?: boolean
   sourceType: SignSourceType
+  submitterName?: string
+  selectedTextColor?: string
+  textRotation?: number
+  textOffsetY?: number
+  textScale?: number
+  approvedAt?: string
 }

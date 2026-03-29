@@ -1,13 +1,18 @@
 import { Hero } from '@/src/components/home/hero'
 import { SignGrid } from '@/src/components/signs/sign-grid'
-import { getAllSigns, getApprovedHomepageCommunitySigns } from '@/src/lib/signs/queries'
+import {
+  getAllSignsAsync,
+  getApprovedHomepageCommunitySignsAsync,
+} from '@/src/lib/signs/queries'
 import { getEditorsPicks, getTrendingSigns } from '@/src/lib/signs/ranking'
 import { SIGN_CATEGORIES } from '@/src/lib/signs/types'
 
-export default function Home() {
-  const allSigns = getAllSigns()
+export const dynamic = 'force-dynamic'
+
+export default async function Home() {
+  const allSigns = await getAllSignsAsync()
   const editorsPicks = getEditorsPicks(8)
-  const communitySigns = getApprovedHomepageCommunitySigns(4)
+  const communitySigns = await getApprovedHomepageCommunitySignsAsync(4)
   const printableCount = allSigns.filter((sign) => sign.categories.includes('printable')).length
   const communityCount = allSigns.filter((sign) => sign.sourceType === 'community').length
 
@@ -58,13 +63,15 @@ export default function Home() {
         title="More No Kings signs"
       />
 
-      <SignGrid
-        description="Community signs keep the wall grounded in local rally language, shared tactics, and downloadable poster ideas."
-        eyebrow="Community additions"
-        id="community-signs"
-        signs={communitySigns}
-        title="Recent community signs"
-      />
+      {communitySigns.length > 0 ? (
+        <SignGrid
+          description="Community signs keep the wall grounded in local rally language, shared tactics, and downloadable poster ideas."
+          eyebrow="Community additions"
+          id="community-signs"
+          signs={communitySigns}
+          title="Recent community signs"
+        />
+      ) : null}
 
       <section aria-labelledby="seo-copy-title" className="home-section seo-copy">
         <div className="section-heading">

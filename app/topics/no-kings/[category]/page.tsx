@@ -6,7 +6,7 @@ import { buildCategoryHref } from '@/src/components/home/category-rail'
 import { SignGrid } from '@/src/components/signs/sign-grid'
 import { siteConfig } from '@/src/data/site'
 import { buildCategoryMetadata } from '@/src/lib/signs/metadata'
-import { getSignsByCategory } from '@/src/lib/signs/queries'
+import { getSignsByCategoryAsync } from '@/src/lib/signs/queries'
 import { getTopAllTimeSigns } from '@/src/lib/signs/ranking'
 import { SIGN_CATEGORIES, type SignCategory } from '@/src/lib/signs/types'
 
@@ -22,6 +22,8 @@ type CategoryPageContent = {
   faqHeading: string
   faqs: Array<{ question: string; answer: string }>
 }
+
+export const dynamic = 'force-dynamic'
 
 const CATEGORY_PAGE_CONTENT: Record<SignCategory, CategoryPageContent> = {
   best: {
@@ -142,9 +144,16 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const category = getCategoryOrThrow((await params).category)
   const content = CATEGORY_PAGE_CONTENT[category]
-  const signs = getSignsByCategory(category)
+  const signs = await getSignsByCategoryAsync(category)
   const topSign = getTopAllTimeSigns(category, 1)[0]
   const relatedCategories = SIGN_CATEGORIES.filter((entry) => entry !== category)
+  const relatedCategoryCards = await Promise.all(
+    relatedCategories.map(async (relatedCategory) => ({
+      relatedCategory,
+      relatedSigns: await getSignsByCategoryAsync(relatedCategory),
+      relatedLeader: getTopAllTimeSigns(relatedCategory, 1)[0],
+    })),
+  )
 
   return (
     <div className="topic-page">
@@ -204,10 +213,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </div>
 
         <div className="topic-links" role="list">
-          {relatedCategories.map((relatedCategory) => {
-            const relatedSigns = getSignsByCategory(relatedCategory)
-            const relatedLeader = getTopAllTimeSigns(relatedCategory, 1)[0]
-
+          {relatedCategoryCards.map(({ relatedCategory, relatedLeader, relatedSigns }) => {
             return (
               <div key={relatedCategory} role="listitem">
                 <Link className="topic-links__item" href={buildCategoryHref(relatedCategory)}>

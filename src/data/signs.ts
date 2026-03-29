@@ -747,3 +747,7 @@ export const launchSigns: SignRecord[] = [
   ...officialLaunchSigns,
   ...approvedCommunitySigns,
 ]
+
+export function getOfficialSigns() {
+  return officialLaunchSigns
+}

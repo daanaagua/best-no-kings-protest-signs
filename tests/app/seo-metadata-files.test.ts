@@ -17,8 +17,8 @@ describe('SEO metadata files', () => {
     })
   })
 
-  it('includes core content routes and sign details in the sitemap', () => {
-    const entries = sitemap()
+  it('includes core content routes and sign details in the sitemap', async () => {
+    const entries = await sitemap()
     const urls = entries.map((entry) => entry.url)
 
     expect(urls).toContain('https://bestnokingsprotestsigns.org/')

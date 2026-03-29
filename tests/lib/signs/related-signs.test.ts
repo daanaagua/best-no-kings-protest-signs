@@ -9,9 +9,8 @@ describe('related sign queries', () => {
     expect(related).toHaveLength(3)
     expect(related.some((sign) => sign.slug === 'no-crown-for-a-clown')).toBe(false)
     expect(related.every((sign) => sign.categories.includes('best'))).toBe(true)
-    expect(
-      related.some((sign) => sign.slug === 'community-we-brought-drums-not-dukes'),
-    ).toBe(true)
+    expect(related.every((sign) => sign.sourceType === 'official')).toBe(true)
+    expect(related.some((sign) => sign.slug.startsWith('community-'))).toBe(false)
   })
 
   it('returns no related signs when the current slug does not exist', () => {

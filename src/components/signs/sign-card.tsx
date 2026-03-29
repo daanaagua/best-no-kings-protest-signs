@@ -14,7 +14,17 @@ function formatVoteCount(voteCount: number) {
   return `${voteCount.toLocaleString('en-US')} ${label}`
 }
 
+function getPublicAttribution(sign: SignRecord) {
+  if (sign.sourceType !== 'community' || !sign.submitterName) {
+    return undefined
+  }
+
+  return `Submitted by ${sign.submitterName}`
+}
+
 export function SignCard({ sign }: SignCardProps) {
+  const attribution = getPublicAttribution(sign)
+
   return (
     <article className="sign-card">
       <div className="sign-card__media">
@@ -33,6 +43,7 @@ export function SignCard({ sign }: SignCardProps) {
           <h3 className="sign-card__title">{sign.title}</h3>
           <p className="sign-card__slogan">{sign.slogan}</p>
           <p className="sign-card__description">{sign.description}</p>
+          {attribution ? <p className="sign-card__attribution">{attribution}</p> : null}
         </div>
 
         <div className="sign-card__footer">

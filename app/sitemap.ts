@@ -1,15 +1,17 @@
 import type { MetadataRoute } from 'next'
 
 import { siteConfig } from '@/src/data/site'
-import { getAllSigns } from '@/src/lib/signs/queries'
+import { getAllSignsAsync } from '@/src/lib/signs/queries'
 import { SIGN_CATEGORIES } from '@/src/lib/signs/types'
 import { STATIC_LAUNCH_LAST_MODIFIED } from '@/src/lib/launch-mode'
+
+export const dynamic = 'force-dynamic'
 
 function buildUrl(path: string) {
   return `${siteConfig.url}${path}`
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: buildUrl('/'),
@@ -64,7 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ])
 
-  const signPages = getAllSigns().map<MetadataRoute.Sitemap[number]>((sign) => ({
+  const signPages = (await getAllSignsAsync()).map<MetadataRoute.Sitemap[number]>((sign) => ({
     url: buildUrl(`/signs/${sign.slug}`),
     lastModified: sign.createdAt,
     changeFrequency: 'weekly',

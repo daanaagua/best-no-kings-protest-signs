@@ -51,4 +51,24 @@ describe('SignDetail', () => {
     expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
     expect(screen.queryByText('Community')).not.toBeInTheDocument()
   })
+
+  it('shows public attribution for approved community signs without leaking private submission fields', () => {
+    const attributedCommunitySign = {
+      ...approvedCommunitySigns[0],
+      submitterName: 'Dana Rivers',
+      submitterEmail: 'dana@example.com',
+      moderatorNote: 'Ready for the gallery',
+    }
+
+    render(
+      <SignDetail
+        shareUrl="https://bestnokingsprotestsigns.org/signs/community-library-cards-over-crowns"
+        sign={attributedCommunitySign}
+      />,
+    )
+
+    expect(screen.getByText(/Submitted by Dana Rivers/i)).toBeInTheDocument()
+    expect(screen.queryByText(/dana@example.com/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Ready for the gallery/i)).not.toBeInTheDocument()
+  })
 })

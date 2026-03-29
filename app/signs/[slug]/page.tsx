@@ -7,7 +7,7 @@ import { SignDetail } from '@/src/components/signs/sign-detail'
 import { SignGrid } from '@/src/components/signs/sign-grid'
 import { siteConfig } from '@/src/data/site'
 import { buildSignMetadata } from '@/src/lib/signs/metadata'
-import { getAllSigns, getRelatedSigns, getSignBySlug } from '@/src/lib/signs/queries'
+import { getRelatedSignsAsync, getSignBySlugAsync } from '@/src/lib/signs/queries'
 
 function getMetadataImages(sign: { image: string; title: string }) {
   if (sign.image.startsWith('data:')) {
@@ -26,16 +26,14 @@ type SignPageProps = {
   params: Promise<{ slug: string }>
 }
 
+export const dynamic = 'force-dynamic'
+
 function buildTopCategoryHref(category: string) {
   return `/topics/no-kings/top/${category}`
 }
 
-export function generateStaticParams() {
-  return getAllSigns().map((sign) => ({ slug: sign.slug }))
-}
-
 export async function generateMetadata({ params }: SignPageProps): Promise<Metadata> {
-  const sign = getSignBySlug((await params).slug)
+  const sign = await getSignBySlugAsync((await params).slug)
 
   if (!sign) {
     notFound()
@@ -69,13 +67,13 @@ export async function generateMetadata({ params }: SignPageProps): Promise<Metad
 }
 
 export default async function SignPage({ params }: SignPageProps) {
-  const sign = getSignBySlug((await params).slug)
+  const sign = await getSignBySlugAsync((await params).slug)
 
   if (!sign) {
     notFound()
   }
 
-  const relatedSigns = getRelatedSigns(sign.slug, sign.primaryCategory, 4)
+  const relatedSigns = await getRelatedSignsAsync(sign.slug, sign.primaryCategory, 4)
   const shareUrl = `${siteConfig.url}/signs/${sign.slug}`
 
   return (

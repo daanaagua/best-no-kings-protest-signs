@@ -49,6 +49,19 @@ describe('ranking helpers', () => {
     expect(topBestSigns[1].voteCount).toBeGreaterThanOrEqual(topBestSigns[2].voteCount)
   })
 
+  it('keeps ranking helpers scoped to official signs only', () => {
+    const rankedSigns = [
+      ...getEditorsPicks(20),
+      ...getCategoryEditorsPicks('best', 20),
+      ...getTopAllTimeSigns('best', 100),
+      ...getTrendingSigns('best', 100),
+    ]
+
+    expect(rankedSigns.length).toBeGreaterThan(0)
+    expect(rankedSigns.every((sign) => sign.sourceType === 'official')).toBe(true)
+    expect(rankedSigns.some((sign) => sign.slug.startsWith('community-'))).toBe(false)
+  })
+
   it('keeps reassigned kids signs rankable without funny tags', () => {
     const topKidsSigns = getTopAllTimeSigns('kids', 4)
     const crayons = topKidsSigns.find((sign) => sign.slug === 'crayons-not-crowns')

@@ -1,9 +1,13 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "best-no-kings-protest-signs",
+  "account_id": "c74872d377347938e13bb632280e185c",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-03-28",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "vars": {
+    "ENABLE_COMMUNITY_MVP": "true"
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
@@ -12,6 +16,15 @@
     {
       "binding": "WORKER_SELF_REFERENCE",
       "service": "best-no-kings-protest-signs"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "SUBMISSIONS_DB",
+      "database_name": "best-no-kings-protest-signs-submissions",
+      "database_id": "d56b14fe-a868-4291-96cc-e4ddf847ff21",
+      "preview_database_id": "d56b14fe-a868-4291-96cc-e4ddf847ff21",
+      "migrations_dir": "migrations"
     }
   ]
 }

@@ -16,7 +16,17 @@ function buildShareHref(signTitle: string, signSlogan: string, shareUrl: string)
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`
 }
 
+function getPublicAttribution(sign: SignRecord) {
+  if (sign.sourceType !== 'community' || !sign.submitterName) {
+    return undefined
+  }
+
+  return `Submitted by ${sign.submitterName}`
+}
+
 export function SignDetail({ sign, shareUrl }: SignDetailProps) {
+  const attribution = getPublicAttribution(sign)
+
   return (
     <article className="sign-detail">
       <div className="sign-detail__media">
@@ -37,6 +47,7 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
           <h1 className="sign-detail__title">{sign.title}</h1>
           <p className="sign-detail__slogan">{sign.slogan}</p>
           <p className="sign-detail__description">{sign.description}</p>
+          {attribution ? <p className="sign-detail__attribution">{attribution}</p> : null}
         </div>
 
         <div className="sign-detail__actions-wrap">

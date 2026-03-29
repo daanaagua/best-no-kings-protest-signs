@@ -1,4 +1,4 @@
-import { getAllSigns, getSignsByCategory } from '@/src/lib/signs/queries'
+import { getOfficialSigns, getOfficialSignsByCategory } from '@/src/lib/signs/queries'
 import type { SignCategory, SignRecord } from '@/src/lib/signs/types'
 
 function normalizeLimit(limit: number) {
@@ -31,7 +31,7 @@ function calculateTrendingScore(sign: SignRecord, now: Date) {
 export function getEditorsPicks(limit: number) {
   const normalizedLimit = normalizeLimit(limit)
 
-  return getAllSigns()
+  return getOfficialSigns()
     .filter((sign) => sign.editorsPick === true)
     .sort(compareByVoteCount)
     .slice(0, normalizedLimit)
@@ -40,7 +40,7 @@ export function getEditorsPicks(limit: number) {
 export function getCategoryEditorsPicks(category: SignCategory, limit: number) {
   const normalizedLimit = normalizeLimit(limit)
 
-  return getSignsByCategory(category)
+  return getOfficialSignsByCategory(category)
     .filter((sign) => sign.editorsPick === true)
     .sort(compareByVoteCount)
     .slice(0, normalizedLimit)
@@ -49,7 +49,7 @@ export function getCategoryEditorsPicks(category: SignCategory, limit: number) {
 export function getTopAllTimeSigns(category: SignCategory, limit: number) {
   const normalizedLimit = normalizeLimit(limit)
 
-  return getSignsByCategory(category)
+  return getOfficialSignsByCategory(category)
     .sort(compareByVoteCount)
     .slice(0, normalizedLimit)
 }
@@ -58,7 +58,7 @@ export function getTrendingSigns(category: SignCategory, limit: number) {
   const normalizedLimit = normalizeLimit(limit)
   const now = new Date()
 
-  return getSignsByCategory(category)
+  return getOfficialSignsByCategory(category)
     .sort(
       (a, b) =>
         calculateTrendingScore(b, now) - calculateTrendingScore(a, now) ||

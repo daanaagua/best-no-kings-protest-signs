@@ -28,6 +28,30 @@ export const TEXT_COLOR_OPTIONS = [
 
 export type TextColorOptionId = (typeof TEXT_COLOR_OPTIONS)[number]['id']
 
+export type TemplatePreviewStyleOptions = {
+  selectedTextColor?: TextColorOptionId
+  textRotation?: number
+  textOffsetY?: number
+  textScale?: number
+}
+
+export type NormalizedTemplatePreviewStyleOptions = {
+  selectedTextColor?: TextColorOptionId
+  textRotation: number
+  textOffsetY: number
+  textScale: number
+}
+
+export const DEFAULT_TEXT_ROTATION = 0
+export const DEFAULT_TEXT_OFFSET_Y = 0
+export const DEFAULT_TEXT_SCALE = 1
+export const MIN_TEXT_ROTATION = -30
+export const MAX_TEXT_ROTATION = 30
+export const MIN_TEXT_OFFSET_Y = -32
+export const MAX_TEXT_OFFSET_Y = 32
+export const MIN_TEXT_SCALE = 0.8
+export const MAX_TEXT_SCALE = 1.2
+
 export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefinition> = {
   classic: {
     id: 'classic',
@@ -96,12 +120,39 @@ function escapeSvgText(value: string) {
     .replace(/'/g, '&#39;')
 }
 
+function normalizeFiniteNumber(value: number | undefined, fallback: number) {
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback
+}
+
 export function isSignTemplateId(value: string): value is SignTemplateId {
   return SIGN_TEMPLATE_IDS.includes(value as SignTemplateId)
 }
 
+export function isTextColorOptionId(value: string): value is TextColorOptionId {
+  return TEXT_COLOR_OPTIONS.some((option) => option.id === value)
+}
+
 export function getSignTemplateDefinition(template: SignTemplateId) {
   return SIGN_TEMPLATE_DEFINITIONS[template]
+}
+
+export function getTextColorValue(optionId?: TextColorOptionId) {
+  return optionId
+    ? TEXT_COLOR_OPTIONS.find((option) => option.id === optionId)?.value
+    : undefined
+}
+
+export function normalizeTemplatePreviewStyleOptions(
+  options: TemplatePreviewStyleOptions = {},
+): NormalizedTemplatePreviewStyleOptions {
+  return {
+    selectedTextColor: isTextColorOptionId(options.selectedTextColor ?? '')
+      ? options.selectedTextColor
+      : undefined,
+    textRotation: normalizeFiniteNumber(options.textRotation, DEFAULT_TEXT_ROTATION),
+    textOffsetY: normalizeFiniteNumber(options.textOffsetY, DEFAULT_TEXT_OFFSET_Y),
+    textScale: normalizeFiniteNumber(options.textScale, DEFAULT_TEXT_SCALE),
+  }
 }
 
 export function normalizePreviewSlogan(slogan: string) {
@@ -155,26 +206,38 @@ export function getPreviewLines(slogan: string) {
   return lines
 }
 
-export function buildTemplatePreviewDataUrl(slogan: string, template: SignTemplateId) {
+export function buildTemplatePreviewDataUrl(
+  slogan: string,
+  template: SignTemplateId,
+  options: TemplatePreviewStyleOptions = {},
+) {
   const definition = getSignTemplateDefinition(template)
+  const previewStyleOptions = normalizeTemplatePreviewStyleOptions(options)
   const lines = getPreviewLines(slogan)
   const fontSize = lines.length >= 6 ? 38 : lines.length === 5 ? 44 : 54
   const lineHeight = fontSize + 24
   const startY = 500 - ((lines.length - 1) * lineHeight) / 2
+  const textColor = getTextColorValue(previewStyleOptions.selectedTextColor) ?? definition.textColor
   const lineMarkup = lines
     .map((line, index) => {
       const y = startY + index * lineHeight
 
-      return `<text x="400" y="${y}" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="${fontSize}" letter-spacing="2" fill="${definition.textColor}">${escapeSvgText(line.toUpperCase())}</text>`
+      return `<text x="400" y="${y}" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="${fontSize}" letter-spacing="2" fill="${textColor}">${escapeSvgText(line.toUpperCase())}</text>`
     })
     .join('')
+  const textTransform = `translate(0 ${previewStyleOptions.textOffsetY}) rotate(${previewStyleOptions.textRotation} 400 500)`
+  const textScaleTransform = `translate(400 500) scale(${previewStyleOptions.textScale}) translate(-400 -500)`
 
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="${escapeSvgText(normalizePreviewSlogan(slogan))}">
       <rect width="800" height="1000" fill="#d7d3cd" />
       <rect x="112" y="48" width="576" height="904" rx="30" fill="${definition.boardColor}" stroke="#162635" stroke-width="16" transform="rotate(${definition.rotation} 400 500)" />
       <rect x="128" y="64" width="544" height="872" rx="22" fill="none" stroke="rgba(22, 38, 53, 0.08)" stroke-width="4" transform="rotate(${definition.rotation} 400 500)" />
-      <g transform="rotate(${definition.rotation} 400 500)">${lineMarkup}</g>
+      <g transform="rotate(${definition.rotation} 400 500)">
+        <g transform="${textTransform}">
+          <g transform="${textScaleTransform}">${lineMarkup}</g>
+        </g>
+      </g>
       <text x="744" y="956" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="2" fill="#3f3f3f" opacity="0.55">NO KINGS PROTEST SIGNS</text>
     </svg>
   `

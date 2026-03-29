@@ -10,15 +10,24 @@ vi.mock('next/image', () => ({
 }))
 
 describe('Home page', () => {
-  it('keeps the homepage free of category-rail labels', () => {
-    render(<Home />)
+  it('hides the recent community section when no approved real submissions exist', async () => {
+    render(await Home())
+
+    expect(
+      screen.queryByRole('heading', { name: /Recent community signs/i }),
+    ).not.toBeInTheDocument()
+    expect(document.getElementById('community-signs')).toBeNull()
+  })
+
+  it('keeps the homepage free of category-rail labels', async () => {
+    render(await Home())
 
     expect(screen.queryByText(/Four fast ways into the sign wall/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/Browse by lane/i)).not.toBeInTheDocument()
   })
 
-  it('keeps the homepage SEO copy focused on the core no-kings sign intent', () => {
-    render(<Home />)
+  it('keeps the homepage SEO copy focused on the core no-kings sign intent', async () => {
+    render(await Home())
 
     const seoHeading = screen.getByRole('heading', {
       name: /What this no kings sign wall is built for/i,
@@ -34,8 +43,8 @@ describe('Home page', () => {
     expect(scoped.queryByText(/turning every card into a joke/i)).not.toBeInTheDocument()
   })
 
-  it('shows eight editorial pick cards when enough picks exist', () => {
-    render(<Home />)
+  it('shows eight editorial pick cards when enough picks exist', async () => {
+    render(await Home())
 
     const editorialHeading = screen.getByRole('heading', {
       name: /Featured no kings protest signs/i,
@@ -46,12 +55,85 @@ describe('Home page', () => {
     expect(within(editorialSection as HTMLElement).getAllByRole('link', { name: /View sign/i })).toHaveLength(8)
   })
 
-  it('avoids beta wording on the public homepage', () => {
-    render(<Home />)
+  it('avoids beta wording on the public homepage', async () => {
+    render(await Home())
 
     expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
-    expect(screen.getByText(/community signs keep the wall grounded in local rally language, shared tactics, and downloadable poster ideas/i)).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: /Recent community signs/i }),
+    ).not.toBeInTheDocument()
     expect(screen.queryByText(/humor/i)).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Make your sign/i })).toBeInTheDocument()
+  })
+
+  it('renders the recent community section when async public queries return approved submissions', async () => {
+    vi.resetModules()
+    vi.doMock('@/src/lib/signs/queries', async () => {
+      const actual = await vi.importActual<typeof import('@/src/lib/signs/queries')>(
+        '@/src/lib/signs/queries',
+      )
+
+      return {
+        ...actual,
+        getAllSignsAsync: async () => [
+          {
+            slug: 'official-sign',
+            title: 'Official Sign',
+            slogan: 'Official Sign',
+            topic: 'no-kings',
+            primaryCategory: 'best',
+            categories: ['best'],
+            image: '/official-sign.jpg',
+            description: 'Official sign',
+            createdAt: '2026-03-20T12:00:00.000Z',
+            voteCount: 10,
+            sourceType: 'official',
+          },
+          {
+            slug: 'town-hall-over-throne-room',
+            title: 'Town Hall Over Throne Room',
+            slogan: 'Town Hall Over Throne Room',
+            topic: 'no-kings',
+            primaryCategory: 'best',
+            categories: ['best', 'printable'],
+            image: '/town-hall.jpg',
+            description: 'Community sign',
+            createdAt: '2026-03-29T10:30:00.000Z',
+            voteCount: 12,
+            sourceType: 'community',
+          },
+        ],
+        getApprovedHomepageCommunitySignsAsync: async () => [
+          {
+            slug: 'town-hall-over-throne-room',
+            title: 'Town Hall Over Throne Room',
+            slogan: 'Town Hall Over Throne Room',
+            topic: 'no-kings',
+            primaryCategory: 'best',
+            categories: ['best', 'printable'],
+            image: '/town-hall.jpg',
+            description: 'Community sign',
+            createdAt: '2026-03-29T10:30:00.000Z',
+            voteCount: 12,
+            sourceType: 'community',
+          },
+        ],
+      }
+    })
+
+    const { default: RuntimeHome } = await import('@/app/page')
+
+    render(await RuntimeHome())
+
+    const communityHeading = screen.getByRole('heading', { name: /Recent community signs/i })
+    const communitySection = communityHeading.closest('section')
+
+    expect(communityHeading).toBeInTheDocument()
+    expect(communitySection).not.toBeNull()
+    expect(
+      within(communitySection as HTMLElement).getByRole('heading', {
+        name: /Town Hall Over Throne Room/i,
+      }),
+    ).toBeInTheDocument()
   })
 })

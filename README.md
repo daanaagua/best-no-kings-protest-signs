@@ -26,11 +26,17 @@ Open `http://localhost:3000` after the dev server starts.
 
 - Launch mode is intentionally static-content-first for `BESTNOKINGSPROTESTSIGNS.ORG`.
 - Public content pages stay live and indexable, including homepage, category pages, top pages, sign details, trust pages, and the `/submit` preview route.
-- The public `/submit` experience is preview-only beta for launch and does not create live server-side submission records.
+- The static Cloudflare launch keeps submit and other write flows gated: the public `/submit` experience is preview-only beta and does not create live server-side submission records.
 - Public voting is disabled in the launch UX and the public write APIs return beta-gated responses instead of persisting new writes.
 - `/internal/moderation` is now a static internal placeholder page, not a live moderation dashboard in the Worker runtime.
 - Next App Router SEO files now generate from `app/robots.ts` and `app/sitemap.ts`.
 - Public content now reads from the launch dataset only, so the Worker runtime does not depend on local JSON file reads.
+
+## Node-hosted community MVP mode
+
+- Enable the community MVP only in a Node-hosted runtime with `ENABLE_COMMUNITY_MVP=true`.
+- Approved community signs appear in public pages only after moderation actually approves them.
+- The homepage `Recent community signs` list sorts approved community signs by `approvedAt`, then `createdAt`, then record id.
 
 ## Content and data locations
 
@@ -47,13 +53,15 @@ When you add a new official sign, place the asset in `public/signs/`, add its pu
 
 ## Moderation token
 
-Create `.env.local` in the project root with a token for the protected moderation screen:
+Create `.env.local` in the project root with the moderation token and the current Node-hosted moderation auth settings:
 
 ```bash
 MODERATION_TOKEN=replace-with-a-long-random-secret
+INTERNAL_MODERATION_TOKEN=replace-with-a-long-random-secret
+INTERNAL_MODERATION_SESSION_SECRET=replace-with-a-long-random-secret
 ```
 
-The token is reserved for future durable moderation workflows. The current launch keeps moderation as an internal placeholder, not a production live queue.
+Moderation needs a `MODERATION_TOKEN`. In the current Node-hosted MVP flow, the protected internal moderation route reads `INTERNAL_MODERATION_TOKEN` and `INTERNAL_MODERATION_SESSION_SECRET`, while the static Cloudflare launch still keeps moderation as an internal placeholder instead of a production live queue.
 
 ## Domain
 
