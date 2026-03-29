@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from 'next/script'
 import "./globals.css";
 
 import { SiteFooter } from '@/src/components/layout/site-footer'
@@ -54,6 +55,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="site-body">
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-N6ES6BGB70" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-N6ES6BGB70');`}
+        </Script>
         <div className="site-shell">
           <SiteHeader />
           <main className="site-main" id="main-content">

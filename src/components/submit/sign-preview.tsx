@@ -1,4 +1,5 @@
 import { getPreviewLines, normalizePreviewSlogan, type SignTemplateId } from '@/src/lib/signs/templates'
+import { SignWatermark } from '@/src/components/signs/sign-watermark'
 
 type SignPreviewProps = {
   slogan: string
@@ -19,6 +20,7 @@ export function SignPreview({ slogan, template }: SignPreviewProps) {
               {line}
             </p>
           ))}
+          <SignWatermark className="sign-watermark--preview" />
         </div>
       </div>
     </div>

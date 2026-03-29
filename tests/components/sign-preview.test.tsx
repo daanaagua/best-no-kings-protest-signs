@@ -15,6 +15,7 @@ describe('SignPreview', () => {
       expect(screen.getByText('No Crown for a Clown')).toBeInTheDocument()
       expect(screen.getByTestId('sign-preview-root')).toHaveAttribute('data-template', template)
       expect(screen.queryByText(/Classic chant board|Tilted curbside sign|Bold marker block|Printable flyer layout/i)).not.toBeInTheDocument()
+      expect(screen.getByText('NO KINGS PROTEST SIGNS')).toBeInTheDocument()
 
       unmount()
     }

@@ -23,6 +23,7 @@ describe('SignCard', () => {
     expect(screen.getByText('942 votes')).toBeInTheDocument()
     expect(image).toHaveAttribute('src', sign.image)
     expect(image).toHaveStyle({ objectFit: 'contain' })
+    expect(screen.getByText('NO KINGS PROTEST SIGNS')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /View sign/i })).toHaveAttribute(
       'href',
       `/signs/${sign.slug}`,

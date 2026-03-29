@@ -23,6 +23,7 @@ describe('SignDetail', () => {
 
     expect(image).toBeInTheDocument()
     expect(image).toHaveStyle({ objectFit: 'contain' })
+    expect(screen.getByText('NO KINGS PROTEST SIGNS')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: officialLaunchSigns[0].title })).toBeInTheDocument()
     expect(screen.getByText(officialLaunchSigns[0].description)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Public voting opens after launch/i })).toBeDisabled()

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 
 import { VoteButton } from '@/src/components/signs/vote-button'
+import { SignWatermark } from '@/src/components/signs/sign-watermark'
 import type { SignRecord } from '@/src/lib/signs/types'
 
 type SignDetailProps = {
@@ -26,6 +27,7 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
           src={sign.image}
           style={{ objectFit: 'contain', objectPosition: 'center' }}
         />
+        <SignWatermark className="sign-watermark--media sign-watermark--detail" />
       </div>
 
       <div className="sign-detail__body">

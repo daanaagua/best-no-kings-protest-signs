@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import type { SignRecord } from '@/src/lib/signs/types'
+import { SignWatermark } from '@/src/components/signs/sign-watermark'
 
 type SignCardProps = {
   sign: SignRecord
@@ -24,6 +25,7 @@ export function SignCard({ sign }: SignCardProps) {
           src={sign.image}
           style={{ objectFit: 'contain', objectPosition: 'center' }}
         />
+        <SignWatermark className="sign-watermark--media" />
       </div>
 
       <div className="sign-card__body">
