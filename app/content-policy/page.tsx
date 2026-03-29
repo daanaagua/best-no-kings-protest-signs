@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { HomeHubPanel } from '@/src/components/seo/home-hub-panel'
 import { siteConfig } from '@/src/data/site'
 
 export const metadata: Metadata = {
@@ -97,6 +98,17 @@ export default function ContentPolicyPage() {
           </p>
         </div>
       </section>
+
+      <HomeHubPanel
+        description="A policy page helps trust, but the homepage remains the main ranking target for this site. This panel sends readers back to the strongest commercial and informational hub."
+        eyebrow="Main keyword hub"
+        homeDescription="Return to the homepage for the best No Kings protest signs, launch-ready ideas, and approved community additions."
+        homeLabel="Browse all best No Kings protest signs"
+        secondaryDescription="Open the builder if you want to submit a sign that follows the moderation rules on this page."
+        secondaryHref="/submit"
+        secondaryLabel="Make your own No Kings sign"
+        title="Read the rules, then move back to the main sign archive"
+      />
     </div>
   )
 }

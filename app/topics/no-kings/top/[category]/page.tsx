@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { buildCategoryHref } from '@/src/components/home/category-rail'
+import { HomeHubPanel } from '@/src/components/seo/home-hub-panel'
 import { SignGrid } from '@/src/components/signs/sign-grid'
 import { siteConfig } from '@/src/data/site'
 import { buildTopMetadata } from '@/src/lib/signs/metadata'
@@ -209,6 +210,17 @@ export default async function TopCategoryPage({ params }: TopCategoryPageProps) 
           ))}
         </div>
       </section>
+
+      <HomeHubPanel
+        description="Top pages serve ranked intent, but they should still pass users and crawl weight back to the homepage that targets the broad best-no-kings query."
+        eyebrow="Main keyword hub"
+        homeDescription="Use the homepage when you want the wider wall of best No Kings protest signs instead of a ranking-only view."
+        homeLabel="Best No Kings protest signs home"
+        secondaryDescription={`Jump back to the full ${category} discovery page if you want broader exploration without losing this lane.`}
+        secondaryHref={buildCategoryHref(category)}
+        secondaryLabel={`Browse all ${category} No Kings ideas`}
+        title="Move from ranked lists back to the primary archive"
+      />
     </div>
   )
 }

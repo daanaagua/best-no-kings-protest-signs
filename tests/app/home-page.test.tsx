@@ -29,6 +29,13 @@ describe('Home page', () => {
   it('keeps the homepage SEO copy focused on the core no-kings sign intent', async () => {
     render(await Home())
 
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /Best No Kings protest signs built to read clearly at marches, rallies, and on the street/i,
+      }),
+    ).toBeInTheDocument()
+
     const seoHeading = screen.getByRole('heading', {
       name: /What this no kings sign wall is built for/i,
     })

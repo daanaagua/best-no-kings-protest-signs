@@ -22,6 +22,10 @@ describe('Submit page', () => {
     expect(screen.getByRole('heading', { name: /Make your No Kings sign/i })).toBeInTheDocument()
     expect(screen.getByText(/send your finished design to the moderation queue/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Submit styled sign for review/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Browse all best No Kings protest signs/i })).toHaveAttribute(
+      'href',
+      '/',
+    )
     expect(screen.queryByText(/preview-only|beta-gated|static launch beta/i)).not.toBeInTheDocument()
   })
 

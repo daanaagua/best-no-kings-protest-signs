@@ -71,4 +71,18 @@ describe('SignDetail', () => {
     expect(screen.queryByText(/dana@example.com/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/Ready for the gallery/i)).not.toBeInTheDocument()
   })
+
+  it('keeps a direct internal link back to the homepage keyword hub', () => {
+    render(
+      <SignDetail
+        shareUrl="https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown"
+        sign={officialLaunchSigns[0]}
+      />,
+    )
+
+    expect(screen.getByRole('link', { name: /Browse all best No Kings protest signs/i })).toHaveAttribute(
+      'href',
+      '/',
+    )
+  })
 })

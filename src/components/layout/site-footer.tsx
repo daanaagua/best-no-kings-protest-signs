@@ -10,6 +10,9 @@ export function SiteFooter() {
         <div className="site-footer__lead">
           <Logo className="site-footer__brand" showDomain={false} />
           <p className="site-footer__note">{siteConfig.footerNote}</p>
+          <Link className="site-footer__link" href="/">
+            Best No Kings protest signs home
+          </Link>
         </div>
 
         <div className="site-footer__groups">

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { HomeHubPanel } from '@/src/components/seo/home-hub-panel'
 import { siteConfig } from '@/src/data/site'
 
 export const metadata: Metadata = {
@@ -101,6 +102,17 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+
+      <HomeHubPanel
+        description="Policy and background pages should still route readers toward the core homepage that targets the main query and showcases the strongest sign ideas first."
+        eyebrow="Main keyword hub"
+        homeDescription="Return to the homepage when you want the full archive of best No Kings protest signs instead of policy or project background."
+        homeLabel="Browse all best No Kings protest signs"
+        secondaryDescription="Open the live builder if you already know the message you want to carry."
+        secondaryHref="/submit"
+        secondaryLabel="Make your own No Kings sign"
+        title="Use this page as context, then go back to the main sign wall"
+      />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { HomeHubPanel } from '@/src/components/seo/home-hub-panel'
 import { siteConfig } from '@/src/data/site'
 
 export const metadata: Metadata = {
@@ -97,6 +98,17 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
       </section>
+
+      <HomeHubPanel
+        description="Privacy pages rarely rank for the core query on their own, so the best SEO use is helping readers and crawlers reconnect with the homepage hub."
+        eyebrow="Main keyword hub"
+        homeDescription="Go back to the homepage when you want the main wall of best No Kings protest signs and printable rally ideas."
+        homeLabel="Browse all best No Kings protest signs"
+        secondaryDescription="Open the sign maker if you want to submit an idea after reviewing the current data-use notes."
+        secondaryHref="/submit"
+        secondaryLabel="Make your own No Kings sign"
+        title="Use privacy context, then return to the main archive"
+      />
     </div>
   )
 }

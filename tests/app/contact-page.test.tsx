@@ -30,4 +30,13 @@ describe('Contact page', () => {
     expect(document.querySelector('.contact-page')).not.toBeNull()
     expect(document.querySelector('.contact-page__panel')).not.toBeNull()
   })
+
+  it('adds a homepage-focused internal link near the contact route', () => {
+    render(<ContactPage />)
+
+    expect(screen.getByRole('link', { name: /Best No Kings protest signs home/i })).toHaveAttribute(
+      'href',
+      '/',
+    )
+  })
 })

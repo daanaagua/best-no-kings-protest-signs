@@ -146,6 +146,10 @@ describe('topic routes', () => {
       'href',
       '/topics/no-kings/top/best',
     )
+    expect(screen.getByRole('link', { name: /Browse all best No Kings protest signs/i })).toHaveAttribute(
+      'href',
+      '/',
+    )
     expect(
       screen.getByRole('link', { name: /Kids\s+\d+ sign ideas\s+Leading now:/i }),
     ).toHaveAttribute('href', '/topics/no-kings/kids')
@@ -155,6 +159,10 @@ describe('topic routes', () => {
     expect(
       screen.getByRole('link', { name: /Browse the full best idea wall/i }),
     ).toHaveAttribute('href', '/topics/no-kings/best')
+    expect(screen.getByRole('link', { name: /Best No Kings protest signs home/i })).toHaveAttribute(
+      'href',
+      '/',
+    )
     expect(screen.getByRole('link', { name: /Top Kids/i })).toHaveAttribute(
       'href',
       '/topics/no-kings/top/kids',
@@ -166,6 +174,11 @@ describe('topic routes', () => {
       'href',
       '/topics/no-kings/best',
     )
+    expect(
+      screen
+        .getAllByRole('link', { name: /Browse all best No Kings protest signs/i })
+        .some((link) => link.getAttribute('href') === '/'),
+    ).toBe(true)
     expect(screen.getByRole('link', { name: /Top list/i })).toHaveAttribute(
       'href',
       '/topics/no-kings/top/best',

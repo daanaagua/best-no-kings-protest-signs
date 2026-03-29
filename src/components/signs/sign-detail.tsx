@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { DownloadSignButton } from '@/src/components/signs/download-sign-button'
 import { SignWatermark } from '@/src/components/signs/sign-watermark'
@@ -71,6 +72,9 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
           {sign.sourceType === 'community'
             ? 'Approved community entries stay indexable here alongside official boards, share links, and downloadable artwork.'
             : 'Official signs anchor the gallery with full-size artwork built for marches, rallies, downloading, and sharing.'}
+        </p>
+        <p className="sign-detail__note">
+          <Link href="/">Browse all best No Kings protest signs</Link> if you want to move from this exact detail page back into the broader archive.
         </p>
       </div>
     </article>

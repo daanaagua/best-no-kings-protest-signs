@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { buildCategoryHref } from '@/src/components/home/category-rail'
+import { HomeHubPanel } from '@/src/components/seo/home-hub-panel'
 import { SignDetail } from '@/src/components/signs/sign-detail'
 import { SignGrid } from '@/src/components/signs/sign-grid'
 import { siteConfig } from '@/src/data/site'
@@ -130,6 +131,17 @@ export default async function SignPage({ params }: SignPageProps) {
         id="related-signs"
         signs={relatedSigns}
         title={`More ${sign.primaryCategory} No Kings signs worth opening next`}
+      />
+
+      <HomeHubPanel
+        description="Exact sign pages are useful for long-tail searches, but the homepage is still the main hub for the broad best-no-kings query and stronger discovery paths."
+        eyebrow="Main keyword hub"
+        homeDescription="Return to the homepage if you want to compare this sign with the broader wall of best No Kings protest signs."
+        homeLabel="Browse all best No Kings protest signs"
+        secondaryDescription="Open the live builder if this detail page gave you an idea for your own board."
+        secondaryHref="/submit"
+        secondaryLabel="Make your own No Kings sign"
+        title="Move from this detail page back into the main archive"
       />
     </div>
   )

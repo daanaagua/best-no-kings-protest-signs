@@ -15,8 +15,8 @@ export function Hero({ featuredSign, totalSigns, communityCount, printableCount 
   return (
     <section className="home-hero">
       <div className="home-hero__copy">
-        <p className="home-hero__eyebrow">Serious protest signs for a no-kings crowd</p>
-        <h1 className="home-hero__title">No Kings protest signs built to read clearly at rallies, on sidewalks, and in the street.</h1>
+        <p className="home-hero__eyebrow">Best no-kings sign ideas for real rally use</p>
+        <h1 className="home-hero__title">Best No Kings protest signs built to read clearly at marches, rallies, and on the street.</h1>
         <p className="home-hero__description">
           Browse a clean wall of No Kings protest signs with stronger lettering, tighter line breaks, and a more serious protest look. Every sign is designed to stay legible without extra clutter inside the board.
         </p>

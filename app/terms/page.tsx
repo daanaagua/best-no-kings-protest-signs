@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { HomeHubPanel } from '@/src/components/seo/home-hub-panel'
 import { siteConfig } from '@/src/data/site'
 
 export const metadata: Metadata = {
@@ -97,6 +98,17 @@ export default function TermsPage() {
           </p>
         </div>
       </section>
+
+      <HomeHubPanel
+        description="Terms pages support trust and crawl depth, but they should still hand authority back to the homepage that targets the broadest search demand."
+        eyebrow="Main keyword hub"
+        homeDescription="Head back to the homepage for the broad archive of best No Kings protest signs, category walls, and printable ideas."
+        homeLabel="Browse all best No Kings protest signs"
+        secondaryDescription="Open the live builder if you are ready to create or submit your own board."
+        secondaryHref="/submit"
+        secondaryLabel="Make your own No Kings sign"
+        title="Read the terms, then continue into the main sign wall"
+      />
     </div>
   )
 }

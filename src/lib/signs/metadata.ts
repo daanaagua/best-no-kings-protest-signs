@@ -12,9 +12,9 @@ function formatCategoryLabel(category: SignCategory) {
 
 export function buildHomeMetadata(): SignPageMetadata {
   return {
-    title: 'Best No Kings Protest Signs, Printable Ideas & Community Uploads',
+    title: 'Best No Kings Protest Signs for Marches, Rallies, and Printouts',
     description:
-      'Browse the best No Kings protest signs, printable slogans, readable sign ideas, and approved community designs for marches, rallies, and fast PNG downloads.',
+      'Find the best No Kings protest signs for marches, rallies, printouts, and community uploads, with one homepage that surfaces the strongest slogans first.',
     keywords: [
       'no kings protest signs',
       'best no kings protest signs',
@@ -28,11 +28,11 @@ export function buildHomeMetadata(): SignPageMetadata {
 
 export function buildCategoryMetadata(category: SignCategory): SignPageMetadata {
   return {
-    title: `${formatCategoryLabel(category)} No Kings Protest Sign Ideas`,
-    description: `Browse ${category} No Kings protest sign ideas, explore related printable picks, and open ready-to-share artwork from the wider archive.`,
+    title: `${formatCategoryLabel(category)} No Kings Sign Ideas for Rally Posters`,
+    description: `Browse ${category} No Kings sign ideas for rally posters, compare printable picks, and move back to the homepage hub for the full sign wall.`,
     keywords: [
-      `${category} no kings protest sign ideas`,
-      `${category} protest signs`,
+      `${category} no kings sign ideas`,
+      `${category} protest sign ideas`,
       'no kings protest sign ideas',
       'protest poster ideas',
     ],
@@ -41,10 +41,10 @@ export function buildCategoryMetadata(category: SignCategory): SignPageMetadata 
 
 export function buildTopMetadata(category: SignCategory): SignPageMetadata {
   return {
-    title: `Top ${formatCategoryLabel(category)} No Kings Protest Signs`,
-    description: `See the strongest ${category} No Kings protest signs ranked from launch scoring and editorial picks.`,
+    title: `Top ${formatCategoryLabel(category)} No Kings Signs for Fast Printing`,
+    description: `See the strongest ${category} No Kings signs ranked for fast printing, then return to the homepage for the broader archive.`,
     keywords: [
-      `top ${category} no kings protest signs`,
+      `top ${category} no kings signs`,
       `best ${category} protest signs`,
       'no kings protest signs',
       'ranked protest signs',

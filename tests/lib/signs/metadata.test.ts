@@ -10,9 +10,9 @@ import {
 describe('metadata helpers', () => {
   it('builds the exact homepage metadata', () => {
     expect(buildHomeMetadata()).toMatchObject({
-      title: 'Best No Kings Protest Signs, Printable Ideas & Community Uploads',
+      title: 'Best No Kings Protest Signs for Marches, Rallies, and Printouts',
       description:
-        'Browse the best No Kings protest signs, printable slogans, readable sign ideas, and approved community designs for marches, rallies, and fast PNG downloads.',
+        'Find the best No Kings protest signs for marches, rallies, printouts, and community uploads, with one homepage that surfaces the strongest slogans first.',
       keywords: expect.arrayContaining([
         'no kings protest signs',
         'best no kings protest signs',
@@ -26,19 +26,19 @@ describe('metadata helpers', () => {
 
   it('builds the exact category metadata', () => {
     expect(buildCategoryMetadata('best')).toMatchObject({
-      title: 'Best No Kings Protest Sign Ideas',
+      title: 'Best No Kings Sign Ideas for Rally Posters',
       description:
-        'Browse best No Kings protest sign ideas, explore related printable picks, and open ready-to-share artwork from the wider archive.',
-      keywords: expect.arrayContaining(['best no kings protest sign ideas', 'best protest signs']),
+        'Browse best No Kings sign ideas for rally posters, compare printable picks, and move back to the homepage hub for the full sign wall.',
+      keywords: expect.arrayContaining(['best no kings sign ideas', 'best protest sign ideas']),
     })
   })
 
   it('builds a distinct top-page title and description', () => {
     expect(buildTopMetadata('printable')).toMatchObject({
-      title: 'Top Printable No Kings Protest Signs',
+      title: 'Top Printable No Kings Signs for Fast Printing',
       description:
-        'See the strongest printable No Kings protest signs ranked from launch scoring and editorial picks.',
-      keywords: expect.arrayContaining(['top printable no kings protest signs', 'best printable protest signs']),
+        'See the strongest printable No Kings signs ranked for fast printing, then return to the homepage for the broader archive.',
+      keywords: expect.arrayContaining(['top printable no kings signs', 'best printable protest signs']),
     })
     expect(buildCategoryMetadata('printable').title).not.toBe(buildTopMetadata('printable').title)
     expect(buildTopMetadata('printable').description).not.toMatch(/funny/i)
