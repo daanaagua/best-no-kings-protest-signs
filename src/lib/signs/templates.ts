@@ -19,6 +19,15 @@ export type SignTemplateDefinition = {
   textFrameWidth: string
 }
 
+export const TEXT_COLOR_OPTIONS = [
+  { id: 'charcoal', label: 'Charcoal black', value: '#171717' },
+  { id: 'signal-red', label: 'Signal red', value: '#b42318' },
+  { id: 'civic-navy', label: 'Civic navy', value: '#1f3d63' },
+  { id: 'muted-gold', label: 'Muted gold', value: '#8a5a2b' },
+] as const
+
+export type TextColorOptionId = (typeof TEXT_COLOR_OPTIONS)[number]['id']
+
 export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefinition> = {
   classic: {
     id: 'classic',

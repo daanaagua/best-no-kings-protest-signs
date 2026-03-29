@@ -10,9 +10,12 @@ type SignPreviewProps = {
   slogan: string
   template: SignTemplateId
   textRotation: number
+  textOffsetY: number
+  textScale: number
+  textColor: string
 }
 
-export function SignPreview({ slogan, template, textRotation }: SignPreviewProps) {
+export function SignPreview({ slogan, template, textRotation, textOffsetY, textScale, textColor }: SignPreviewProps) {
   const definition = getSignTemplateDefinition(template)
   const previewText = normalizePreviewSlogan(slogan)
   const lines = getPreviewLines(previewText)
@@ -27,6 +30,9 @@ export function SignPreview({ slogan, template, textRotation }: SignPreviewProps
             style={
               {
                 '--text-rotation': `${textRotation}deg`,
+                '--text-offset-y': `${textOffsetY}px`,
+                '--text-scale': `${textScale}`,
+                '--text-color': textColor,
                 '--text-frame-top': definition.textFrameTop,
                 '--text-frame-width': definition.textFrameWidth,
               } as React.CSSProperties
