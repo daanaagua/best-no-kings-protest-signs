@@ -59,7 +59,7 @@ export default function Home() {
       />
 
       <SignGrid
-        description="Approved uploads keep the wall grounded in local rally language while the public submission flow stays in beta."
+        description="Community signs keep the wall grounded in local rally language, neighborhood humor, and downloadable poster ideas."
         eyebrow="Community additions"
         id="community-signs"
         signs={communitySigns}

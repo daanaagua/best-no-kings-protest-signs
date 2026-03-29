@@ -44,4 +44,12 @@ describe('Home page', () => {
     expect(editorialSection).not.toBeNull()
     expect(within(editorialSection as HTMLElement).getAllByRole('link', { name: /View sign/i })).toHaveLength(8)
   })
+
+  it('avoids beta wording on the public homepage', () => {
+    render(<Home />)
+
+    expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/community signs keep the wall grounded in local rally language/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Make your sign/i })).toBeInTheDocument()
+  })
 })

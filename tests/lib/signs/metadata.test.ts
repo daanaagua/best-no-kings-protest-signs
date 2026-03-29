@@ -12,7 +12,7 @@ describe('metadata helpers', () => {
     expect(buildHomeMetadata()).toMatchObject({
       title: 'Best No Kings Protest Signs, Funny Ideas & Community Uploads',
       description:
-        'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs. Static launch keeps public voting and new submissions in beta.',
+        'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs for marches, rallies, and fast PNG downloads.',
       keywords: expect.arrayContaining([
         'no kings protest signs',
         'best no kings protest signs',
@@ -25,7 +25,7 @@ describe('metadata helpers', () => {
     expect(buildCategoryMetadata('funny')).toMatchObject({
       title: 'Funny No Kings Protest Sign Ideas',
       description:
-        'Browse funny No Kings protest sign ideas, explore related printable picks, and preview where approved community signs fit into the static launch archive.',
+        'Browse funny No Kings protest sign ideas, explore related printable picks, and open ready-to-share artwork from the wider archive.',
       keywords: expect.arrayContaining(['funny no kings protest sign ideas', 'funny protest signs']),
     })
   })
@@ -44,7 +44,7 @@ describe('metadata helpers', () => {
     expect(buildSignMetadata({ title: 'No Crown for a Clown' })).toMatchObject({
       title: 'No Crown for a Clown | No Kings Protest Sign',
       description:
-        'View this No Kings protest sign, share it, and explore related funny, printable, or approved community signs.',
+        'View this No Kings protest sign, download it as a PNG, share it, and explore related funny, printable, or approved community signs.',
       keywords: expect.arrayContaining(['No Crown for a Clown', 'no kings protest sign']),
     })
   })
@@ -53,7 +53,7 @@ describe('metadata helpers', () => {
     expect(buildSignMetadata({ title: '  No Crown for a Clown  ' })).toMatchObject({
       title: 'No Crown for a Clown | No Kings Protest Sign',
       description:
-        'View this No Kings protest sign, share it, and explore related funny, printable, or approved community signs.',
+        'View this No Kings protest sign, download it as a PNG, share it, and explore related funny, printable, or approved community signs.',
       keywords: expect.arrayContaining(['No Crown for a Clown', 'no kings protest sign']),
     })
   })

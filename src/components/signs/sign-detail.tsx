@@ -1,7 +1,8 @@
 import Image from 'next/image'
 
-import { VoteButton } from '@/src/components/signs/vote-button'
+import { DownloadSignButton } from '@/src/components/signs/download-sign-button'
 import { SignWatermark } from '@/src/components/signs/sign-watermark'
+import { formatVoteCount } from '@/src/lib/signs/votes'
 import type { SignRecord } from '@/src/lib/signs/types'
 
 type SignDetailProps = {
@@ -39,9 +40,11 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
         </div>
 
         <div className="sign-detail__actions-wrap">
-          <VoteButton initialVoteCount={sign.voteCount} slug={sign.slug} />
-
+          <span aria-live="polite" className="sign-card__badge sign-card__badge--pick">
+            {formatVoteCount(sign.voteCount)}
+          </span>
           <div className="sign-detail__actions">
+            <DownloadSignButton assetUrl={sign.image} title={sign.title} />
             <a
               className="home-hero__secondary sign-detail__share"
               href={buildShareHref(sign.title, sign.slogan, shareUrl)}
@@ -55,8 +58,8 @@ export function SignDetail({ sign, shareUrl }: SignDetailProps) {
 
         <p className="sign-detail__note">
           {sign.sourceType === 'community'
-            ? 'Approved community entries stay indexable here while the public submission flow remains in beta.'
-            : 'Official signs anchor the launch gallery with full-size artwork built for marches, rallies, and sharing.'}
+            ? 'Approved community entries stay indexable here alongside official boards, share links, and downloadable artwork.'
+            : 'Official signs anchor the gallery with full-size artwork built for marches, rallies, downloading, and sharing.'}
         </p>
       </div>
     </article>

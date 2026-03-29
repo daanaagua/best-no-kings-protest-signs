@@ -2,12 +2,12 @@ import { siteConfig } from '@/src/data/site'
 
 const content = `# No Kings Protest Signs
 
-> No Kings Protest Signs is a visual archive and lightweight editor for anti-authoritarian protest sign ideas, official sign artwork, and community-ready rally messaging.
+> No Kings Protest Signs is a visual archive and lightweight sign-making tool for anti-authoritarian protest sign ideas, official sign artwork, community-ready rally messaging, and PNG exports.
 
 ## Docs
 
-- [Homepage](${siteConfig.url}/): Main sign wall with featured official signs, newer community sign ideas, and a direct route into the submit preview editor.
-- [Submit Editor](${siteConfig.url}/submit): Interactive sign preview page where users can choose white-board templates and adjust slogan color, rotation, vertical position, and scale.
+- [Homepage](${siteConfig.url}/): Main sign wall with featured official signs, newer community sign ideas, and a direct route into the submit builder.
+- [Submit Editor](${siteConfig.url}/submit): Interactive sign-making page where users can choose white-board templates, adjust slogan color, rotation, vertical position, and scale, then export PNGs.
 - [About](${siteConfig.url}/about): Overview of the site mission, launch direction, and archive purpose.
 - [Content Policy](${siteConfig.url}/content-policy): Publishing rules, moderation expectations, and launch constraints.
 
@@ -32,9 +32,9 @@ const content = `# No Kings Protest Signs
 
 - Domain: ${siteConfig.url}
 - Primary topic: No Kings protest signs
-- Main user jobs: browse sign ideas, view sign artwork, preview new slogans on blank board templates
-- Artwork model: official signs use generated protest-board imagery; preview editor uses blank white-board template images with text overlays
-- Public submissions and public voting remain beta-gated during the current launch
+- Main user jobs: browse sign ideas, view sign artwork, download PNGs, and build new slogans on blank board templates
+- Artwork model: official signs use generated protest-board imagery; the sign maker uses blank white-board template images with text overlays
+- Public site behavior: browsing, sharing, and PNG exports are all available on public routes
 
 ## Contact
 

@@ -8,7 +8,7 @@ describe('ModerationPage', () => {
     render(<ModerationPage />)
 
     expect(screen.getByRole('heading', { name: /Internal workflow placeholder/i })).toBeInTheDocument()
-    expect(screen.getByText(/internal-only beta route/i)).toBeInTheDocument()
+    expect(screen.getByText(/internal-only route stays available for launch operations/i)).toBeInTheDocument()
     expect(screen.getByText(/not a live moderation dashboard/i)).toBeInTheDocument()
   })
 })

@@ -1,7 +1,7 @@
 import { INTERNAL_MODERATION_BETA_MESSAGE } from '@/src/lib/launch-mode'
 
 export const metadata = {
-  title: 'Internal Moderation Beta | Best No Kings Protest Signs',
+  title: 'Internal Moderation | Best No Kings Protest Signs',
   description:
     'Internal-only moderation placeholder for the Best No Kings Protest Signs launch workflow.',
   robots: {
@@ -15,7 +15,7 @@ export default function ModerationPage() {
     <div className="moderation-page">
       <section className="moderation-page__panel">
         <div className="section-heading">
-          <p className="section-heading__eyebrow">Internal moderation beta</p>
+          <p className="section-heading__eyebrow">Internal moderation</p>
           <h1 className="section-heading__title">Internal workflow placeholder</h1>
           <p className="section-heading__description">
             {INTERNAL_MODERATION_BETA_MESSAGE} For the Cloudflare launch, public content is deployed as a static-first archive and moderation is intentionally kept out of the live Worker runtime.

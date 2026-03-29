@@ -5,12 +5,10 @@ export default function SubmitPage() {
     <div className="submit-page">
       <section className="submit-page__hero">
         <div className="section-heading">
-          <p className="section-heading__eyebrow">Submit beta</p>
-          <h1 className="section-heading__title">
-            Preview your No Kings sign now, then come back when public submissions reopen
-          </h1>
+          <p className="section-heading__eyebrow">Sign maker</p>
+          <h1 className="section-heading__title">Make your No Kings sign</h1>
           <p className="section-heading__description">
-            This launch is intentionally static-content-first. The submit route now lets you choose blank rally-board backgrounds and rotate the text layer before public submissions reopen, but it still does not send live public writes to the server yet.
+            Switch board templates, tune the text, and export a PNG built for marches, rallies, printouts, and quick sharing.
           </p>
         </div>
       </section>

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { SignDetailActions } from '@/src/components/signs/sign-detail-actions'
 
 describe('SignDetailActions', () => {
-  it('beta-gates public voting during the static launch', () => {
+  it('keeps vote totals read-only while preserving sharing actions', () => {
     render(
       <SignDetailActions
         shareUrl="https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown"
@@ -16,7 +16,7 @@ describe('SignDetailActions', () => {
 
     expect(screen.getByText('942 votes')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Public voting opens after launch/i })).toBeDisabled()
-    expect(screen.getByRole('status')).toHaveTextContent(/public voting is disabled/i)
+    expect(screen.getByRole('status')).toHaveTextContent(/vote totals update from the curated archive/i)
     expect(screen.getByRole('link', { name: /Share this sign/i })).toHaveAttribute(
       'href',
       expect.stringContaining('https://twitter.com/intent/tweet'),

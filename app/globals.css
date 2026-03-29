@@ -970,6 +970,39 @@ a {
   padding-top: clamp(1.25rem, 2vw, 1.85rem);
 }
 
+.contact-page {
+  width: min(100%, 52rem);
+  margin: 0 auto;
+  padding-top: clamp(1.25rem, 2vw, 1.85rem);
+}
+
+.contact-page__panel {
+  position: relative;
+  margin-bottom: clamp(1.5rem, 3vw, 2.4rem);
+  padding: clamp(0.85rem, 1.8vw, 1rem);
+  border: 3px solid var(--ink);
+  border-radius: 1.2rem 0.55rem 1.2rem 0.55rem;
+  background: linear-gradient(180deg, rgba(255, 248, 238, 0.98), rgba(245, 233, 213, 0.92));
+  box-shadow: var(--shadow-strong);
+}
+
+.contact-page__panel::before {
+  content: '';
+  position: absolute;
+  inset: 0.55rem;
+  border: 1px dashed rgba(22, 38, 53, 0.18);
+  border-radius: 0.9rem 0.3rem 0.9rem 0.3rem;
+  pointer-events: none;
+}
+
+.contact-page__frame {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-height: 34rem;
+  border: none;
+}
+
 .submit-page__hero,
 .submit-form,
 .submit-preview-panel,
@@ -1422,6 +1455,7 @@ a {
 
   .topic-page,
   .sign-detail-page,
+  .contact-page,
   .submit-page,
   .moderation-page {
     padding-top: 1rem;
@@ -1433,6 +1467,7 @@ a {
   .seo-copy,
   .topic-page__hero,
   .topic-page__panel,
+  .contact-page__panel,
   .sign-detail,
   .submit-page__hero,
   .submit-form,

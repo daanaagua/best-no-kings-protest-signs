@@ -9,7 +9,7 @@ describe('VoteButton', () => {
     vi.unstubAllGlobals()
   })
 
-  it('does not call the live vote API during the static launch', async () => {
+  it('keeps archived vote totals read-only without calling the live vote API', async () => {
     const fetchMock = vi.fn()
     const user = userEvent.setup()
 
@@ -23,7 +23,7 @@ describe('VoteButton', () => {
     await user.click(button)
 
     expect(fetchMock).not.toHaveBeenCalled()
-    expect(screen.getByRole('status')).toHaveTextContent(/public voting is disabled/i)
+    expect(screen.getByRole('status')).toHaveTextContent(/vote totals update from the curated archive/i)
     expect(screen.getByText('942 votes')).toBeInTheDocument()
   })
 })

@@ -11,7 +11,7 @@ vi.mock('next/image', () => ({
 }))
 
 describe('SignDetail', () => {
-  it('renders the static sign detail content around the launch-gated actions', () => {
+  it('renders the static sign detail content with download and share actions', () => {
     render(
       <SignDetail
         shareUrl="https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown"
@@ -26,7 +26,11 @@ describe('SignDetail', () => {
     expect(screen.getByText('NO KINGS PROTEST SIGNS')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: officialLaunchSigns[0].title })).toBeInTheDocument()
     expect(screen.getByText(officialLaunchSigns[0].description)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Public voting opens after launch/i })).toBeDisabled()
+    expect(screen.getByText('942 votes')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Download PNG/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Share this sign/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Public voting opens after launch/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
     expect(screen.queryByText('Editors pick')).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Funny' })).not.toBeInTheDocument()
   })
@@ -40,6 +44,8 @@ describe('SignDetail', () => {
     )
 
     expect(screen.getByRole('heading', { name: approvedCommunitySigns[0].title })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Download PNG/i })).toBeInTheDocument()
+    expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
     expect(screen.queryByText('Community')).not.toBeInTheDocument()
   })
 })

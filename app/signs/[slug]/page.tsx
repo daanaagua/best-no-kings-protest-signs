@@ -117,9 +117,9 @@ export default async function SignPage({ params }: SignPageProps) {
           <div role="listitem">
             <Link className="topic-links__item" href="/submit">
               <p className="topic-links__eyebrow">Community route</p>
-              <p className="topic-links__title">Preview your own sign idea</p>
+              <p className="topic-links__title">Make your own sign</p>
               <p className="topic-links__description">
-                Static launch keeps the submit route in preview-only beta mode, while approved community signs already render on detail pages like this one.
+                Open the builder to sketch your own board, tune the lettering, and export a ready-to-carry PNG.
               </p>
             </Link>
           </div>

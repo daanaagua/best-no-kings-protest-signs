@@ -13,12 +13,12 @@ export const siteConfig = {
   domainLabel: 'BESTNOKINGSPROTESTSIGNS.ORG',
   url: 'https://bestnokingsprotestsigns.org',
   description:
-    'Browse No Kings protest signs built for marches, rallies, and printable use. Static launch keeps public voting and new submissions in beta.',
+    'Browse No Kings protest signs built for marches, rallies, printable use, and fast PNG downloads.',
   headerNote: 'A clean wall of No Kings protest signs for marches, rallies, and print-at-home poster making.',
   footerNote:
-    'A focused archive of No Kings protest signs with clean layouts, stronger readability, and public write features still in beta for launch.',
+    'A focused archive of No Kings protest signs with clean layouts, stronger readability, and a built-in sign maker for quick PNG exports.',
   primaryAction: {
-    label: 'Preview your sign',
+    label: 'Make your sign',
     href: '/submit',
   },
   footerGroups: [
@@ -27,7 +27,7 @@ export const siteConfig = {
         links: [
           { label: 'About', href: '/about' },
           { label: 'Content Policy', href: '/content-policy' },
-          { label: 'Preview your sign', href: '/submit' },
+          { label: 'Make your sign', href: '/submit' },
         ],
       },
     {
@@ -35,6 +35,7 @@ export const siteConfig = {
       links: [
         { label: 'Privacy Policy', href: '/privacy-policy' },
         { label: 'Terms', href: '/terms' },
+        { label: 'Contact', href: '/contact' },
       ],
     },
   ] satisfies SiteLinkGroup[],

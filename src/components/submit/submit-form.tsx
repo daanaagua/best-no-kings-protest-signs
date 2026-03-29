@@ -68,12 +68,12 @@ export function SubmitForm() {
     <div className="submit-layout">
       <div className="submit-form">
         <div className="section-heading section-heading--compact">
-          <p className="section-heading__eyebrow">Submit beta</p>
+          <p className="section-heading__eyebrow">Build your sign</p>
           <h2 className="section-heading__title" id="submit-form-title">
-            Preview your sign while public submissions are in beta
+            Shape the board, then export a PNG
           </h2>
           <p className="section-heading__description">
-            Try slogans, switch templates, and use the live board preview now. Static launch keeps public server writes off until the archive settles.
+            Try slogans, switch templates, and use the live board preview to dial in a poster you can carry, print, or share.
           </p>
         </div>
 
@@ -120,18 +120,14 @@ export function SubmitForm() {
 
         <div className="submit-form__message submit-form__message--success" role="status">
           <p>{PUBLIC_SUBMISSION_BETA_MESSAGE}</p>
-          <p>Use this page to shape the slogan and switch blank boards here. Fine-tune text color, angle, position, and size under the live preview.</p>
+          <p>Use this page to shape the slogan, switch blank boards, and fine-tune text color, angle, position, and size under the live preview.</p>
         </div>
-
-        <button className="site-cta" disabled type="button">
-          Public submissions coming soon
-        </button>
       </div>
 
       <aside className="submit-preview-panel">
         <div className="section-heading section-heading--compact">
           <p className="section-heading__eyebrow">Live preview</p>
-          <h2 className="section-heading__title">See the board before submissions reopen</h2>
+          <h2 className="section-heading__title">See the board before you export</h2>
           <p className="section-heading__description">
             Current template: {selectedTemplate.label}. The preview updates as you type, rotate the lettering, and adjust color, position, and size.
           </p>
