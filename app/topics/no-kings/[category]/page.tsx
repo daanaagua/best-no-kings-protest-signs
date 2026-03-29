@@ -24,40 +24,19 @@ type CategoryPageContent = {
 }
 
 const CATEGORY_PAGE_CONTENT: Record<SignCategory, CategoryPageContent> = {
-  funny: {
-    eyebrow: 'Comic timing for march day',
-    title: 'Funny No Kings protest sign ideas that still read clean from the curb',
-    description:
-      'Funny No Kings signs win when the joke lands fast, survives a phone crop, and keeps the chant readable from the second row. This page collects the sharpest comic lines, visual gags, and punchy poster copy in the launch wall.',
-    supportingCopy:
-      'Use this category when you want humor to open the conversation without turning the sign into an inside joke. The strongest cards here keep the anti-monarchy read obvious even when the crowd is moving.',
-    faqHeading: 'Funny sign FAQ',
-    faqs: [
-      {
-        question: 'What makes a funny No Kings sign work in a crowd?',
-        answer:
-          'The joke needs to land in one glance. Short lines, familiar monarchy references, and strong contrast keep the humor visible from a march route or a social share.',
-      },
-      {
-        question: 'Should funny signs stay family-safe?',
-        answer:
-          'Usually yes. Clean humor travels farther online, fits mixed-age rallies, and keeps the political message usable for more groups without losing bite.',
-      },
-    ],
-  },
   best: {
     eyebrow: 'Evergreen rally language',
     title: 'Best No Kings protest sign ideas for the main camera shot and the long chant line',
     description:
       'The best No Kings signs carry the clearest democratic message. This landing page focuses on the strongest all-around slogans, dependable rally phrases, and poster lines that hold up across marches, libraries, school pickups, and civic events.',
     supportingCopy:
-      'If you want a sign that feels timeless instead of topical, start here. These cards prioritize clarity, crowd resonance, and broad shareability over narrower joke formats.',
+      'If you want a sign that feels timeless instead of topical, start here. These cards prioritize clarity, crowd resonance, and broad shareability across the widest range of marches, civic events, and shared posts.',
     faqHeading: 'Best-sign FAQ',
     faqs: [
       {
-        question: 'When should I pick a classic sign instead of a joke sign?',
+        question: 'When should I start with the best-sign category?',
         answer:
-          'Choose a classic line when you want the clearest civic stance, an evergreen photo, or a slogan that can be reused across multiple marches without explanation.',
+          'Start here when you want the clearest civic stance, an evergreen photo, or a slogan that can be reused across multiple marches without explanation.',
       },
       {
         question: 'What does this category optimize for?',
@@ -70,7 +49,7 @@ const CATEGORY_PAGE_CONTENT: Record<SignCategory, CategoryPageContent> = {
     eyebrow: 'Family-safe rally copy',
     title: 'Kids-friendly No Kings protest sign ideas for school pickups, family marches, and neighborhood walks',
     description:
-      'Kids-safe No Kings signs need to be bright, understandable, and genuinely usable by younger marchers. This category gathers softer phrasing, classroom-ready humor, and family-friendly poster copy that still keeps the message intact.',
+      'Kids-safe No Kings signs need to be bright, understandable, and genuinely usable by younger marchers. This category gathers softer phrasing, classroom-ready wording, and family-friendly poster copy that still keeps the message intact.',
     supportingCopy:
       'These signs aim for reassurance and clarity rather than edge. They are built for parents, teachers, and organizers who want children to join the visual conversation without carrying hostile text.',
     faqHeading: 'Kids-sign FAQ',

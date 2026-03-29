@@ -59,7 +59,7 @@ export default function Home() {
       />
 
       <SignGrid
-        description="Community signs keep the wall grounded in local rally language, neighborhood humor, and downloadable poster ideas."
+        description="Community signs keep the wall grounded in local rally language, shared tactics, and downloadable poster ideas."
         eyebrow="Community additions"
         id="community-signs"
         signs={communitySigns}
@@ -76,7 +76,7 @@ export default function Home() {
 
         <div className="seo-copy__body">
           <p>
-            This homepage is built for people looking for No Kings protest signs that feel direct, readable, and serious enough to carry at a march without turning every card into a joke or a content bucket.
+            This homepage is built for people looking for No Kings protest signs that feel direct, readable, and serious enough to carry at a march without turning every card into a gimmick or a content bucket.
           </p>
           <p>
             Featured signs surface the strongest all-around lines, the wider wall gives you more phrases to browse, and approved community additions bring in local voice without cluttering the front page with unnecessary category labels.

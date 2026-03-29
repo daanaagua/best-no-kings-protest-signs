@@ -3,10 +3,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { DownloadSignButton } from '@/src/components/signs/download-sign-button'
 
-const exportSignAssetAsPng = vi.fn(() => Promise.resolve())
+type ExportSignAssetAsPng =
+  typeof import('@/src/lib/signs/export-sign-asset')['exportSignAssetAsPng']
+
+const exportSignAssetAsPng = vi.fn<ExportSignAssetAsPng>().mockResolvedValue(undefined)
 
 vi.mock('@/src/lib/signs/export-sign-asset', () => ({
-  exportSignAssetAsPng: (...args: unknown[]) => exportSignAssetAsPng(...args),
+  exportSignAssetAsPng: (...args: Parameters<ExportSignAssetAsPng>) => exportSignAssetAsPng(...args),
 }))
 
 describe('DownloadSignButton', () => {

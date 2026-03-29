@@ -23,8 +23,8 @@ describe('SEO metadata files', () => {
 
     expect(urls).toContain('https://bestnokingsprotestsigns.org/')
     expect(urls).toContain('https://bestnokingsprotestsigns.org/submit')
-    expect(urls).toContain('https://bestnokingsprotestsigns.org/topics/no-kings/funny')
-    expect(urls).toContain('https://bestnokingsprotestsigns.org/topics/no-kings/top/funny')
+    expect(urls).not.toContain('https://bestnokingsprotestsigns.org/topics/no-kings/funny')
+    expect(urls).not.toContain('https://bestnokingsprotestsigns.org/topics/no-kings/top/funny')
     expect(urls).toContain('https://bestnokingsprotestsigns.org/signs/no-crown-for-a-clown')
     expect(urls.some((url) => url.includes('/internal/moderation'))).toBe(false)
   })

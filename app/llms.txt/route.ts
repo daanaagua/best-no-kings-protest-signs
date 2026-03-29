@@ -14,11 +14,11 @@ const content = `# No Kings Protest Signs
 
 ## Resources
 
-- [Funny No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/funny): Cluster page for lighter and satirical No Kings sign language.
 - [Best No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/best): Cluster page for broad-appeal No Kings signs and civic messaging.
+- [Kids No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/kids): Cluster page for simpler, family-friendly No Kings signs.
 - [Printable No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/printable): Cluster page for cleaner, poster-like sign formats and printable wording.
-- [Top Funny No Kings Protest Signs](${siteConfig.url}/topics/no-kings/top/funny): Ranking page showing the highest-scoring funny protest signs.
 - [Top Best No Kings Protest Signs](${siteConfig.url}/topics/no-kings/top/best): Ranking page showing the highest-scoring general-interest protest signs.
+- [Top Printable No Kings Protest Signs](${siteConfig.url}/topics/no-kings/top/printable): Ranking page showing the highest-scoring printable protest signs.
 
 ## Key Facts
 

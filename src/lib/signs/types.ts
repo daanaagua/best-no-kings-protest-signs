@@ -1,4 +1,4 @@
-export const SIGN_CATEGORIES = ['funny', 'best', 'kids', 'printable'] as const
+export const SIGN_CATEGORIES = ['best', 'kids', 'printable'] as const
 
 export type SignCategory = (typeof SIGN_CATEGORIES)[number]
 

@@ -12,9 +12,9 @@ function formatCategoryLabel(category: SignCategory) {
 
 export function buildHomeMetadata(): SignPageMetadata {
   return {
-    title: 'Best No Kings Protest Signs, Funny Ideas & Community Uploads',
+    title: 'Best No Kings Protest Signs, Printable Ideas & Community Uploads',
     description:
-      'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs for marches, rallies, and fast PNG downloads.',
+      'Browse the best No Kings protest signs, printable slogans, readable sign ideas, and approved community designs for marches, rallies, and fast PNG downloads.',
     keywords: [
       'no kings protest signs',
       'best no kings protest signs',
@@ -60,7 +60,7 @@ export function buildSignMetadata(
   return {
     title: `${normalizedTitle} | No Kings Protest Sign`,
     description:
-      'View this No Kings protest sign, download it as a PNG, share it, and explore related funny, printable, or approved community signs.',
+      'View this No Kings protest sign, download it as a PNG, share it, and explore related readable, printable, or approved community signs.',
     keywords: [
       normalizedTitle,
       'no kings protest sign',

@@ -27,8 +27,8 @@ export default function NotFound() {
         <dl className="topic-page__stats">
           <div className="topic-page__stat">
             <dt>Popular route</dt>
-            <dd>Funny</dd>
-            <p className="topic-page__stat-note">/topics/no-kings/funny</p>
+            <dd>Best</dd>
+            <p className="topic-page__stat-note">/topics/no-kings/best</p>
           </div>
           <div className="topic-page__stat">
             <dt>Policy route</dt>

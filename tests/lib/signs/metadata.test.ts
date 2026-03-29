@@ -10,41 +10,45 @@ import {
 describe('metadata helpers', () => {
   it('builds the exact homepage metadata', () => {
     expect(buildHomeMetadata()).toMatchObject({
-      title: 'Best No Kings Protest Signs, Funny Ideas & Community Uploads',
+      title: 'Best No Kings Protest Signs, Printable Ideas & Community Uploads',
       description:
-        'Browse the best No Kings protest signs, funny sign ideas, printable slogans, and approved community designs for marches, rallies, and fast PNG downloads.',
+        'Browse the best No Kings protest signs, printable slogans, readable sign ideas, and approved community designs for marches, rallies, and fast PNG downloads.',
       keywords: expect.arrayContaining([
         'no kings protest signs',
         'best no kings protest signs',
         'protest sign ideas',
       ]),
     })
+
+    expect(buildHomeMetadata().title).not.toMatch(/funny/i)
+    expect(buildHomeMetadata().description).not.toMatch(/funny/i)
   })
 
   it('builds the exact category metadata', () => {
-    expect(buildCategoryMetadata('funny')).toMatchObject({
-      title: 'Funny No Kings Protest Sign Ideas',
+    expect(buildCategoryMetadata('best')).toMatchObject({
+      title: 'Best No Kings Protest Sign Ideas',
       description:
-        'Browse funny No Kings protest sign ideas, explore related printable picks, and open ready-to-share artwork from the wider archive.',
-      keywords: expect.arrayContaining(['funny no kings protest sign ideas', 'funny protest signs']),
+        'Browse best No Kings protest sign ideas, explore related printable picks, and open ready-to-share artwork from the wider archive.',
+      keywords: expect.arrayContaining(['best no kings protest sign ideas', 'best protest signs']),
     })
   })
 
   it('builds a distinct top-page title and description', () => {
-    expect(buildTopMetadata('funny')).toMatchObject({
-      title: 'Top Funny No Kings Protest Signs',
+    expect(buildTopMetadata('printable')).toMatchObject({
+      title: 'Top Printable No Kings Protest Signs',
       description:
-        'See the strongest funny No Kings protest signs ranked from launch scoring and editorial picks.',
-      keywords: expect.arrayContaining(['top funny no kings protest signs', 'best funny protest signs']),
+        'See the strongest printable No Kings protest signs ranked from launch scoring and editorial picks.',
+      keywords: expect.arrayContaining(['top printable no kings protest signs', 'best printable protest signs']),
     })
-    expect(buildCategoryMetadata('funny').title).not.toBe(buildTopMetadata('funny').title)
+    expect(buildCategoryMetadata('printable').title).not.toBe(buildTopMetadata('printable').title)
+    expect(buildTopMetadata('printable').description).not.toMatch(/funny/i)
   })
 
   it('builds the exact sign detail metadata', () => {
     expect(buildSignMetadata({ title: 'No Crown for a Clown' })).toMatchObject({
       title: 'No Crown for a Clown | No Kings Protest Sign',
       description:
-        'View this No Kings protest sign, download it as a PNG, share it, and explore related funny, printable, or approved community signs.',
+        'View this No Kings protest sign, download it as a PNG, share it, and explore related readable, printable, or approved community signs.',
       keywords: expect.arrayContaining(['No Crown for a Clown', 'no kings protest sign']),
     })
   })
@@ -53,7 +57,7 @@ describe('metadata helpers', () => {
     expect(buildSignMetadata({ title: '  No Crown for a Clown  ' })).toMatchObject({
       title: 'No Crown for a Clown | No Kings Protest Sign',
       description:
-        'View this No Kings protest sign, download it as a PNG, share it, and explore related funny, printable, or approved community signs.',
+        'View this No Kings protest sign, download it as a PNG, share it, and explore related readable, printable, or approved community signs.',
       keywords: expect.arrayContaining(['No Crown for a Clown', 'no kings protest sign']),
     })
   })

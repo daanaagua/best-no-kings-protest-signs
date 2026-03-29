@@ -13,7 +13,7 @@ const content = `# No Kings Protest Signs
 
 ## Sign Examples
 
-- [No Crown for a Clown](${siteConfig.url}/signs/no-crown-for-a-clown): Official sign artwork using short satirical wording and a straightforward protest-board presentation.
+- [No Crown for a Clown](${siteConfig.url}/signs/no-crown-for-a-clown): Official sign artwork using concise anti-monarchy wording and a straightforward protest-board presentation.
 - [Democracy Looks Better on Us](${siteConfig.url}/signs/democracy-looks-better-on-us): Official sign artwork using a civic-forward slogan with restrained red emphasis.
 - [Liberty Doesn\'t Bow](${siteConfig.url}/signs/liberty-doesnt-bow): Official sign artwork showing a more serious tone and simple two-line board design.
 - [Power Belongs to the Public](${siteConfig.url}/signs/power-belongs-to-the-public): Official sign artwork focused on broad public-democracy language.
@@ -21,12 +21,11 @@ const content = `# No Kings Protest Signs
 
 ## Topic Pages
 
-- [Funny No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/funny): Topic page collecting more satirical or ironic No Kings signs.
 - [Best No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/best): Topic page for stronger broad-appeal civic signs.
 - [Kids No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/kids): Topic page for simpler, family-friendly sign concepts.
 - [Printable No Kings Protest Sign Ideas](${siteConfig.url}/topics/no-kings/printable): Topic page for cleaner board-first layouts.
-- [Top Funny No Kings Protest Signs](${siteConfig.url}/topics/no-kings/top/funny): Ranked list of leading funny No Kings signs.
 - [Top Best No Kings Protest Signs](${siteConfig.url}/topics/no-kings/top/best): Ranked list of leading broad-appeal No Kings signs.
+- [Top Printable No Kings Protest Signs](${siteConfig.url}/topics/no-kings/top/printable): Ranked list of leading printable No Kings signs.
 
 ## Key Facts
 

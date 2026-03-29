@@ -25,12 +25,15 @@ describe('SignDetail', () => {
     expect(image).toHaveStyle({ objectFit: 'contain' })
     expect(screen.getByText('NO KINGS PROTEST SIGNS')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: officialLaunchSigns[0].title })).toBeInTheDocument()
-    expect(screen.getByText(officialLaunchSigns[0].description)).toBeInTheDocument()
+    expect(
+      screen.getByText(/launch-ready No Kings protest sign designed for marches, neighborhood rallies, and printable share-outs/i),
+    ).toBeInTheDocument()
     expect(screen.getByText('942 votes')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Download PNG/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Share this sign/i })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Public voting opens after launch/i })).not.toBeInTheDocument()
     expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/funny/i)).not.toBeInTheDocument()
     expect(screen.queryByText('Editors pick')).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Funny' })).not.toBeInTheDocument()
   })

@@ -6,8 +6,14 @@ import {
   getSignBySlug,
   getSignsByCategory,
 } from '@/src/lib/signs/queries'
+import { SIGN_CATEGORIES } from '@/src/lib/signs/types'
 
 describe('public sign queries', () => {
+  it('exposes only the current public sign categories', () => {
+    expect(SIGN_CATEGORIES).toEqual(['best', 'kids', 'printable'])
+    expect(SIGN_CATEGORIES).not.toContain('funny')
+  })
+
   it('returns the unified launch feed with official and community signs', () => {
     const signs = getAllSigns()
 
@@ -17,9 +23,33 @@ describe('public sign queries', () => {
   })
 
   it('returns a sign by slug', () => {
-    expect(getSignBySlug('no-crown-for-a-clown')?.slug).toBe(
-      'no-crown-for-a-clown',
-    )
+    const sign = getSignBySlug('no-crown-for-a-clown')
+
+    expect(sign?.slug).toBe('no-crown-for-a-clown')
+    expect(sign?.primaryCategory).toBe('best')
+    expect(sign?.categories).toEqual(['best'])
+  })
+
+  it('reassigns former funny signs into surviving public categories', () => {
+    expect(getSignBySlug('cardboard-not-crowns')).toMatchObject({
+      primaryCategory: 'printable',
+      categories: ['printable'],
+    })
+    expect(getSignBySlug('no-king-just-kidding-still-no-king')).toMatchObject({
+      primaryCategory: 'kids',
+      categories: ['kids'],
+    })
+
+    expect(
+      getSignsByCategory('printable').some(
+        (sign) => sign.slug === 'cardboard-not-crowns',
+      ),
+    ).toBe(true)
+    expect(
+      getSignsByCategory('kids').some(
+        (sign) => sign.slug === 'no-king-just-kidding-still-no-king',
+      ),
+    ).toBe(true)
   })
 
   it('returns defensive copies so one lookup cannot mutate later query results', () => {
@@ -41,12 +71,10 @@ describe('public sign queries', () => {
   })
 
   it('returns category matches using category tags', () => {
-    const funnySigns = getSignsByCategory('funny')
+    const bestSigns = getSignsByCategory('best')
 
-    expect(funnySigns.length).toBeGreaterThanOrEqual(12)
-    expect(funnySigns.every((sign) => sign.categories.includes('funny'))).toBe(
-      true,
-    )
+    expect(bestSigns.length).toBeGreaterThanOrEqual(12)
+    expect(bestSigns.every((sign) => sign.categories.includes('best'))).toBe(true)
   })
 
   it('returns approved community signs for the homepage feed', () => {

@@ -31,6 +31,7 @@ describe('Home page', () => {
 
     expect(scoped.getByText(/No Kings protest signs/i)).toBeInTheDocument()
     expect(scoped.queryByRole('link', { name: /Funny No Kings signs/i })).not.toBeInTheDocument()
+    expect(scoped.queryByText(/turning every card into a joke/i)).not.toBeInTheDocument()
   })
 
   it('shows eight editorial pick cards when enough picks exist', () => {
@@ -49,7 +50,8 @@ describe('Home page', () => {
     render(<Home />)
 
     expect(screen.queryByText(/beta/i)).not.toBeInTheDocument()
-    expect(screen.getByText(/community signs keep the wall grounded in local rally language/i)).toBeInTheDocument()
+    expect(screen.getByText(/community signs keep the wall grounded in local rally language, shared tactics, and downloadable poster ideas/i)).toBeInTheDocument()
+    expect(screen.queryByText(/humor/i)).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Make your sign/i })).toBeInTheDocument()
   })
 })

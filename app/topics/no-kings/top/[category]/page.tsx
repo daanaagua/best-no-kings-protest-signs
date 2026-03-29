@@ -25,14 +25,6 @@ type TopPageContent = {
 }
 
 const TOP_PAGE_CONTENT: Record<SignCategory, TopPageContent> = {
-  funny: {
-    eyebrow: 'Ranking desk: funny lane',
-    title: 'Top funny No Kings protest signs ranked by crowd response and freshness',
-    description:
-      'This ranking page is for people who want the leaders first, not the full discovery wall. It spotlights the strongest vote-getters, the fast risers, and the editor-backed comic cards inside the funny category.',
-    methodology:
-      'All-time leaders sort by vote count, trending cards blend freshness with votes, and editor picks highlight launch-desk choices that still convert in photos and on march routes.',
-  },
   best: {
     eyebrow: 'Ranking desk: classic lane',
     title: 'Top best No Kings protest signs for the clearest democratic read',

@@ -11,6 +11,10 @@ describe('llms routes', () => {
     expect(content).toContain('browser-based sign maker')
     expect(content).toContain('instant PNG export')
     expect(content).toContain('browser-based sign making')
+    expect(content).toContain('/topics/no-kings/kids')
+    expect(content).toContain('/topics/no-kings/top/printable')
+    expect(content).not.toContain('/topics/no-kings/funny')
+    expect(content).not.toContain('/topics/no-kings/top/funny')
     expect(content).not.toMatch(/preview|beta-gated/i)
   })
 
@@ -20,6 +24,11 @@ describe('llms routes', () => {
 
     expect(content).toContain('lightweight sign-making tool')
     expect(content).toContain('PNG exports are all available on public routes')
+    expect(content).toContain('/topics/no-kings/kids')
+    expect(content).toContain('/topics/no-kings/top/printable')
+    expect(content).not.toContain('/topics/no-kings/funny')
+    expect(content).not.toContain('/topics/no-kings/top/funny')
+    expect(content).not.toContain('short satirical wording')
     expect(content).not.toMatch(/preview|beta-gated/i)
   })
 })

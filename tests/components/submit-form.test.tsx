@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { SubmitForm } from '@/src/components/submit/submit-form'
 
-const exportPreviewAsPng = vi.fn(() => Promise.resolve())
+type ExportPreviewAsPng = typeof import('@/src/lib/signs/export-preview')['exportPreviewAsPng']
+
+const exportPreviewAsPng = vi.fn<ExportPreviewAsPng>().mockResolvedValue(undefined)
 
 vi.mock('@/src/lib/signs/export-preview', () => ({
   buildExportFileName: (slogan: string) =>
@@ -11,7 +13,7 @@ vi.mock('@/src/lib/signs/export-preview', () => ({
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '') || 'no-kings-sign'}.png`,
-  exportPreviewAsPng: (...args: unknown[]) => exportPreviewAsPng(...args),
+  exportPreviewAsPng: (...args: Parameters<ExportPreviewAsPng>) => exportPreviewAsPng(...args),
 }))
 
 describe('SubmitForm', () => {
@@ -28,7 +30,11 @@ describe('SubmitForm', () => {
       expect(exportPreviewAsPng).toHaveBeenCalledTimes(1)
     })
 
-    const [element, filename] = exportPreviewAsPng.mock.calls[0]
+    const firstCall = exportPreviewAsPng.mock.calls[0]
+
+    expect(firstCall).toBeDefined()
+
+    const [element, filename] = firstCall!
 
     expect(element).toBeInstanceOf(HTMLElement)
     expect(filename).toBe('power-to-the-public.png')
@@ -62,8 +68,11 @@ describe('SubmitForm', () => {
     const angleSlider = screen.getByLabelText(/Text angle/i)
 
     expect(previewRoot).not.toBeNull()
-    expect(
-      previewRoot?.compareDocumentPosition(angleSlider) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy()
+
+    if (!previewRoot) {
+      throw new Error('Expected sign preview root to render')
+    }
+
+    expect(previewRoot.compareDocumentPosition(angleSlider) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 })
