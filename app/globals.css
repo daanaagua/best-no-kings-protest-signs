@@ -1194,6 +1194,14 @@ a {
   background: rgba(212, 87, 54, 0.12);
 }
 
+.submit-preview-controls {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(22, 38, 53, 0.18);
+}
+
 .sign-preview {
   display: flex;
   justify-content: center;

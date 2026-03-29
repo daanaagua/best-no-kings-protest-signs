@@ -102,90 +102,9 @@ export function SubmitForm() {
           </div>
         </fieldset>
 
-        <fieldset className="submit-fieldset">
-          <legend className="submit-field__label">Text color</legend>
-          <div className="color-switcher" role="list">
-            {TEXT_COLOR_OPTIONS.map((option) => {
-              const isSelected = option.id === formState.selectedTextColor
-
-              return (
-                <label
-                  key={option.id}
-                  className={`color-switcher__option ${isSelected ? 'color-switcher__option--selected' : ''}`}
-                  role="listitem"
-                >
-                  <input
-                    checked={isSelected}
-                    name="selectedTextColor"
-                    onChange={() => updateField('selectedTextColor', option.id)}
-                    type="radio"
-                    value={option.id}
-                  />
-                  <span aria-hidden="true" className="color-switcher__swatch" style={{ background: option.value }} />
-                  <span className="color-switcher__label">{option.label}</span>
-                </label>
-              )
-            })}
-          </div>
-        </fieldset>
-
-        <label className="submit-field">
-          <span className="submit-field__label submit-field__label--row">
-            <span>Text angle</span>
-            <strong>{formState.textRotation}°</strong>
-          </span>
-          <input
-            aria-label="Text angle"
-            className="submit-field__range"
-            max={30}
-            min={-30}
-            name="textRotation"
-            onChange={(event) => updateField('textRotation', Number(event.target.value))}
-            step={1}
-            type="range"
-            value={formState.textRotation}
-          />
-        </label>
-
-        <label className="submit-field">
-          <span className="submit-field__label submit-field__label--row">
-            <span>Text position</span>
-            <strong>{formState.textOffsetY}px</strong>
-          </span>
-          <input
-            aria-label="Text position"
-            className="submit-field__range"
-            max={32}
-            min={-32}
-            name="textOffsetY"
-            onChange={(event) => updateField('textOffsetY', Number(event.target.value))}
-            step={1}
-            type="range"
-            value={formState.textOffsetY}
-          />
-        </label>
-
-        <label className="submit-field">
-          <span className="submit-field__label submit-field__label--row">
-            <span>Text size</span>
-            <strong>{Math.round(formState.textScale * 100)}%</strong>
-          </span>
-          <input
-            aria-label="Text size"
-            className="submit-field__range"
-            max={120}
-            min={80}
-            name="textScale"
-            onChange={(event) => updateField('textScale', Number(event.target.value) / 100)}
-            step={1}
-            type="range"
-            value={Math.round(formState.textScale * 100)}
-          />
-        </label>
-
         <div className="submit-form__message submit-form__message--success" role="status">
           <p>{PUBLIC_SUBMISSION_BETA_MESSAGE}</p>
-          <p>Use this page to shape the slogan, switch blank boards, and rotate the text layer before public submissions reopen.</p>
+          <p>Use this page to shape the slogan and switch blank boards here. Fine-tune text color, angle, position, and size under the live preview.</p>
         </div>
 
         <button className="site-cta" disabled type="button">
@@ -210,6 +129,89 @@ export function SubmitForm() {
           textScale={formState.textScale}
           textColor={selectedTextColor.value}
         />
+
+        <div className="submit-preview-controls">
+          <fieldset className="submit-fieldset">
+            <legend className="submit-field__label">Text color</legend>
+            <div className="color-switcher" role="list">
+              {TEXT_COLOR_OPTIONS.map((option) => {
+                const isSelected = option.id === formState.selectedTextColor
+
+                return (
+                  <label
+                    key={option.id}
+                    className={`color-switcher__option ${isSelected ? 'color-switcher__option--selected' : ''}`}
+                    role="listitem"
+                  >
+                    <input
+                      checked={isSelected}
+                      name="selectedTextColor"
+                      onChange={() => updateField('selectedTextColor', option.id)}
+                      type="radio"
+                      value={option.id}
+                    />
+                    <span aria-hidden="true" className="color-switcher__swatch" style={{ background: option.value }} />
+                    <span className="color-switcher__label">{option.label}</span>
+                  </label>
+                )
+              })}
+            </div>
+          </fieldset>
+
+          <label className="submit-field">
+            <span className="submit-field__label submit-field__label--row">
+              <span>Text angle</span>
+              <strong>{formState.textRotation}°</strong>
+            </span>
+            <input
+              aria-label="Text angle"
+              className="submit-field__range"
+              max={30}
+              min={-30}
+              name="textRotation"
+              onChange={(event) => updateField('textRotation', Number(event.target.value))}
+              step={1}
+              type="range"
+              value={formState.textRotation}
+            />
+          </label>
+
+          <label className="submit-field">
+            <span className="submit-field__label submit-field__label--row">
+              <span>Text position</span>
+              <strong>{formState.textOffsetY}px</strong>
+            </span>
+            <input
+              aria-label="Text position"
+              className="submit-field__range"
+              max={32}
+              min={-32}
+              name="textOffsetY"
+              onChange={(event) => updateField('textOffsetY', Number(event.target.value))}
+              step={1}
+              type="range"
+              value={formState.textOffsetY}
+            />
+          </label>
+
+          <label className="submit-field">
+            <span className="submit-field__label submit-field__label--row">
+              <span>Text size</span>
+              <strong>{Math.round(formState.textScale * 100)}%</strong>
+            </span>
+            <input
+              aria-label="Text size"
+              className="submit-field__range"
+              max={120}
+              min={80}
+              name="textScale"
+              onChange={(event) => updateField('textScale', Number(event.target.value) / 100)}
+              step={1}
+              type="range"
+              value={Math.round(formState.textScale * 100)}
+            />
+          </label>
+        </div>
       </aside>
     </div>
   )

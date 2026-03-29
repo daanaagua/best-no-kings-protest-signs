@@ -24,4 +24,16 @@ describe('SubmitForm', () => {
     expect(screen.getByText('114%')).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: /Signal red/i })).toBeChecked()
   })
+
+  it('places text controls below the live preview so adjustments stay in view', () => {
+    const { container } = render(<SubmitForm />)
+
+    const previewRoot = container.querySelector('[data-testid="sign-preview-root"]')
+    const angleSlider = screen.getByLabelText(/Text angle/i)
+
+    expect(previewRoot).not.toBeNull()
+    expect(
+      previewRoot?.compareDocumentPosition(angleSlider) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
 })
