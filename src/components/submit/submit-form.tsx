@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import {
   SIGN_TEMPLATE_IDS,
@@ -11,6 +11,7 @@ import {
 } from '@/src/lib/signs/templates'
 import { SignPreview } from '@/src/components/submit/sign-preview'
 import { PUBLIC_SUBMISSION_BETA_MESSAGE } from '@/src/lib/launch-mode'
+import { buildExportFileName, exportPreviewAsPng } from '@/src/lib/signs/export-preview'
 
 type SubmissionFormState = {
   slogan: string
@@ -32,6 +33,8 @@ const INITIAL_FORM_STATE: SubmissionFormState = {
 
 export function SubmitForm() {
   const [formState, setFormState] = useState<SubmissionFormState>(INITIAL_FORM_STATE)
+  const [isExporting, setIsExporting] = useState(false)
+  const previewExportRef = useRef<HTMLDivElement | null>(null)
   const selectedTemplate = useMemo(
     () => getSignTemplateDefinition(formState.selectedTemplate),
     [formState.selectedTemplate],
@@ -46,6 +49,19 @@ export function SubmitForm() {
       ...currentState,
       [key]: value,
     }))
+  }
+
+  async function handleExport() {
+    if (!previewExportRef.current || isExporting) {
+      return
+    }
+
+    try {
+      setIsExporting(true)
+      await exportPreviewAsPng(previewExportRef.current, buildExportFileName(formState.slogan))
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   return (
@@ -121,16 +137,22 @@ export function SubmitForm() {
           </p>
         </div>
 
-        <SignPreview
-          slogan={formState.slogan}
-          template={formState.selectedTemplate}
-          textRotation={formState.textRotation}
-          textOffsetY={formState.textOffsetY}
-          textScale={formState.textScale}
-          textColor={selectedTextColor.value}
-        />
+        <div className="submit-preview-export" ref={previewExportRef}>
+          <SignPreview
+            slogan={formState.slogan}
+            template={formState.selectedTemplate}
+            textRotation={formState.textRotation}
+            textOffsetY={formState.textOffsetY}
+            textScale={formState.textScale}
+            textColor={selectedTextColor.value}
+          />
+        </div>
 
         <div className="submit-preview-controls">
+          <button className="site-cta submit-export-button" onClick={handleExport} type="button">
+            {isExporting ? 'Exporting PNG...' : 'Export PNG'}
+          </button>
+
           <fieldset className="submit-fieldset">
             <legend className="submit-field__label">Text color</legend>
             <div className="color-switcher" role="list">
