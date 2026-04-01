@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 
 import { SignBoardScene } from '@/src/components/submit/sign-board-scene'
 import { getSignTemplateDefinition } from '@/src/lib/signs/templates'
+import { getBoardLayerFrameStyle, getBoardPointStyle } from '@/src/lib/signs/board-stage-layout'
 import type {
   SignBoardDocument,
   SignBoardLayer,
@@ -76,7 +77,13 @@ export function SignBoardStage({ board, assets, selectedLayerId, onSelectLayer, 
         onPointerMove={handlePointerMove}
         onPointerUp={() => setDragState(null)}
       >
-        <div className="sign-board-stage__poster" style={{ backgroundImage: `url(${definition.previewBackground})` }}>
+        <div
+          className="sign-board-stage__poster"
+          style={{
+            backgroundImage: `url(${definition.previewBackground})`,
+            aspectRatio: `${board.canvasWidth} / ${board.canvasHeight}`,
+          }}
+        >
           <SignBoardScene board={board} assets={assets} className="sign-board-stage__scene" />
 
           {board.layers.map((layer) => {
@@ -84,18 +91,15 @@ export function SignBoardStage({ board, assets, selectedLayerId, onSelectLayer, 
               return null
             }
 
+            const frameStyle = getBoardLayerFrameStyle(board, layer)
+
             return (
               <button
                 key={layer.id}
                 className={`sign-board-stage__hitbox ${selectedLayerId === layer.id ? 'sign-board-stage__hitbox--selected' : ''}`}
                 onClick={() => onSelectLayer(layer.id)}
                 onDoubleClick={() => onSelectLayer(layer.id)}
-                style={{
-                  left: layer.x - layer.width / 2,
-                  top: layer.y - layer.height / 2,
-                  width: layer.width,
-                  height: layer.height,
-                }}
+                style={frameStyle}
                 type="button"
               >
                 <span className="sr-only">{layer.name}</span>
@@ -109,7 +113,7 @@ export function SignBoardStage({ board, assets, selectedLayerId, onSelectLayer, 
                 className="sign-board-stage__handle sign-board-stage__handle--move"
                 data-testid="stage-layer-handle-move"
                 onPointerDown={() => setDragState({ mode: 'move', layerId: selectedLayer.id })}
-                style={{ left: selectedLayer.x, top: selectedLayer.y }}
+                style={getBoardPointStyle(board, selectedLayer.x, selectedLayer.y)}
                 type="button"
               >
                 Move
@@ -118,7 +122,11 @@ export function SignBoardStage({ board, assets, selectedLayerId, onSelectLayer, 
                 className="sign-board-stage__handle sign-board-stage__handle--rotate"
                 data-testid="stage-layer-handle-rotate"
                 onPointerDown={() => setDragState({ mode: 'rotate', layerId: selectedLayer.id })}
-                style={{ left: selectedLayer.x + selectedLayer.width / 2, top: selectedLayer.y - selectedLayer.height / 2 }}
+                style={getBoardPointStyle(
+                  board,
+                  selectedLayer.x + selectedLayer.width / 2,
+                  selectedLayer.y - selectedLayer.height / 2,
+                )}
                 type="button"
               >
                 Rotate
@@ -127,7 +135,11 @@ export function SignBoardStage({ board, assets, selectedLayerId, onSelectLayer, 
                 className="sign-board-stage__handle sign-board-stage__handle--resize"
                 data-testid="stage-layer-handle-resize"
                 onPointerDown={() => setDragState({ mode: 'resize', layerId: selectedLayer.id })}
-                style={{ left: selectedLayer.x + selectedLayer.width / 2, top: selectedLayer.y + selectedLayer.height / 2 }}
+                style={getBoardPointStyle(
+                  board,
+                  selectedLayer.x + selectedLayer.width / 2,
+                  selectedLayer.y + selectedLayer.height / 2,
+                )}
                 type="button"
               >
                 Resize
