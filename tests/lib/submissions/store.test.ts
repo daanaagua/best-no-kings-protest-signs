@@ -5,6 +5,10 @@ import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import {
+  createBlankBoardDocument,
+  createTextLayer,
+} from '@/src/lib/signs/board-document'
+import {
   buildApprovedSubmissionSign,
   createSubmissionStore,
 } from '@/src/lib/submissions/store'
@@ -52,6 +56,77 @@ afterEach(async () => {
 })
 
 describe('submission store', () => {
+  it('stores a board document and restores it on read', async () => {
+    const store = await createTestStore()
+    const boardDocument = createBlankBoardDocument()
+    boardDocument.layers = [createTextLayer({ text: 'Power to the Public' })]
+
+    const pending = await store.createPendingSubmission({
+      slogan: 'Power to the Public',
+      slugCandidate: 'power-to-the-public',
+      selectedTemplate: 'blank-white',
+      primaryCategory: 'printable',
+      categories: ['printable', 'best'],
+      boardDocument,
+      submissionAssets: [
+        {
+          id: 'asset-1',
+          mimeType: 'image/png',
+          originalFileName: 'poster.png',
+          storageType: 'inline-data-url',
+          dataUrl: 'data:image/png;base64,abc123',
+          fileSizeBytes: 1024,
+          naturalWidth: 1200,
+          naturalHeight: 900,
+        },
+      ],
+    })
+
+    const [saved] = await store.listPendingSubmissions()
+
+    expect(saved?.boardDocument).toEqual(pending.boardDocument)
+    expect(saved?.submissionAssets[0]?.id).toBe('asset-1')
+  })
+
+  it('converts a legacy record without boardDocument into a one-text-layer board on read', async () => {
+    const dataDir = await mkdtemp(path.join(os.tmpdir(), 'site-mvp-store-'))
+    temporaryDirectories.push(dataDir)
+
+    await writeFile(
+      path.join(dataDir, 'submissions.json'),
+      JSON.stringify(
+        {
+          submissions: [
+            {
+              id: 'legacy-submission',
+              slogan: 'Legacy board',
+              slugCandidate: 'legacy-board',
+              selectedTemplate: 'classic',
+              status: 'approved',
+              createdAt: '2026-03-28T12:00:00.000Z',
+            },
+          ],
+        },
+        null,
+        2,
+      ),
+    )
+    await writeFile(path.join(dataDir, 'votes.json'), JSON.stringify({ votes: {} }, null, 2))
+
+    const store = createSubmissionStore({
+      dataDir,
+      now: () => '2026-03-28T12:00:00.000Z',
+      generateId: () => 'unused',
+    })
+
+    const [legacy] = await store.listApprovedSubmissions()
+
+    expect(legacy?.boardDocument.layers[0]).toMatchObject({
+      type: 'text',
+      text: 'Legacy board',
+    })
+  })
+
   it('creates pending submissions and can approve them', async () => {
     const store = await createTestStore()
 
@@ -242,7 +317,7 @@ describe('submission store', () => {
     expect(sign).not.toHaveProperty('submitterEmail')
     expect(sign).not.toHaveProperty('moderatorNote')
     expect(svg).toContain('fill="#b42318"')
-    expect(svg).toContain('rotate(8 400 500)')
+    expect(svg).toContain('rotate(8 400 512)')
   })
 
   it('keeps the template default text color for legacy records without a stored color id', async () => {
@@ -292,7 +367,7 @@ describe('submission store', () => {
 
     const d1Statements = new Map<string, { results?: unknown[]; first?: unknown }>([
       [
-        'SELECT id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, status, created_at, approved_at, moderator_note FROM submissions WHERE status = ? ORDER BY datetime(created_at) DESC, id DESC',
+        'SELECT id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, board_document_json, submission_assets_json, status, created_at, approved_at, moderator_note FROM submissions WHERE status = ? ORDER BY datetime(created_at) DESC, id DESC',
         {
           results: [
             {
@@ -394,7 +469,7 @@ describe('submission store', () => {
             async first() {
               if (
                 sql ===
-                'SELECT id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, status, created_at, approved_at, moderator_note FROM submissions WHERE id = ?'
+                'SELECT id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, board_document_json, submission_assets_json, status, created_at, approved_at, moderator_note FROM submissions WHERE id = ?'
               ) {
                 return {
                   id: 'submission-from-d1',

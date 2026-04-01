@@ -1,28 +1,12 @@
-import {
-  MAX_TEXT_OFFSET_Y,
-  MAX_TEXT_ROTATION,
-  MAX_TEXT_SCALE,
-  MIN_TEXT_OFFSET_Y,
-  MIN_TEXT_ROTATION,
-  MIN_TEXT_SCALE,
-  getSignTemplateDefinition,
-  isTextColorOptionId,
-  isSignTemplateId,
-  normalizeTemplatePreviewStyleOptions,
-  type SignTemplateId,
-  type TextColorOptionId,
-} from '@/src/lib/signs/templates'
+import type { SignBoardDocument, SubmissionAssetRecord } from '@/src/lib/signs/board-document'
+import { getSignTemplateDefinition, isSignTemplateId } from '@/src/lib/signs/templates'
 import type { SignCategory } from '@/src/lib/signs/types'
 
 export type SubmissionValidationInput = {
-  slogan?: string
-  selectedTemplate?: string
+  boardDocument?: unknown
+  submissionAssets?: unknown
   submitterName?: string
   submitterEmail?: string
-  selectedTextColor?: string
-  textRotation?: number
-  textOffsetY?: number
-  textScale?: number
   acceptedPolicy?: boolean
   confirmedOwnership?: boolean
 }
@@ -30,15 +14,13 @@ export type SubmissionValidationInput = {
 export type ValidatedSubmissionInput = {
   slogan: string
   slugCandidate: string
-  selectedTemplate: SignTemplateId
+  selectedTemplate: SignBoardDocument['templateId']
   primaryCategory: SignCategory
   categories: SignCategory[]
+  boardDocument: SignBoardDocument
+  submissionAssets: SubmissionAssetRecord[]
   submitterName?: string
   submitterEmail?: string
-  selectedTextColor?: TextColorOptionId
-  textRotation: number
-  textOffsetY: number
-  textScale: number
 }
 
 export type SubmissionValidationErrors = Partial<Record<keyof SubmissionValidationInput | 'form', string>>
@@ -56,6 +38,12 @@ type SubmissionValidationSuccess = {
 
 export type SubmissionValidationResult = SubmissionValidationFailure | SubmissionValidationSuccess
 
+const SUPPORTED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'])
+const MAX_FILE_SIZE_BYTES = 5_000_000
+const MAX_IMAGE_DIMENSION = 4000
+const MIN_LAYER_WIDTH = 40
+const MIN_LAYER_HEIGHT = 40
+
 function normalizeText(value: string | undefined) {
   return value?.replace(/\s+/g, ' ').trim() ?? ''
 }
@@ -64,90 +52,148 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
-function isWithinRange(value: number, min: number, max: number) {
-  return Number.isFinite(value) && value >= min && value <= max
+function isSubmissionAssetRecord(value: unknown): value is SubmissionAssetRecord {
+  return typeof value === 'object' && value !== null && typeof (value as SubmissionAssetRecord).id === 'string'
+}
+
+function isBoardDocument(value: unknown): value is SignBoardDocument {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as SignBoardDocument).templateId === 'string' &&
+    Array.isArray((value as SignBoardDocument).layers)
+  )
+}
+
+function validateBoardGeometry(boardDocument: SignBoardDocument) {
+  for (const layer of boardDocument.layers) {
+    if (layer.width < MIN_LAYER_WIDTH || layer.height < MIN_LAYER_HEIGHT) {
+      return 'Keep every layer within the supported size bounds before submitting.'
+    }
+
+    if (
+      layer.x < -boardDocument.canvasWidth ||
+      layer.x > boardDocument.canvasWidth * 2 ||
+      layer.y < -boardDocument.canvasHeight ||
+      layer.y > boardDocument.canvasHeight * 2
+    ) {
+      return 'Keep layers within the editable board envelope before submitting.'
+    }
+
+    if (layer.type === 'text' && !normalizeText(layer.text)) {
+      return 'Every visible text layer needs text before submitting.'
+    }
+  }
+
+  return undefined
+}
+
+function validateAssets(assets: SubmissionAssetRecord[]) {
+  for (const asset of assets) {
+    if (!SUPPORTED_IMAGE_TYPES.has(asset.mimeType)) {
+      return 'Use a supported image format before submitting.'
+    }
+
+    if (asset.fileSizeBytes > MAX_FILE_SIZE_BYTES) {
+      return 'Keep uploaded image file size under the supported limit before submitting.'
+    }
+
+    if (asset.naturalWidth > MAX_IMAGE_DIMENSION || asset.naturalHeight > MAX_IMAGE_DIMENSION) {
+      return 'Keep uploaded image dimensions within the supported limit before submitting.'
+    }
+  }
+
+  return undefined
+}
+
+function derivePrimaryText(boardDocument: SignBoardDocument) {
+  const textLayer = boardDocument.layers.find(
+    (layer): layer is Extract<SignBoardDocument['layers'][number], { type: 'text' }> =>
+      layer.type === 'text' && layer.visible && Boolean(normalizeText(layer.text)),
+  )
+
+  return textLayer ? normalizeText(textLayer.text) : undefined
+}
+
+function ensureImageAssetsResolve(boardDocument: SignBoardDocument, submissionAssets: SubmissionAssetRecord[]) {
+  const assetIds = new Set(submissionAssets.map((asset) => asset.id))
+
+  return boardDocument.layers.every(
+    (layer) => layer.type !== 'image' || !layer.visible || assetIds.has(layer.imageAssetId),
+  )
 }
 
 export function createSlugCandidate(slogan: string) {
-  const normalized = slogan
+  return slogan
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-
-  return normalized || 'community-sign'
+    .replace(/^-+|-+$/g, '') || 'community-sign'
 }
 
 export function validateSubmission(input: SubmissionValidationInput): SubmissionValidationResult {
-  const slogan = normalizeText(input.slogan)
-  const slugCandidate = createSlugCandidate(slogan)
   const submitterName = normalizeText(input.submitterName)
   const submitterEmail = normalizeText(input.submitterEmail).toLowerCase()
-  const selectedTemplate = input.selectedTemplate
-  const previewStyleOptions = normalizeTemplatePreviewStyleOptions({
-    selectedTextColor: input.selectedTextColor as TextColorOptionId | undefined,
-    textRotation: input.textRotation,
-    textOffsetY: input.textOffsetY,
-    textScale: input.textScale,
-  })
   const errors: SubmissionValidationErrors = {}
 
-  if (!slogan) {
-    errors.slogan = 'Enter a slogan before sending your sign for review.'
-  } else if (slogan.length < 4) {
-    errors.slogan = 'Use at least 4 characters so moderators can review it.'
-  } else if (slogan.length > 120) {
-    errors.slogan = 'Keep slogans under 120 characters for the MVP sign layouts.'
-  } else if (!/[a-z0-9]/i.test(slogan) || slugCandidate === 'community-sign') {
-    errors.slogan = 'Use at least one letter or number so we can create a usable slug candidate.'
+  if (!isBoardDocument(input.boardDocument) || !isSignTemplateId(input.boardDocument.templateId)) {
+    errors.boardDocument = 'Build a valid board before submitting.'
   }
 
-  if (!selectedTemplate || !isSignTemplateId(selectedTemplate)) {
-    errors.selectedTemplate = 'Choose one of the four supported sign templates.'
-  }
+  const submissionAssets = Array.isArray(input.submissionAssets)
+    ? input.submissionAssets.filter(isSubmissionAssetRecord)
+    : []
 
   if (!input.acceptedPolicy) {
     errors.acceptedPolicy = 'You need to accept the content policy before submitting.'
   }
 
   if (!input.confirmedOwnership) {
-    errors.confirmedOwnership = 'Confirm ownership so moderators know the slogan is yours or safe to share.'
+    errors.confirmedOwnership = 'Confirm ownership so moderators know the design is safe to share.'
   }
 
   if (submitterEmail && !isValidEmail(submitterEmail)) {
     errors.submitterEmail = 'Enter a valid email address or leave the field blank.'
   }
 
-  if (input.selectedTextColor !== undefined && !isTextColorOptionId(input.selectedTextColor)) {
-    errors.selectedTextColor = 'Choose a supported text color before submitting.'
+  if (errors.boardDocument || !isBoardDocument(input.boardDocument) || !isSignTemplateId(input.boardDocument.templateId)) {
+    return { success: false, errors }
   }
 
-  if (
-    input.textRotation !== undefined &&
-    !isWithinRange(input.textRotation, MIN_TEXT_ROTATION, MAX_TEXT_ROTATION)
-  ) {
-    errors.textRotation = `Keep text angle between ${MIN_TEXT_ROTATION} and ${MAX_TEXT_ROTATION} degrees.`
+  const boardDocument = input.boardDocument
+  const visibleLayers = boardDocument.layers.filter((layer) => layer.visible)
+
+  if (visibleLayers.length === 0) {
+    errors.boardDocument = 'Add at least one visible layer before submitting.'
   }
 
-  if (
-    input.textOffsetY !== undefined &&
-    !isWithinRange(input.textOffsetY, MIN_TEXT_OFFSET_Y, MAX_TEXT_OFFSET_Y)
-  ) {
-    errors.textOffsetY = `Keep text position between ${MIN_TEXT_OFFSET_Y} and ${MAX_TEXT_OFFSET_Y} pixels.`
+  const geometryError = validateBoardGeometry(boardDocument)
+  if (geometryError) {
+    errors.boardDocument = geometryError
   }
 
-  if (input.textScale !== undefined && !isWithinRange(input.textScale, MIN_TEXT_SCALE, MAX_TEXT_SCALE)) {
-    errors.textScale = `Keep text size between ${MIN_TEXT_SCALE} and ${MAX_TEXT_SCALE}.`
+  const assetsError = validateAssets(submissionAssets)
+  if (assetsError) {
+    errors.submissionAssets = assetsError
   }
 
-  if (Object.keys(errors).length > 0) {
+  if (!ensureImageAssetsResolve(boardDocument, submissionAssets)) {
+    errors.boardDocument = 'Every visible image layer needs a matching image asset before submitting.'
+  }
+
+  const slogan = derivePrimaryText(boardDocument)
+  if (!errors.boardDocument && !slogan) {
+    errors.boardDocument = 'Add at least one visible text layer so we can create a public slogan and slug.'
+  }
+
+  if (Object.keys(errors).length > 0 || !slogan) {
     return {
       success: false,
       errors,
     }
   }
 
-  const validatedTemplate = selectedTemplate as SignTemplateId
-  const templateDefinition = getSignTemplateDefinition(validatedTemplate)
+  const slugCandidate = createSlugCandidate(slogan)
+  const templateDefinition = getSignTemplateDefinition(boardDocument.templateId)
 
   return {
     success: true,
@@ -155,15 +201,13 @@ export function validateSubmission(input: SubmissionValidationInput): Submission
     value: {
       slogan,
       slugCandidate,
-      selectedTemplate: validatedTemplate,
+      selectedTemplate: boardDocument.templateId,
       primaryCategory: templateDefinition.primaryCategory,
       categories: [...templateDefinition.categories],
+      boardDocument,
+      submissionAssets,
       submitterName: submitterName || undefined,
       submitterEmail: submitterEmail || undefined,
-      selectedTextColor: previewStyleOptions.selectedTextColor,
-      textRotation: previewStyleOptions.textRotation,
-      textOffsetY: previewStyleOptions.textOffsetY,
-      textScale: previewStyleOptions.textScale,
     },
   }
 }

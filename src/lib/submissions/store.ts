@@ -5,7 +5,12 @@ import { randomUUID } from 'node:crypto'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 import {
-  buildTemplatePreviewDataUrl,
+  createLegacyTextBoardDocument,
+  type SignBoardDocument,
+  type SubmissionAssetRecord,
+} from '@/src/lib/signs/board-document'
+import { renderBoardToSvgDataUrl } from '@/src/lib/signs/board-render'
+import {
   getSignTemplateDefinition,
   normalizeTemplatePreviewStyleOptions,
   type SignTemplateId,
@@ -28,19 +33,32 @@ export type SubmissionRecord = {
   submitterName?: string
   submitterEmail?: string
   selectedTextColor?: TextColorOptionId
-  textRotation: number
-  textOffsetY: number
-  textScale: number
+  textRotation?: number
+  textOffsetY?: number
+  textScale?: number
+  boardDocument: SignBoardDocument
+  submissionAssets: SubmissionAssetRecord[]
   status: SubmissionStatus
   createdAt: string
   approvedAt?: string
   moderatorNote?: string
 }
 
-export type SubmissionDraft = Omit<
-  SubmissionRecord,
-  'id' | 'status' | 'createdAt' | 'approvedAt' | 'moderatorNote'
->
+export type SubmissionDraft = {
+  slogan: string
+  slugCandidate: string
+  selectedTemplate: SignTemplateId
+  primaryCategory: SignCategory
+  categories: SignCategory[]
+  submitterName?: string
+  submitterEmail?: string
+  selectedTextColor?: TextColorOptionId
+  textRotation?: number
+  textOffsetY?: number
+  textScale?: number
+  boardDocument?: SignBoardDocument
+  submissionAssets?: SubmissionAssetRecord[]
+}
 
 type SubmissionFile = {
   submissions: SubmissionRecord[]
@@ -83,6 +101,8 @@ type SubmissionDatabaseRow = {
   text_rotation: number | null
   text_offset_y: number | null
   text_scale: number | null
+  board_document_json: string | null
+  submission_assets_json: string | null
   status: SubmissionStatus
   created_at: string
   approved_at: string | null
@@ -103,7 +123,7 @@ const DEFAULT_VOTES_FILE: VotesFile = {
 }
 
 const SUBMISSION_SELECT_COLUMNS =
-  'id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, status, created_at, approved_at, moderator_note'
+  'id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, board_document_json, submission_assets_json, status, created_at, approved_at, moderator_note'
 
 const LIST_SUBMISSIONS_SQL = `SELECT ${SUBMISSION_SELECT_COLUMNS} FROM submissions ORDER BY datetime(created_at) DESC, id DESC`
 const LIST_SUBMISSIONS_BY_STATUS_SQL = `SELECT ${SUBMISSION_SELECT_COLUMNS} FROM submissions WHERE status = ? ORDER BY datetime(created_at) DESC, id DESC`
@@ -111,7 +131,7 @@ const FIND_SUBMISSION_BY_ID_SQL = `SELECT ${SUBMISSION_SELECT_COLUMNS} FROM subm
 const LIST_APPROVED_SLUGS_SQL =
   'SELECT slug_candidate FROM submissions WHERE status = ? AND id != ?'
 const INSERT_SUBMISSION_SQL =
-  'INSERT INTO submissions (id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, status, created_at, approved_at, moderator_note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+  'INSERT INTO submissions (id, slogan, slug_candidate, selected_template, primary_category, categories_json, submitter_name, submitter_email, selected_text_color, text_rotation, text_offset_y, text_scale, board_document_json, submission_assets_json, status, created_at, approved_at, moderator_note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 const UPDATE_SUBMISSION_STATUS_SQL =
   'UPDATE submissions SET slug_candidate = ?, status = ?, approved_at = ?, moderator_note = ? WHERE id = ?'
 const LIST_VOTES_SQL = 'SELECT slug, vote_count FROM votes'
@@ -126,6 +146,8 @@ function cloneSubmission(record: SubmissionRecord): SubmissionRecord {
   return {
     ...normalized,
     categories: [...normalized.categories],
+    boardDocument: structuredClone(normalized.boardDocument),
+    submissionAssets: normalized.submissionAssets.map((asset) => ({ ...asset })),
   }
 }
 
@@ -136,6 +158,15 @@ function parseSubmissionCategories(record: SubmissionDatabaseRow) {
 }
 
 function mapSubmissionDatabaseRow(row: SubmissionDatabaseRow): SubmissionRecord {
+  const legacyBoardDocument = createLegacyTextBoardDocument({
+    slogan: row.slogan,
+    selectedTemplate: row.selected_template,
+    selectedTextColor: row.selected_text_color ?? undefined,
+    textRotation: row.text_rotation ?? 0,
+    textOffsetY: row.text_offset_y ?? 0,
+    textScale: row.text_scale ?? 1,
+  })
+
   return normalizeSubmissionRecord({
     id: row.id,
     slogan: row.slogan,
@@ -149,6 +180,8 @@ function mapSubmissionDatabaseRow(row: SubmissionDatabaseRow): SubmissionRecord 
     textRotation: row.text_rotation ?? 0,
     textOffsetY: row.text_offset_y ?? 0,
     textScale: row.text_scale ?? 1,
+    boardDocument: row.board_document_json ? parseJsonFile(row.board_document_json, legacyBoardDocument) : legacyBoardDocument,
+    submissionAssets: row.submission_assets_json ? parseJsonFile(row.submission_assets_json, []) : [],
     status: row.status,
     createdAt: row.created_at,
     approvedAt: row.approved_at ?? undefined,
@@ -229,6 +262,15 @@ function isApprovedSlugConflictError(error: unknown) {
 function normalizeSubmissionRecord(record: SubmissionRecord): SubmissionRecord {
   const template = getSignTemplateDefinition(record.selectedTemplate)
   const previewStyleOptions = normalizeTemplatePreviewStyleOptions(record)
+  const boardDocument = record.boardDocument ??
+    createLegacyTextBoardDocument({
+      slogan: record.slogan,
+      selectedTemplate: record.selectedTemplate,
+      selectedTextColor: record.selectedTextColor,
+      textRotation: record.textRotation,
+      textOffsetY: record.textOffsetY,
+      textScale: record.textScale,
+    })
 
   return {
     ...record,
@@ -241,8 +283,24 @@ function normalizeSubmissionRecord(record: SubmissionRecord): SubmissionRecord {
     textRotation: previewStyleOptions.textRotation,
     textOffsetY: previewStyleOptions.textOffsetY,
     textScale: previewStyleOptions.textScale,
+    boardDocument,
+    submissionAssets: Array.isArray(record.submissionAssets) ? [...record.submissionAssets] : [],
     approvedAt: record.status === 'approved' ? record.approvedAt : undefined,
   }
+}
+
+function createBoardDocumentForDraft(draft: SubmissionDraft) {
+  return (
+    draft.boardDocument ??
+    createLegacyTextBoardDocument({
+      slogan: draft.slogan,
+      selectedTemplate: draft.selectedTemplate,
+      selectedTextColor: draft.selectedTextColor,
+      textRotation: draft.textRotation,
+      textOffsetY: draft.textOffsetY,
+      textScale: draft.textScale,
+    })
+  )
 }
 
 function normalizeSubmissionFile(file: SubmissionFile): SubmissionFile {
@@ -261,27 +319,28 @@ export function buildApprovedSubmissionSign(
   submission: SubmissionRecord,
   storedVoteCount = 0,
 ): SignRecord {
-  const template = getSignTemplateDefinition(submission.selectedTemplate)
-  const title = submission.slogan
+  const normalizedSubmission = normalizeSubmissionRecord(submission)
+  const template = getSignTemplateDefinition(normalizedSubmission.selectedTemplate)
+  const title = normalizedSubmission.slogan
 
   return {
     topic: 'no-kings',
-    slug: submission.slugCandidate,
+    slug: normalizedSubmission.slugCandidate,
     title,
-    slogan: submission.slogan,
-    primaryCategory: submission.primaryCategory,
-    categories: [...submission.categories],
-    image: buildTemplatePreviewDataUrl(submission.slogan, submission.selectedTemplate, submission),
+    slogan: normalizedSubmission.slogan,
+    primaryCategory: normalizedSubmission.primaryCategory,
+    categories: [...normalizedSubmission.categories],
+    image: renderBoardToSvgDataUrl(normalizedSubmission.boardDocument, normalizedSubmission.submissionAssets),
     description: `${title} is an approved community No Kings sign submitted in the ${template.label.toLowerCase()} template for the public gallery.`,
-    createdAt: submission.createdAt,
+    createdAt: normalizedSubmission.createdAt,
     voteCount: storedVoteCount,
     sourceType: 'community',
-    submitterName: submission.submitterName,
-    selectedTextColor: submission.selectedTextColor,
-    textRotation: submission.textRotation,
-    textOffsetY: submission.textOffsetY,
-    textScale: submission.textScale,
-    approvedAt: submission.approvedAt,
+    submitterName: normalizedSubmission.submitterName,
+    selectedTextColor: normalizedSubmission.selectedTextColor,
+    textRotation: normalizedSubmission.textRotation,
+    textOffsetY: normalizedSubmission.textOffsetY,
+    textScale: normalizedSubmission.textScale,
+    approvedAt: normalizedSubmission.approvedAt,
   }
 }
 
@@ -365,6 +424,7 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
   }
 
   async function createPendingSubmissionInD1(database: SubmissionDatabase, draft: SubmissionDraft) {
+    const boardDocument = createBoardDocumentForDraft(draft)
     const record: SubmissionRecord = {
       id: generateId(),
       slogan: draft.slogan,
@@ -378,6 +438,8 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
       textRotation: draft.textRotation,
       textOffsetY: draft.textOffsetY,
       textScale: draft.textScale,
+      boardDocument,
+      submissionAssets: draft.submissionAssets ?? [],
       status: 'pending',
       createdAt: now(),
     }
@@ -394,9 +456,11 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
         record.submitterName ?? null,
         record.submitterEmail ?? null,
         record.selectedTextColor ?? null,
-        record.textRotation,
-        record.textOffsetY,
-        record.textScale,
+        record.textRotation ?? 0,
+        record.textOffsetY ?? 0,
+        record.textScale ?? 1,
+        JSON.stringify(record.boardDocument),
+        JSON.stringify(record.submissionAssets),
         record.status,
         record.createdAt,
         null,
@@ -580,6 +644,7 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
         d1: async (database) => createPendingSubmissionInD1(database, draft),
         file: async () => {
           const file = await readSubmissionsFile()
+          const boardDocument = createBoardDocumentForDraft(draft)
           const record: SubmissionRecord = {
             id: generateId(),
             slogan: draft.slogan,
@@ -593,6 +658,8 @@ export function createSubmissionStore(options: SubmissionStoreOptions = {}) {
             textRotation: draft.textRotation,
             textOffsetY: draft.textOffsetY,
             textScale: draft.textScale,
+            boardDocument,
+            submissionAssets: draft.submissionAssets ?? [],
             status: 'pending',
             createdAt: now(),
           }

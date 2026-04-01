@@ -1,6 +1,10 @@
 import type { SignCategory } from '@/src/lib/signs/types'
 
-export const SIGN_TEMPLATE_IDS = ['classic', 'tilted', 'bold-marker', 'printable'] as const
+const BLANK_WHITE_BOARD_PREVIEW = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000"><rect width="800" height="1000" fill="#ece7df"/><rect x="112" y="48" width="576" height="904" rx="30" fill="#ffffff" stroke="#162635" stroke-width="16"/><rect x="128" y="64" width="544" height="872" rx="22" fill="none" stroke="rgba(22,38,53,0.08)" stroke-width="4"/></svg>',
+)}`
+
+export const SIGN_TEMPLATE_IDS = ['classic', 'tilted', 'bold-marker', 'printable', 'blank-white'] as const
 
 export type SignTemplateId = (typeof SIGN_TEMPLATE_IDS)[number]
 
@@ -103,6 +107,20 @@ export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefin
     categories: ['printable', 'best'],
     previewBackground: '/submit-templates/poster-board.png',
     accentColor: '#0d2235',
+    boardColor: '#ffffff',
+    textColor: '#111111',
+    rotation: 0,
+    textFrameTop: '50%',
+    textFrameWidth: '80%',
+  },
+  'blank-white': {
+    id: 'blank-white',
+    label: 'Blank white board',
+    description: 'A plain white board with no background art so people can compose from scratch.',
+    primaryCategory: 'printable',
+    categories: ['printable', 'best'],
+    previewBackground: BLANK_WHITE_BOARD_PREVIEW,
+    accentColor: '#111111',
     boardColor: '#ffffff',
     textColor: '#111111',
     rotation: 0,

@@ -79,4 +79,12 @@ describe('SignPreview', () => {
     expect(textLayer?.style.getPropertyValue('--text-scale')).toBe('1.14')
     expect(textLayer?.style.getPropertyValue('--text-color')).toBe('#b42318')
   })
+
+  it('renders the shared board scene inside the legacy preview wrapper', () => {
+    render(
+      <SignPreview slogan="Power to the Public" template="classic" textRotation={0} textOffsetY={0} textScale={1} textColor="#111111" />,
+    )
+
+    expect(screen.getByTestId('sign-board-scene')).toBeInTheDocument()
+  })
 })

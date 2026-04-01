@@ -1380,6 +1380,149 @@ a {
   gap: 0.55rem;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sign-designer {
+  display: grid;
+  gap: 1.1rem;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.25fr) minmax(16rem, 0.85fr);
+  align-items: start;
+}
+
+.sign-layer-list,
+.sign-designer__center,
+.sign-layer-inspector {
+  position: relative;
+  padding: 1rem;
+  border: 2px solid rgba(22, 38, 53, 0.12);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 30px rgba(22, 38, 53, 0.08);
+}
+
+.sign-layer-list__actions,
+.sign-layer-inspector__controls,
+.submit-form__meta {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sign-layer-list__upload {
+  display: inline-flex;
+  justify-content: center;
+}
+
+.sign-layer-list__file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sign-layer-list__stack {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.sign-layer-list__item {
+  display: grid;
+  gap: 0.2rem;
+  text-align: left;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(22, 38, 53, 0.14);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.sign-layer-list__item--selected {
+  border-color: var(--signal);
+  background: rgba(212, 87, 54, 0.08);
+}
+
+.sign-designer__center {
+  display: grid;
+  gap: 1rem;
+}
+
+.sign-board-stage__poster {
+  position: relative;
+  min-height: 38rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #f7f3ec;
+  box-shadow: inset 0 0 0 1px rgba(22, 38, 53, 0.08);
+}
+
+.sign-board-stage__scene {
+  position: absolute;
+  inset: 0;
+}
+
+.sign-board-scene__text-layer {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.sign-board-scene__line {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  line-height: 0.94;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+.sign-board-scene__image-layer {
+  border-radius: 0.45rem;
+}
+
+.sign-board-stage__hitbox,
+.sign-board-stage__handle {
+  position: absolute;
+  border: 1px dashed rgba(22, 38, 53, 0.28);
+  background: transparent;
+}
+
+.sign-board-stage__hitbox--selected {
+  border-color: var(--signal);
+}
+
+.sign-board-stage__handle {
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0.3rem 0.55rem;
+  border-style: solid;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  transform: translate(-50%, -50%);
+}
+
+.sign-template-switcher {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 1100px) {
+  .sign-designer {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 860px) {
   .site-header__inner {
     flex-direction: column;

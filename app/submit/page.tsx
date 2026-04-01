@@ -15,8 +15,8 @@ export default function SubmitPage() {
           <h1 className="section-heading__title">Make your No Kings sign</h1>
           <p className="section-heading__description">
             {communityMvpEnabled
-              ? 'Switch board templates, tune the text, and send your finished design to the moderation queue for review.'
-              : 'Switch board templates, tune the text, and export a PNG built for marches, rallies, printouts, and quick sharing.'}
+              ? 'Start from a blank white board or a rally template, add text boxes and images freely, then send the finished board to moderation.'
+              : 'Start from a blank white board or a rally template, place text and images directly on the sign, and export a PNG ready for print or sharing.'}
           </p>
         </div>
       </section>

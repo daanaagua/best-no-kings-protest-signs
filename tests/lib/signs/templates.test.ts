@@ -1,12 +1,24 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildTemplatePreviewDataUrl } from '@/src/lib/signs/templates'
+import {
+  SIGN_TEMPLATE_IDS,
+  buildTemplatePreviewDataUrl,
+  getSignTemplateDefinition,
+} from '@/src/lib/signs/templates'
 
 function decodeSvgAsset(dataUrl: string) {
   return decodeURIComponent(dataUrl.replace('data:image/svg+xml;charset=UTF-8,', ''))
 }
 
 describe('buildTemplatePreviewDataUrl', () => {
+  it('includes the blank white board in the supported template ids', () => {
+    expect(SIGN_TEMPLATE_IDS).toContain('blank-white')
+    expect(getSignTemplateDefinition('blank-white')).toMatchObject({
+      id: 'blank-white',
+      label: 'Blank white board',
+    })
+  })
+
   it('encodes style-aware text options into the generated asset', () => {
     const asset = (
       buildTemplatePreviewDataUrl as unknown as (
