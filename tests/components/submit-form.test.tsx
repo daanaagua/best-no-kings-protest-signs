@@ -22,6 +22,63 @@ afterEach(() => {
 })
 
 describe('SubmitForm', () => {
+  it('opens the submit form on the blank board by default', () => {
+    render(<SubmitForm />)
+
+    expect(screen.getByRole('radio', { name: /Blank white board/i })).toBeChecked()
+    expect(screen.getByLabelText(/Board ratio/i)).toBeInTheDocument()
+  })
+
+  it('shows ratio controls only while the blank board is selected', () => {
+    render(<SubmitForm />)
+
+    fireEvent.click(screen.getByRole('radio', { name: /Centered crowd board/i }))
+
+    expect(screen.queryByLabelText(/Board ratio/i)).not.toBeInTheDocument()
+  })
+
+  it('updates the stage aspect ratio when the blank board ratio changes', () => {
+    render(<SubmitForm />)
+
+    fireEvent.change(screen.getByLabelText(/Board ratio/i), { target: { value: 'square-1-1' } })
+
+    expect(screen.getByTestId('sign-board-stage-poster')).toHaveStyle({ aspectRatio: '1000 / 1000' })
+  })
+
+  it('keeps existing blank-board layers after a ratio change', () => {
+    render(<SubmitForm />)
+
+    fireEvent.click(screen.getByRole('button', { name: /Add text/i }))
+    fireEvent.change(screen.getByRole('textbox', { name: /Layer text/i }), {
+      target: { value: 'Square crowd' },
+    })
+    fireEvent.change(screen.getByLabelText(/Board ratio/i), { target: { value: 'landscape-4-3' } })
+
+    expect(screen.getAllByText(/Text layer/i).length).toBeGreaterThan(0)
+    expect(screen.getByDisplayValue('Square crowd')).toBeInTheDocument()
+  })
+
+  it('restores decorated template dimensions after leaving a custom blank-board ratio', () => {
+    render(<SubmitForm />)
+
+    fireEvent.change(screen.getByLabelText(/Board ratio/i), { target: { value: 'square-1-1' } })
+    fireEvent.click(screen.getByRole('radio', { name: /Centered crowd board/i }))
+
+    expect(screen.queryByLabelText(/Board ratio/i)).not.toBeInTheDocument()
+    expect(screen.getByTestId('sign-board-stage-poster')).toHaveStyle({ aspectRatio: '800 / 1000' })
+  })
+
+  it('restores the last blank-board ratio after returning from a decorated template', () => {
+    render(<SubmitForm />)
+
+    fireEvent.change(screen.getByLabelText(/Board ratio/i), { target: { value: 'square-1-1' } })
+    fireEvent.click(screen.getByRole('radio', { name: /Centered crowd board/i }))
+    fireEvent.click(screen.getByRole('radio', { name: /Blank white board/i }))
+
+    expect(screen.getByLabelText(/Board ratio/i)).toHaveValue('square-1-1')
+    expect(screen.getByTestId('sign-board-stage-poster')).toHaveStyle({ aspectRatio: '1000 / 1000' })
+  })
+
   it('exports the current board as a PNG', async () => {
     render(<SubmitForm />)
 
@@ -42,8 +99,6 @@ describe('SubmitForm', () => {
 
   it('shows the blank white board in the template switcher and reinitializes the board when selected', () => {
     render(<SubmitForm />)
-
-    fireEvent.click(screen.getByRole('radio', { name: /Blank white board/i }))
 
     expect(screen.getByRole('radio', { name: /Blank white board/i })).toBeChecked()
     expect(screen.getByText(/blank white board/i)).toBeInTheDocument()

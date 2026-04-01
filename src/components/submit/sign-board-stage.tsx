@@ -79,8 +79,9 @@ export function SignBoardStage({ board, assets, selectedLayerId, onSelectLayer, 
       >
         <div
           className="sign-board-stage__poster"
+          data-testid="sign-board-stage-poster"
           style={{
-            backgroundImage: `url(${definition.previewBackground})`,
+            backgroundImage: definition.previewBackground === 'none' ? 'none' : `url(${definition.previewBackground})`,
             aspectRatio: `${board.canvasWidth} / ${board.canvasHeight}`,
           }}
         >

@@ -6,6 +6,11 @@ import {
   type SignTemplateId,
   type TextColorOptionId,
 } from '@/src/lib/signs/templates'
+import {
+  DEFAULT_BLANK_BOARD_RATIO_ID,
+  type BlankBoardRatioId,
+  getBlankBoardRatioPreset,
+} from '@/src/lib/signs/blank-board-ratios'
 
 export const BOARD_DOCUMENT_VERSION = 1 as const
 export const BOARD_CANVAS_WIDTH = 800
@@ -183,6 +188,7 @@ export function createImageLayer(overrides: Partial<SignBoardImageLayer>): SignB
 
 function createBoardDocument(templateId: SignTemplateId, backgroundMode: BoardBackgroundMode): SignBoardDocument {
   const template = getSignTemplateDefinition(templateId)
+  const blankBoardRatio = templateId === 'blank-white' ? getBlankBoardRatioPreset(DEFAULT_BLANK_BOARD_RATIO_ID) : null
 
   return {
     version: BOARD_DOCUMENT_VERSION,
@@ -192,14 +198,18 @@ function createBoardDocument(templateId: SignTemplateId, backgroundMode: BoardBa
       backgroundMode === 'blank-board'
         ? { kind: 'solid', color: template.boardColor }
         : { kind: 'template', src: template.previewBackground },
-    canvasWidth: BOARD_CANVAS_WIDTH,
-    canvasHeight: BOARD_CANVAS_HEIGHT,
+    canvasWidth: blankBoardRatio?.canvasWidth ?? BOARD_CANVAS_WIDTH,
+    canvasHeight: blankBoardRatio?.canvasHeight ?? BOARD_CANVAS_HEIGHT,
     layers: [],
   }
 }
 
-export function createBlankBoardDocument(): SignBoardDocument {
+export function createBlankBoardDocument(ratioId: BlankBoardRatioId = DEFAULT_BLANK_BOARD_RATIO_ID): SignBoardDocument {
   const board = createBoardDocument('blank-white', 'blank-board')
+  const ratio = getBlankBoardRatioPreset(ratioId)
+
+  board.canvasWidth = ratio.canvasWidth
+  board.canvasHeight = ratio.canvasHeight
 
   board.layers = [
     createTextLayer({
@@ -207,15 +217,27 @@ export function createBlankBoardDocument(): SignBoardDocument {
       width: 520,
       height: 240,
       color: '#111111',
+      x: ratio.canvasWidth / 2,
+      y: ratio.canvasHeight / 2,
     }),
   ]
 
   return board
 }
 
-export function createStarterBoardDocument(templateId: SignTemplateId): SignBoardDocument {
+export function applyBlankBoardRatio(board: SignBoardDocument, ratioId: BlankBoardRatioId): SignBoardDocument {
+  const ratio = getBlankBoardRatioPreset(ratioId)
+
+  return {
+    ...board,
+    canvasWidth: ratio.canvasWidth,
+    canvasHeight: ratio.canvasHeight,
+  }
+}
+
+export function createStarterBoardDocument(templateId: SignTemplateId = 'blank-white'): SignBoardDocument {
   if (templateId === 'blank-white') {
-    return createBlankBoardDocument()
+    return createBlankBoardDocument(DEFAULT_BLANK_BOARD_RATIO_ID)
   }
 
   return createLegacyTextBoardDocument({

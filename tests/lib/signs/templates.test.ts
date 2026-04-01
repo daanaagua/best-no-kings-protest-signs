@@ -11,11 +11,12 @@ function decodeSvgAsset(dataUrl: string) {
 }
 
 describe('buildTemplatePreviewDataUrl', () => {
-  it('includes the blank white board in the supported template ids', () => {
-    expect(SIGN_TEMPLATE_IDS).toContain('blank-white')
+  it('keeps the blank board visually plain and listed first', () => {
+    expect(SIGN_TEMPLATE_IDS[0]).toBe('blank-white')
     expect(getSignTemplateDefinition('blank-white')).toMatchObject({
       id: 'blank-white',
       label: 'Blank white board',
+      previewBackground: 'none',
     })
   })
 

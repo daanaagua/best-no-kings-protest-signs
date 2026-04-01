@@ -1,10 +1,6 @@
 import type { SignCategory } from '@/src/lib/signs/types'
 
-const BLANK_WHITE_BOARD_PREVIEW = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000"><rect width="800" height="1000" fill="#ece7df"/><rect x="112" y="48" width="576" height="904" rx="30" fill="#ffffff" stroke="#162635" stroke-width="16"/><rect x="128" y="64" width="544" height="872" rx="22" fill="none" stroke="rgba(22,38,53,0.08)" stroke-width="4"/></svg>',
-)}`
-
-export const SIGN_TEMPLATE_IDS = ['classic', 'tilted', 'bold-marker', 'printable', 'blank-white'] as const
+export const SIGN_TEMPLATE_IDS = ['blank-white', 'classic', 'tilted', 'bold-marker', 'printable'] as const
 
 export type SignTemplateId = (typeof SIGN_TEMPLATE_IDS)[number]
 
@@ -119,9 +115,9 @@ export const SIGN_TEMPLATE_DEFINITIONS: Record<SignTemplateId, SignTemplateDefin
     description: 'A plain white board with no background art so people can compose from scratch.',
     primaryCategory: 'printable',
     categories: ['printable', 'best'],
-    previewBackground: BLANK_WHITE_BOARD_PREVIEW,
+    previewBackground: 'none',
     accentColor: '#111111',
-    boardColor: '#ffffff',
+    boardColor: '#f5f0e6',
     textColor: '#111111',
     rotation: 0,
     textFrameTop: '50%',
@@ -248,15 +244,18 @@ export function buildTemplatePreviewDataUrl(
 
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="${escapeSvgText(normalizePreviewSlogan(slogan))}">
-      <rect width="800" height="1000" fill="#d7d3cd" />
-      <rect x="112" y="48" width="576" height="904" rx="30" fill="${definition.boardColor}" stroke="#162635" stroke-width="16" transform="rotate(${definition.rotation} 400 500)" />
-      <rect x="128" y="64" width="544" height="872" rx="22" fill="none" stroke="rgba(22, 38, 53, 0.08)" stroke-width="4" transform="rotate(${definition.rotation} 400 500)" />
+      <rect width="800" height="1000" fill="${template === 'blank-white' ? definition.boardColor : '#d7d3cd'}" />
+      ${
+        template === 'blank-white'
+          ? ''
+          : `<rect x="112" y="48" width="576" height="904" rx="30" fill="${definition.boardColor}" stroke="#162635" stroke-width="16" transform="rotate(${definition.rotation} 400 500)" /><rect x="128" y="64" width="544" height="872" rx="22" fill="none" stroke="rgba(22, 38, 53, 0.08)" stroke-width="4" transform="rotate(${definition.rotation} 400 500)" />`
+      }
       <g transform="rotate(${definition.rotation} 400 500)">
         <g transform="${textTransform}">
           <g transform="${textScaleTransform}">${lineMarkup}</g>
         </g>
       </g>
-      <text x="744" y="956" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="2" fill="#3f3f3f" opacity="0.55">NO KINGS PROTEST SIGNS</text>
+      ${template === 'blank-white' ? '' : '<text x="744" y="956" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="2" fill="#3f3f3f" opacity="0.55">NO KINGS PROTEST SIGNS</text>'}
     </svg>
   `
 
