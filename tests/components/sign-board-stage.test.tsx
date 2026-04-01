@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SignBoardStage } from '@/src/components/submit/sign-board-stage'
-import { createLegacyTextBoardDocument } from '@/src/lib/signs/board-document'
+import { createBlankBoardDocument, createLegacyTextBoardDocument } from '@/src/lib/signs/board-document'
 
 describe('SignBoardStage', () => {
   it('positions the default text layer using responsive percentages inside the poster', () => {
@@ -34,5 +34,37 @@ describe('SignBoardStage', () => {
     expect(textLayer?.style.left).toBe('20%')
     expect(textLayer?.style.top).toBe('39%')
     expect(moveHandle).toHaveStyle({ left: '50%', top: '50%' })
+  })
+
+  it('uses the current board dimensions for poster aspect ratio', () => {
+    const board = createBlankBoardDocument('square-1-1')
+
+    render(
+      <SignBoardStage
+        assets={[]}
+        board={board}
+        onBoardChange={vi.fn()}
+        onSelectLayer={vi.fn()}
+        selectedLayerId={board.layers[0]?.id ?? null}
+      />,
+    )
+
+    expect(screen.getByTestId('sign-board-stage-poster')).toHaveStyle({ aspectRatio: '1000 / 1000' })
+  })
+
+  it('renders the blank board poster without decorative background art', () => {
+    const board = createBlankBoardDocument()
+
+    render(
+      <SignBoardStage
+        assets={[]}
+        board={board}
+        onBoardChange={vi.fn()}
+        onSelectLayer={vi.fn()}
+        selectedLayerId={board.layers[0]?.id ?? null}
+      />,
+    )
+
+    expect(screen.getByTestId('sign-board-stage-poster')).toHaveStyle({ backgroundImage: 'none' })
   })
 })

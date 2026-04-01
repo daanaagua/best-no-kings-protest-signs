@@ -6,6 +6,13 @@ import { SignBoardStage } from '@/src/components/submit/sign-board-stage'
 import { SignLayerInspector } from '@/src/components/submit/sign-layer-inspector'
 import { SignLayerList } from '@/src/components/submit/sign-layer-list'
 import {
+  DEFAULT_BLANK_BOARD_RATIO_ID,
+  getBlankBoardRatioIdForDimensions,
+  type BlankBoardRatioId,
+} from '@/src/lib/signs/blank-board-ratios'
+import {
+  applyBlankBoardRatio,
+  createBlankBoardDocument,
   createImageLayer,
   createStarterBoardDocument,
   createTextLayer,
@@ -33,7 +40,7 @@ type SubmitMetaState = {
   confirmedOwnership: boolean
 }
 
-const INITIAL_TEMPLATE_ID: SignTemplateId = 'classic'
+const INITIAL_TEMPLATE_ID: SignTemplateId = 'blank-white'
 
 function replaceLayer(board: SignBoardDocument, layerId: string, nextLayer: SignBoardLayer): SignBoardDocument {
   return {
@@ -45,6 +52,7 @@ function replaceLayer(board: SignBoardDocument, layerId: string, nextLayer: Sign
 export function SubmitForm({ communityMvpEnabled = false }: SubmitFormProps) {
   const [board, setBoard] = useState<SignBoardDocument>(() => createStarterBoardDocument(INITIAL_TEMPLATE_ID))
   const [submissionAssets, setSubmissionAssets] = useState<SubmissionAssetRecord[]>([])
+  const [lastBlankBoardRatioId, setLastBlankBoardRatioId] = useState<BlankBoardRatioId>(DEFAULT_BLANK_BOARD_RATIO_ID)
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null)
   const [isExporting, setIsExporting] = useState(false)
   const [metaState, setMetaState] = useState<SubmitMetaState>({
@@ -72,9 +80,24 @@ export function SubmitForm({ communityMvpEnabled = false }: SubmitFormProps) {
   }
 
   function handleTemplateChange(templateId: SignTemplateId) {
-    const nextBoard = createStarterBoardDocument(templateId)
+    const nextBoard =
+      templateId === 'blank-white'
+        ? createBlankBoardDocument(lastBlankBoardRatioId)
+        : createStarterBoardDocument(templateId)
+
     setBoardWithSelection(nextBoard, nextBoard.layers[0]?.id ?? null)
     setSubmissionAssets([])
+  }
+
+  function handleBlankBoardRatioChange(ratioId: BlankBoardRatioId) {
+    setLastBlankBoardRatioId(ratioId)
+
+    if (board.templateId !== 'blank-white') {
+      return
+    }
+
+    const nextBoard = applyBlankBoardRatio(board, ratioId)
+    setBoardWithSelection(nextBoard, selectedLayerId)
   }
 
   function handleAddText() {
@@ -327,7 +350,9 @@ export function SubmitForm({ communityMvpEnabled = false }: SubmitFormProps) {
       </div>
 
       <SignLayerInspector
+        blankBoardRatioId={getBlankBoardRatioIdForDimensions(board.canvasWidth, board.canvasHeight)}
         board={board}
+        onBlankBoardRatioChange={handleBlankBoardRatioChange}
         onTemplateChange={handleTemplateChange}
         onToggleVisibility={handleToggleVisibility}
         onUpdateImageLayer={handleUpdateImageLayer}

@@ -3,6 +3,10 @@ import {
   getSignTemplateDefinition,
   type SignTemplateId,
 } from '@/src/lib/signs/templates'
+import {
+  BLANK_BOARD_RATIO_PRESETS,
+  type BlankBoardRatioId,
+} from '@/src/lib/signs/blank-board-ratios'
 import type {
   SignBoardDocument,
   SignBoardImageLayer,
@@ -13,7 +17,9 @@ import type {
 type SignLayerInspectorProps = {
   board: SignBoardDocument
   selectedLayer: SignBoardLayer | undefined
+  blankBoardRatioId: BlankBoardRatioId
   onTemplateChange: (templateId: SignTemplateId) => void
+  onBlankBoardRatioChange: (ratioId: BlankBoardRatioId) => void
   onUpdateTextLayer: (updates: Partial<SignBoardTextLayer>) => void
   onUpdateImageLayer: (updates: Partial<SignBoardImageLayer>) => void
   onUpdateLayerFrame: (updates: Partial<Pick<SignBoardLayer, 'x' | 'y' | 'width' | 'height' | 'rotation'>>) => void
@@ -23,7 +29,9 @@ type SignLayerInspectorProps = {
 export function SignLayerInspector({
   board,
   selectedLayer,
+  blankBoardRatioId,
   onTemplateChange,
+  onBlankBoardRatioChange,
   onUpdateTextLayer,
   onUpdateImageLayer,
   onUpdateLayerFrame,
@@ -58,6 +66,24 @@ export function SignLayerInspector({
           })}
         </div>
       </fieldset>
+
+      {board.templateId === 'blank-white' ? (
+        <label className="submit-field">
+          <span className="submit-field__label">Board ratio</span>
+          <select
+            aria-label="Board ratio"
+            className="submit-field__input"
+            onChange={(event) => onBlankBoardRatioChange(event.target.value as BlankBoardRatioId)}
+            value={blankBoardRatioId}
+          >
+            {BLANK_BOARD_RATIO_PRESETS.map((preset) => (
+              <option key={preset.id} value={preset.id}>
+                {preset.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
 
       {selectedLayer ? (
         <div className="sign-layer-inspector__controls">
