@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   let submission
 
   try {
-    submission = await createPendingSubmission(result.value)
+    submission = await createPendingSubmission(result.value as never)
   } catch {
     return Response.json(
       {
@@ -51,10 +51,7 @@ export async function POST(request: Request) {
         slogan: submission.slogan,
         slugCandidate: submission.slugCandidate,
         selectedTemplate: submission.selectedTemplate,
-        selectedTextColor: submission.selectedTextColor,
-        textRotation: submission.textRotation,
-        textOffsetY: submission.textOffsetY,
-        textScale: submission.textScale,
+        boardDocument: (submission as { boardDocument?: unknown }).boardDocument,
         status: submission.status,
         createdAt: submission.createdAt,
       },

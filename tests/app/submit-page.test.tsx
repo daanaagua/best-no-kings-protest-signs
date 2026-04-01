@@ -20,7 +20,7 @@ describe('Submit page', () => {
     render(<SubmitPage />)
 
     expect(screen.getByRole('heading', { name: /Make your No Kings sign/i })).toBeInTheDocument()
-    expect(screen.getByText(/send your finished design to the moderation queue/i)).toBeInTheDocument()
+    expect(screen.getByText(/add text boxes and images freely, then send the finished board to moderation/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Submit styled sign for review/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Browse all best No Kings protest signs/i })).toHaveAttribute(
       'href',
@@ -34,7 +34,7 @@ describe('Submit page', () => {
 
     render(<SubmitPage />)
 
-    expect(screen.getByText(/switch board templates, tune the text, and export a png/i)).toBeInTheDocument()
+    expect(screen.getByText(/place text and images directly on the sign, and export a png ready for print or sharing/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Export PNG/i })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Submit styled sign for review/i })).not.toBeInTheDocument()
   })
