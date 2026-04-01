@@ -1458,7 +1458,8 @@ a {
 
 .sign-board-stage__poster {
   position: relative;
-  min-height: 38rem;
+  width: 100%;
+  min-height: 0;
   border-radius: 1rem;
   overflow: hidden;
   background-position: center;

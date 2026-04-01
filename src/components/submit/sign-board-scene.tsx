@@ -6,6 +6,7 @@ import {
   type SignBoardImageLayer,
   type SubmissionAssetRecord,
 } from '@/src/lib/signs/board-document'
+import { getBoardLayerFrameStyle } from '@/src/lib/signs/board-stage-layout'
 import { getPreviewLines } from '@/src/lib/signs/templates'
 
 type LegacyTextPresentation = {
@@ -49,6 +50,7 @@ export function SignBoardScene({
 
         if (layer.type === 'text') {
           const lines = getPreviewLines(layer.text)
+          const frameStyle = getBoardLayerFrameStyle(board, layer)
           const style: CSSProperties = legacyTextPresentation
             ? ({
                 '--text-rotation': `${legacyTextPresentation.textRotation}deg`,
@@ -60,10 +62,10 @@ export function SignBoardScene({
               } as CSSProperties)
             : {
                 position: 'absolute',
-                left: layer.x - layer.width / 2,
-                top: layer.y - layer.height / 2,
-                width: layer.width,
-                minHeight: layer.height,
+                left: frameStyle.left,
+                top: frameStyle.top,
+                width: frameStyle.width,
+                minHeight: frameStyle.height,
                 opacity: layer.opacity,
                 transform: `rotate(${layer.rotation}deg)`,
                 transformOrigin: 'center center',
@@ -82,6 +84,7 @@ export function SignBoardScene({
         }
 
         const asset = resolveAsset(layer, assets)
+        const frameStyle = getBoardLayerFrameStyle(board, layer)
 
         if (!asset) {
           return null
@@ -98,10 +101,10 @@ export function SignBoardScene({
             width={layer.width}
             style={{
               position: 'absolute',
-              left: layer.x - layer.width / 2,
-              top: layer.y - layer.height / 2,
-              width: layer.width,
-              height: layer.height,
+              left: frameStyle.left,
+              top: frameStyle.top,
+              width: frameStyle.width,
+              height: frameStyle.height,
               objectFit: layer.fitMode,
               opacity: layer.opacity,
               transform: `rotate(${layer.rotation}deg)`,
