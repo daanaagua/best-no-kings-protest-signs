@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Hero } from '@/src/components/home/hero'
 import { SignGrid } from '@/src/components/signs/sign-grid'
 import {
@@ -46,6 +48,22 @@ export default async function Home() {
         printableCount={printableCount}
         totalSigns={allSigns.length}
       />
+
+      <section className="home-section home-update-callout" aria-labelledby="home-update-title">
+        <div className="section-heading section-heading--compact">
+          <p className="section-heading__eyebrow">Product update</p>
+          <h2 className="section-heading__title" id="home-update-title">
+            The sign maker now starts on a blank board
+          </h2>
+          <p className="section-heading__description">
+            Read what changed in the editor, including blank-board defaults, ratio presets, image uploads, and freer text placement.
+          </p>
+        </div>
+
+        <Link className="home-hero__secondary" href="/updates/blank-board-designer">
+          Read the update
+        </Link>
+      </section>
 
       <SignGrid
         description="A tighter first pass of the strongest No Kings protest signs, rebuilt around cleaner boards, stronger wording, and a more serious rally tone."

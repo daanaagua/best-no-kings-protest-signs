@@ -10,6 +10,16 @@ vi.mock('next/image', () => ({
 }))
 
 describe('Home page', () => {
+  it('shows the sign maker product update card on the homepage', async () => {
+    render(await Home())
+
+    expect(screen.getByText(/Product update/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Read the update/i })).toHaveAttribute(
+      'href',
+      '/updates/blank-board-designer',
+    )
+  })
+
   it('hides the recent community section when no approved real submissions exist', async () => {
     render(await Home())
 
